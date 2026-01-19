@@ -1,6 +1,7 @@
-import { defineWorkspace } from 'vitest/config';
+import { defineConfig } from 'vitest/config';
 
-export default defineWorkspace([
-  '**/vite.config.{mjs,js,ts,mts}',
-  '**/vitest.config.{mjs,js,ts,mts}',
-]);
+export default defineConfig({
+  test: {
+    include: ['**/vite.config.{mjs,js,ts,mts}', '**/vitest.config.{mjs,js,ts,mts}'],
+  },
+});
