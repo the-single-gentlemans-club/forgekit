@@ -59,9 +59,32 @@
       "!utils",
       "!@org/source"
     ],
+    "conventionalCommits": {
+      "types": {
+        "docs": {
+          "semverBump": "patch",
+          "description": "Documentation changes"
+        }
+      }
+    },
     "version": {
       "conventionalCommits": true,
       "preVersionCommand": "npx nx run-many -t build"
+    },
+    "changelog": {
+      "workspaceChangelog": {
+         "file": false,
+        "createRelease": "github"
+      },
+      "projectChangelogs": {
+        "createRelease": "github",
+        "renderOptions": {
+          "authors": true,
+          "applyUsernameToAuthors": true,
+          "commitReferences": true,
+          "versionTitleDate": true
+        }
+      }
     }
   },
   "targetDefaults": {

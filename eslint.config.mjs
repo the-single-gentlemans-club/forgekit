@@ -13,7 +13,7 @@ export default [
     ],
   },
   rules: {
-"testing-library/no-container": "warn",
+    "testing-library/no-container": "warn",
     "testing-library/prefer-screen-queries": "warn",
     "testing-library/no-node-access": ["warn"],
     "react/no-multi-comp": [
@@ -59,7 +59,17 @@ export default [
     "import/default": "off",
     "import/no-named-as-default-member": "off",
     "import/no-named-as-default": "off",
-    "no-self-compare": "warn"
+    "no-self-compare": "warn",
+    "react/sort-prop-types": [
+      "warn",
+      {
+        "callbacksLast": true,
+        "ignoreCase": false,
+        "requiredFirst": true,
+        "sortShapeProp": true,
+        "noSortAlphabetically": false
+      }
+    ]
   },
   {
     files: ['**/*.ts', '**/*.js'],
