@@ -9,7 +9,7 @@ export default defineConfig(() => ({
   //  plugins: [ nxViteTsPaths() ],
   // },
   test: {
-    name: '@org/async',
+    name: '@forgekit/async',
     watch: false,
     globals: true,
     environment: 'node',

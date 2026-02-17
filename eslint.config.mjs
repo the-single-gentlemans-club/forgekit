@@ -12,55 +12,6 @@ export default [
       '**/vitest.config.*.timestamp*',
     ],
   },
-  rules: {
-"testing-library/no-container": "warn",
-    "testing-library/prefer-screen-queries": "warn",
-    "testing-library/no-node-access": ["warn"],
-    "react/no-multi-comp": [
-      "warn",
-      {
-        "ignoreStateless": false
-      }
-    ],
-    "no-console": "warn",
-    "no-restricted-syntax": [
-      "error",
-      {
-        "selector": "CallExpression[callee.object.name='console'][callee.property.name!=/^(log|warn|error|info|trace)$/]",
-        "message": "Unexpected property on console object was called"
-      }
-    ],
-    "react/no-children-prop": "warn",
-    "react/react-in-jsx-scope": "off",
-    "react/no-unescaped-entities": [
-      "error",
-      {
-        "forbid": [
-          {
-            "char": ">",
-            "alternatives": ["&gt;"]
-          },
-          {
-            "char": "}",
-            "alternatives": ["&#125;"]
-          }
-        ]
-      }
-    ],
-    "simple-import-sort/imports": "error",
-    "simple-import-sort/exports": "error",
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": [
-      "error",
-      {
-        "enableDangerousAutofixThisMayCauseInfiniteLoops": true
-      }
-    ],
-    "import/default": "off",
-    "import/no-named-as-default-member": "off",
-    "import/no-named-as-default": "off",
-    "no-self-compare": "warn"
-  },
   {
     files: ['**/*.ts', '**/*.js'],
     rules: {
@@ -92,15 +43,7 @@ export default [
     },
   },
   {
-    files: [
-      '**/*.ts',
-      '**/*.cts',
-      '**/*.mts',
-      '**/*.js',
-      '**/*.cjs',
-      '**/*.mjs',
-    ],
-    // Override or add rules here
+    files: ['**/*.ts', '**/*.cts', '**/*.mts', '**/*.js', '**/*.cjs', '**/*.mjs'],
     rules: {},
   },
 ];

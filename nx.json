@@ -57,7 +57,7 @@
   "release": {
     "projects": [
       "!utils",
-      "!@org/source"
+      "!@forgekit/source"
     ],
     "version": {
       "conventionalCommits": true,
