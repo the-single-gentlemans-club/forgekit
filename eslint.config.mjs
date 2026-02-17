@@ -1,4 +1,4 @@
-import nx from '@nx/eslint-plugin';
+import nx from '@nx/eslint-plugin'
 
 export default [
   ...nx.configs['flat/base'],
@@ -37,6 +37,23 @@ export default [
               sourceTag: 'scope:strings',
               onlyDependOnLibsWithTags: ['scope:shared', 'scope:strings'],
             },
+            {
+              sourceTag: 'scope:storybook',
+              onlyDependOnLibsWithTags: ['scope:shared', 'scope:storybook'],
+            },
+            {
+              sourceTag: 'scope:figma',
+              onlyDependOnLibsWithTags: ['scope:shared', 'scope:figma'],
+            },
+            {
+              sourceTag: 'scope:context',
+              onlyDependOnLibsWithTags: [
+                'scope:shared',
+                'scope:storybook',
+                'scope:figma',
+                'scope:context',
+              ],
+            },
           ],
         },
       ],
@@ -46,4 +63,4 @@ export default [
     files: ['**/*.ts', '**/*.cts', '**/*.mts', '**/*.js', '**/*.cjs', '**/*.mjs'],
     rules: {},
   },
-];
+]

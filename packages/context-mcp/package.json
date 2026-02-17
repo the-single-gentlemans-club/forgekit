@@ -1,0 +1,30 @@
+{
+  "name": "forgekit-context",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@forgekit/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "nx": {
+    "tags": [
+      "type:mcp",
+      "scope:context"
+    ]
+  },
+  "dependencies": {
+    "@forgekit/mcp-core": "^0.0.1",
+    "forgekit-figma-mcp": "^0.0.1",
+    "forgekit-storybook-mcp": "^0.0.1",
+    "tslib": "^2.3.0"
+  }
+}

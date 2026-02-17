@@ -1,10 +1,7 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
-    ],
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
       "default",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
@@ -55,10 +52,7 @@
     }
   ],
   "release": {
-    "projects": [
-      "!utils",
-      "!@forgekit/source"
-    ],
+    "projects": ["!utils", "!@forgekit/source"],
     "version": {
       "conventionalCommits": true,
       "preVersionCommand": "npx nx run-many -t build"
@@ -66,9 +60,7 @@
   },
   "targetDefaults": {
     "test": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     }
   },
   "nxCloudId": "696db08bce9a081c87ebb2d1"
