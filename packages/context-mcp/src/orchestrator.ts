@@ -14,22 +14,29 @@ export type ConnectionStatus = 'connected' | 'unavailable' | 'not-attempted'
 export interface OrchestratorStatus {
   figma: ConnectionStatus
   storybook: ConnectionStatus
+  figmaDev: ConnectionStatus
   figmaError?: string
   storybookError?: string
+  figmaDevError?: string
 }
+
+const FIGMA_DEV_MODE_URL = 'http://127.0.0.1:3845/sse'
 
 export class ForgeKitOrchestrator {
   private figmaClient: Client | null = null
+  private figmaDevClient: Client | null = null
   private storybookClient: Client | null = null
   private status: OrchestratorStatus = {
     figma: 'not-attempted',
     storybook: 'not-attempted',
+    figmaDev: 'not-attempted',
   }
 
   async connect(config: ForgeKitContextConfig): Promise<OrchestratorStatus> {
-    const [figmaResult, storybookResult] = await Promise.allSettled([
+    const [figmaResult, storybookResult, figmaDevResult] = await Promise.allSettled([
       this.connectFigma(config),
       this.connectStorybook(config),
+      this.connectFigmaDev(),
     ])
 
     if (figmaResult.status === 'rejected') {
@@ -50,6 +57,17 @@ export class ForgeKitOrchestrator {
       process.stderr.write(`[context-mcp] Storybook MCP unavailable: ${this.status.storybookError}\n`)
     } else {
       this.status.storybook = 'connected'
+    }
+
+    if (figmaDevResult.status === 'rejected') {
+      this.status.figmaDev = 'unavailable'
+      this.status.figmaDevError = figmaDevResult.reason instanceof Error
+        ? figmaDevResult.reason.message
+        : String(figmaDevResult.reason)
+      process.stderr.write(`[context-mcp] Figma Dev Mode MCP unavailable (Figma desktop not running): ${this.status.figmaDevError}\n`)
+    } else {
+      this.status.figmaDev = 'connected'
+      process.stderr.write('[context-mcp] Figma Dev Mode MCP connected (Code to Canvas available)\n')
     }
 
     return this.getStatus()
@@ -128,6 +146,16 @@ export class ForgeKitOrchestrator {
     }
   }
 
+  private async connectFigmaDev(): Promise<void> {
+    // Connect to Figma desktop's Dev Mode MCP server (Code to Canvas endpoint)
+    // This is non-fatal — Figma desktop must be running with Dev Mode MCP enabled
+    this.figmaDevClient = await createHttpMcpClient(
+      'figma-dev-mode',
+      FIGMA_DEV_MODE_URL
+      // No auth headers — uses OAuth inside Figma desktop
+    )
+  }
+
   async callFigma(tool: string, args: Record<string, unknown>): Promise<unknown> {
     if (!this.figmaClient || this.status.figma !== 'connected') {
       throw new Error(
@@ -136,6 +164,19 @@ export class ForgeKitOrchestrator {
       )
     }
     return callTool(this.figmaClient, tool, args)
+  }
+
+  async callFigmaDev(tool: string, args: Record<string, unknown>): Promise<unknown> {
+    if (!this.figmaDevClient || this.status.figmaDev !== 'connected') {
+      throw new Error(
+        'Figma Dev Mode MCP is unavailable. To enable Code to Canvas:\n' +
+        '  1. Open Figma desktop app\n' +
+        '  2. Go to Preferences → Enable Dev Mode MCP Server\n' +
+        `  3. The server should start at ${FIGMA_DEV_MODE_URL}\n` +
+        '  4. Restart context-mcp\n'
+      )
+    }
+    return callTool(this.figmaDevClient, tool, args)
   }
 
   async callStorybook(tool: string, args: Record<string, unknown>): Promise<unknown> {
@@ -155,9 +196,15 @@ export class ForgeKitOrchestrator {
   async disconnect(): Promise<void> {
     await Promise.allSettled([
       this.figmaClient?.close(),
+      this.figmaDevClient?.close(),
       this.storybookClient?.close(),
     ])
     this.figmaClient = null
+    this.figmaDevClient = null
     this.storybookClient = null
+  }
+
+  isFigmaDevAvailable(): boolean {
+    return this.status.figmaDev === 'connected'
   }
 }

@@ -34,6 +34,7 @@ interface ParsedArgs {
   projectRoot: string
   licenseKey?: string
   outputDir: string
+  storybookUrl: string
   help: boolean
 }
 
@@ -56,6 +57,7 @@ function parseArgs(): ParsedArgs {
       process.env['FORGEKIT_LICENSE'] ??
       process.env['STORYBOOK_MCP_LICENSE'],
     outputDir: get('output-dir') ?? '.forgekit',
+    storybookUrl: get('storybook-url') ?? 'http://localhost:6006',
     help: has('help') || has('h'),
   }
 }
@@ -75,6 +77,7 @@ OPTIONS:
   --project-root=PATH       Root of the React project (default: cwd)
   --license-key=KEY         ForgeKit Pro license key (or FORGEKIT_LICENSE env)
   --output-dir=DIR          Output directory for generated files (default: .forgekit)
+  --storybook-url=URL       Storybook base URL for sync_stories_to_figma (default: http://localhost:6006)
   -h, --help                Show this help
 
 TOOLS EXPOSED:
@@ -84,6 +87,7 @@ TOOLS EXPOSED:
   get_drifted_components     Components with hardcoded values that should be tokens
   get_missing_components     Figma components with no code counterpart (suggestions)
   onboard                    Generate .forgekit/rules.md + preview story/test/docs generation
+  sync_stories_to_figma      Push story renders to Figma as editable frames (requires Figma desktop)
 
 ENVIRONMENT VARIABLES:
   FIGMA_ACCESS_TOKEN         Figma personal access token
@@ -144,6 +148,7 @@ async function main(): Promise<void> {
       projectRoot: args.projectRoot,
       libraries,
       licenseKey: args.licenseKey,
+      storybookUrl: args.storybookUrl,
     },
     outputDir: args.outputDir,
   }

@@ -31,6 +31,7 @@ import {
   syncComponentTool,
   generateTestTool,
   generateDocsTool,
+  generateCodeConnectTool,
   checkHealthTool,
 } from './tools.js'
 
@@ -348,6 +349,32 @@ export function createStorybookMCPServer(config: StorybookMCPConfig) {
         },
       },
       {
+        name: 'generate_code_connect',
+        description: 'Generate a @figma/code-connect .figma.tsx file for a component, linking it to Figma dev mode so designers see your actual code. Pro tier only.',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            componentPath: {
+              type: 'string',
+              description: 'Path to the component file relative to project root',
+            },
+            figmaNodeUrl: {
+              type: 'string',
+              description: 'Figma component URL (e.g. https://figma.com/design/xxx/yyy?node-id=zzz). If omitted, a placeholder is used.',
+            },
+            overwrite: {
+              type: 'boolean',
+              description: 'Overwrite existing .figma.tsx file (default: false)',
+            },
+            dryRun: {
+              type: 'boolean',
+              description: 'Generate but do not write to disk (default: false)',
+            },
+          },
+          required: ['componentPath'],
+        },
+      },
+      {
         name: 'check_health',
         description: 'Check Storybook installation health — missing packages, outdated configs, version mismatches',
         inputSchema: {
@@ -420,6 +447,10 @@ export function createStorybookMCPServer(config: StorybookMCPConfig) {
 
         case 'generate_docs':
           result = await generateDocsTool(config, args as any)
+          break
+
+        case 'generate_code_connect':
+          result = await generateCodeConnectTool(config, args as any)
           break
 
         case 'check_health':

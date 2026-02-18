@@ -21,6 +21,7 @@ export interface StorybookContextConfig {
   projectRoot: string
   libraries: LibraryConfig[]
   licenseKey?: string
+  storybookUrl?: string
 }
 
 // -----------------------------------------------
@@ -102,4 +103,22 @@ export interface OnboardResult {
   rulesFile: string
   syncPreview: unknown
   instructions: string
+}
+
+// -----------------------------------------------
+// Sync stories to Figma (Code to Canvas)
+// -----------------------------------------------
+export interface SyncToFigmaResult {
+  pushed: Array<{
+    componentName: string
+    storyName: string
+    storyUrl: string
+    figmaFrameId?: string
+  }>
+  skipped: Array<{
+    componentName: string
+    reason: string
+  }>
+  devModeAvailable: boolean
+  summary: string
 }

@@ -12,6 +12,7 @@ import { getComponent } from './tools/get-component.js'
 import { getDriftedComponents } from './tools/get-drifted-components.js'
 import { getMissingComponents } from './tools/get-missing-components.js'
 import { onboard } from './tools/onboard.js'
+import { syncStoriesToFigma } from './tools/sync-stories-to-figma.js'
 
 export function createContextMCPServer(
   config: ForgeKitContextConfig,
@@ -77,6 +78,29 @@ export function createContextMCPServer(
           'Initialize ForgeKit for this project: generate design system rules from Figma and preview story/test/docs generation.',
         inputSchema: { type: 'object', properties: {} },
       },
+      {
+        name: 'sync_stories_to_figma',
+        description:
+          'Push Storybook story renders to Figma as editable frames via Code to Canvas. ' +
+          'Requires Figma desktop app with Dev Mode MCP server enabled (Preferences → Enable Dev Mode MCP Server).',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            library: {
+              type: 'string',
+              description: 'Filter by library name (optional — syncs all libraries if omitted)',
+            },
+            storybookUrl: {
+              type: 'string',
+              description: 'Storybook base URL (default: http://localhost:6006)',
+            },
+            dryRun: {
+              type: 'boolean',
+              description: 'Preview which stories would be pushed without actually pushing them',
+            },
+          },
+        },
+      },
     ],
   }))
 
@@ -110,6 +134,13 @@ export function createContextMCPServer(
         case 'onboard':
           result = await onboard(orchestrator, config)
           break
+        case 'sync_stories_to_figma':
+          result = await syncStoriesToFigma(orchestrator, {
+            library: typedArgs['library'] as string | undefined,
+            storybookUrl: (typedArgs['storybookUrl'] as string | undefined) ?? config.storybook.storybookUrl,
+            dryRun: typedArgs['dryRun'] as boolean | undefined,
+          })
+          break
         default:
           throw new Error(`Unknown tool: ${name}`)
       }
@@ -135,7 +166,7 @@ export async function runContextServer(config: ForgeKitContextConfig): Promise<v
   process.stderr.write('[context-mcp] Connecting to downstream MCP servers...\n')
   const status = await orchestrator.connect(config)
   process.stderr.write(
-    `[context-mcp] Figma: ${status.figma} | Storybook: ${status.storybook}\n`
+    `[context-mcp] Figma: ${status.figma} | Storybook: ${status.storybook} | FigmaDev: ${status.figmaDev}\n`
   )
 
   if (status.figma === 'unavailable' && status.storybook === 'unavailable') {
