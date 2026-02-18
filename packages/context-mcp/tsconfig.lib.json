@@ -15,9 +15,6 @@
       "path": "../storybook-mcp/tsconfig.lib.json"
     },
     {
-      "path": "../figma-mcp/tsconfig.lib.json"
-    },
-    {
       "path": "../mcp-core/tsconfig.lib.json"
     }
   ],

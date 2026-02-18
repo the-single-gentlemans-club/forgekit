@@ -6,9 +6,13 @@ export default defineConfig(() => ({
   test: {
     name: 'forgekit-context',
     watch: false,
-    globals: true,
+    globals: false,
     environment: 'node',
-    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    include: [
+      'src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      'src/__tests__/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+    ],
+    passWithNoTests: true,
     reporters: ['default'],
     coverage: {
       reportsDirectory: './test-output/vitest/coverage',
