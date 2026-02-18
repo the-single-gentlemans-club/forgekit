@@ -1,203 +1,120 @@
-# Nx TypeScript Repository
+# ForgeKit
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+> AI-powered MCP tools for Storybook story generation, Figma integration, and design-system automation.
 
-✨ A repository showcasing key [Nx](https://nx.dev) features for TypeScript monorepos ✨
+ForgeKit is an Nx monorepo containing two MCP servers and a shared transport library. Together they bridge the gap between your Figma design system and your React component library through Claude, Cursor, and other MCP-compatible AI assistants.
 
-## 📦 Project Overview
+## Packages
 
-This repository demonstrates a production-ready TypeScript monorepo with:
+| Package | npm | Description |
+|---------|-----|-------------|
+| [`packages/storybook-mcp`](packages/storybook-mcp/README.md) | [forgekit-storybook-mcp](https://npmjs.com/package/forgekit-storybook-mcp) | Story generation, component analysis, Figma Code Connect (15 tools) |
+| [`packages/context-mcp`](packages/context-mcp/README.md) | `forgekit-context` (coming soon) | Orchestration layer: gap analysis, drift detection, Code to Canvas |
+| [`packages/mcp-core`](packages/mcp-core/README.md) | internal | Shared MCP client factories (`createStdioMcpClient`, `createHttpMcpClient`, `callTool`) |
 
-- **3 Publishable Packages** - Ready for NPM publishing
+## What you can do
 
-  - `@org/strings` - String manipulation utilities
-  - `@org/async` - Async utility functions with retry logic
-  - `@org/colors` - Color conversion and manipulation utilities
+### With `forgekit-storybook-mcp`
 
-- **1 Internal Library**
-  - `@org/utils` - Shared utilities (private, not published)
+- **Generate stories** for any React component — 8 templates including interactive, MSW, router, form, and page layouts
+- **Update stories** without losing your custom exports (`update_story` merges preserved user blocks)
+- **Generate tests** — Playwright and Vitest test files from component analysis
+- **Generate MDX docs** — component documentation pages with usage examples
+- **Generate Figma Code Connect** — `.figma.tsx` files that link components to Figma Dev Mode
+- **Sync everything** — auto-sync all components on startup, or on demand
+- **Health checks** — diagnose missing packages, outdated configs, version mismatches
 
-## 🚀 Quick Start
+### With `forgekit-context`
+
+- **Gap analysis** — find components in Figma without code, code without Figma, or components without stories
+- **Drift detection** — surface hardcoded hex values and pixel sizes that should use design tokens
+- **Code to Canvas** — push Storybook story renders into Figma as editable frames (via Figma desktop Dev Mode MCP)
+- **Onboarding** — generate `.forgekit/rules.md` from Figma design rules and preview sync output
+
+## Quick start
 
 ```bash
-# Clone the repository
-git clone <your-fork-url>
-cd typescript-template
-
 # Install dependencies
-npm install
+NODE_ENV=development npm install
 
 # Build all packages
-npx nx run-many -t build
+npx nx run-many -t build --parallel=3
 
-# Run tests
-npx nx run-many -t test
+# Test all packages
+NODE_ENV=development npx nx run-many -t test --parallel=3
 
-# Lint all projects
-npx nx run-many -t lint
-
-# Run everything in parallel
-npx nx run-many -t lint test build --parallel=3
-
-# Visualize the project graph
-npx nx graph
+# Build a specific package
+npx nx build forgekit-storybook-mcp
+npx nx build forgekit-context
 ```
 
-## ⭐ Featured Nx Capabilities
+## MCP configuration
 
-This repository showcases several powerful Nx features:
+### Storybook MCP only
 
-### 1. 🔒 Module Boundaries
-
-Enforces architectural constraints using tags. Each package has specific dependencies it can use:
-
-- `scope:shared` (utils) - Can be used by all packages
-- `scope:strings` - Can only depend on shared utilities
-- `scope:async` - Can only depend on shared utilities
-- `scope:colors` - Can only depend on shared utilities
-
-**Try it out:**
-
-```bash
-# See the current project graph and boundaries
-npx nx graph
-
-# View a specific project's details
-npx nx show project strings --web
+```json
+{
+  "mcpServers": {
+    "storybook": {
+      "command": "npx",
+      "args": ["forgekit-storybook-mcp", "--skip-init"],
+      "env": {
+        "FORGEKIT_LICENSE": "your-license-key"
+      }
+    }
+  }
+}
 ```
 
-[Learn more about module boundaries →](https://nx.dev/features/enforce-module-boundaries)
+### Full ForgeKit stack (Storybook + Figma)
 
-### 2. 🛠️ Custom Run Commands
-
-Packages can define custom commands beyond standard build/test/lint:
-
-```bash
-# Run the custom build-base command for strings package
-npx nx run strings:build-base
-
-# See all available targets for a project
-npx nx show project strings
+```json
+{
+  "mcpServers": {
+    "forgekit": {
+      "command": "npx",
+      "args": ["forgekit-context"],
+      "env": {
+        "FIGMA_ACCESS_TOKEN": "your-figma-token",
+        "FIGMA_FILE_ID": "your-file-id",
+        "FORGEKIT_LICENSE": "your-license-key"
+      }
+    }
+  }
+}
 ```
 
-[Learn more about custom run commands →](https://nx.dev/concepts/executors-and-configurations)
-
-### 3. 🔧 Self-Healing CI
-
-The CI pipeline includes `nx fix-ci` which automatically identifies and suggests fixes for common issues. To test it, you can make a change to `async-retry.spec.ts` so that it fails, and create a PR.
-
-```bash
-# Run tests and see the failure
-npx nx test async
-
-# In CI, this command provides automated fixes
-npx nx fix-ci
-```
-
-[Learn more about self-healing CI →](https://nx.dev/ci/features/self-healing-ci)
-
-### 4. 📦 Package Publishing
-
-Manage releases and publishing with Nx Release:
-
-```bash
-# Dry run to see what would be published
-npx nx release --dry-run
-
-# Version and release packages
-npx nx release
-
-# Publish only specific packages
-npx nx release publish --projects=strings,colors
-```
-
-[Learn more about Nx Release →](https://nx.dev/features/manage-releases)
-
-## 📁 Project Structure
+## Project structure
 
 ```
+forgekit/
 ├── packages/
-│   ├── strings/     [scope:strings] - String utilities (publishable)
-│   ├── async/       [scope:async]   - Async utilities (publishable)
-│   ├── colors/      [scope:colors]  - Color utilities (publishable)
-│   └── utils/       [scope:shared]  - Shared utilities (private)
-├── nx.json          - Nx configuration
-├── tsconfig.json    - TypeScript configuration
-└── eslint.config.mjs - ESLint with module boundary rules
+│   ├── storybook-mcp/     # MCP server — story generation + Figma Code Connect
+│   │   └── src/
+│   │       ├── tools.ts           # All 15 tool implementations
+│   │       ├── index.ts           # Server wiring
+│   │       └── utils/             # scanner, generator, merger, history, etc.
+│   ├── context-mcp/       # MCP server — Figma + Storybook orchestration
+│   │   └── src/
+│   │       ├── orchestrator.ts    # ForgeKitOrchestrator class
+│   │       ├── server.ts          # MCP server with 7 tools
+│   │       ├── cli.ts             # CLI entry point
+│   │       └── tools/             # Individual tool implementations
+│   └── mcp-core/          # Internal — shared MCP client factories
+│       └── src/lib/
+│           └── mcp-core.ts        # createStdioMcpClient, createHttpMcpClient, callTool
+├── nx.json
+└── package.json
 ```
 
-## 🏷️ Understanding Tags
+## Releases
 
-This repository uses tags to enforce module boundaries:
+New features are developed here and released via the standalone repo:
 
-| Package        | Tag             | Can Import From        |
-| -------------- | --------------- | ---------------------- |
-| `@org/utils`   | `scope:shared`  | Nothing (base library) |
-| `@org/strings` | `scope:strings` | `scope:shared`         |
-| `@org/async`   | `scope:async`   | `scope:shared`         |
-| `@org/colors`  | `scope:colors`  | `scope:shared`         |
+- **Storybook MCP** → [github.com/the-single-gentlemans-club/storybook-mcp](https://github.com/the-single-gentlemans-club/storybook-mcp)
+- **Docs** → [forgekit.cloud](https://forgekit.cloud)
+- **npm** → [forgekit-storybook-mcp](https://npmjs.com/package/forgekit-storybook-mcp)
 
-The ESLint configuration enforces these boundaries, preventing circular dependencies and maintaining clean architecture.
+## License
 
-## 🧪 Testing Module Boundaries
-
-To see module boundary enforcement in action:
-
-1. Try importing `@org/colors` into `@org/strings`
-2. Run `npx nx lint strings`
-3. You'll see an error about violating module boundaries
-
-## 📚 Useful Commands
-
-```bash
-# Project exploration
-npx nx graph                                    # Interactive dependency graph
-npx nx list                                     # List installed plugins
-npx nx show project strings --web              # View project details
-
-# Development
-npx nx build strings                           # Build a specific package
-npx nx test async                              # Test a specific package
-npx nx lint colors                             # Lint a specific package
-
-# Running multiple tasks
-npx nx run-many -t build                       # Build all projects
-npx nx run-many -t test --parallel=3          # Test in parallel
-npx nx run-many -t lint test build            # Run multiple targets
-
-# Affected commands (great for CI)
-npx nx affected -t build                       # Build only affected projects
-npx nx affected -t test                        # Test only affected projects
-
-# Release management
-npx nx release --dry-run                       # Preview release changes
-npx nx release                                 # Create a new release
-```
-
-## Nx Cloud
-
-Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## 🔗 Learn More
-
-- [Nx Documentation](https://nx.dev)
-- [Module Boundaries](https://nx.dev/features/enforce-module-boundaries)
-- [Custom Commands](https://nx.dev/concepts/executors-and-configurations)
-- [Self-Healing CI](https://nx.dev/ci/features/self-healing-ci)
-- [Releasing Packages](https://nx.dev/features/manage-releases)
-- [Nx Cloud](https://nx.dev/ci/intro/why-nx-cloud)
-
-## 💬 Community
-
-Join the Nx community:
-
-- [Discord](https://go.nx.dev/community)
-- [X (Twitter)](https://twitter.com/nxdevtools)
-- [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [YouTube](https://www.youtube.com/@nxdevtools)
-- [Blog](https://nx.dev/blog)
+Free tier available. Pro license at [forgekit.cloud](https://forgekit.cloud) — $29 launch price.
