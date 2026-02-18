@@ -22,9 +22,9 @@
     ]
   },
   "dependencies": {
-    "@forgekit/mcp-core": "^0.0.1",
-    "forgekit-figma-mcp": "^0.0.1",
-    "forgekit-storybook-mcp": "^0.0.1",
+    "@forgekit/mcp-core": "*",
+    "forgekit-figma-mcp": "*",
+    "forgekit-storybook-mcp": "*",
     "tslib": "^2.3.0"
   }
 }

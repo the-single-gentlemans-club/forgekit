@@ -1,11 +1,16 @@
 {
   "name": "forgekit-storybook-mcp",
-  "version": "0.0.1",
-  "private": true,
+  "version": "0.10.6",
+  "description": "MCP server for Storybook story generation, component analysis, and validation",
+  "author": "Rich Tillman <richtillman@gmail.com>",
+  "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
-  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "forgekit-storybook-mcp": "./dist/cli.js",
+    "storybook-mcp": "./dist/cli.js"
+  },
   "exports": {
     "./package.json": "./package.json",
     ".": {
@@ -15,6 +20,10 @@
       "default": "./dist/index.js"
     }
   },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "nx": {
     "tags": [
       "type:mcp",
@@ -22,7 +31,29 @@
     ]
   },
   "dependencies": {
-    "@forgekit/mcp-core": "^0.0.1",
+    "@forgekit/mcp-core": "*",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "fast-glob": "^3.3.2",
     "tslib": "^2.3.0"
-  }
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "storybook",
+    "mcp",
+    "model-context-protocol",
+    "code-generation",
+    "react",
+    "component-library",
+    "testing"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/effinrich/forgekit.git"
+  },
+  "homepage": "https://forgekit.cloud"
 }
