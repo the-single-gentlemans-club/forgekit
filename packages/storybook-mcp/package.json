@@ -24,6 +24,11 @@
     "dist",
     "README.md"
   ],
+  "scripts": {
+    "build": "npx tsup src/index.ts src/cli.ts --format esm --dts --clean --tsconfig tsconfig.build.json",
+    "prepublishOnly": "npm run build",
+    "publish:npm": "npm publish --access public"
+  },
   "nx": {
     "tags": [
       "type:mcp",
@@ -31,7 +36,6 @@
     ]
   },
   "dependencies": {
-    "@forgekit/mcp-core": "*",
     "@modelcontextprotocol/sdk": "^1.0.0",
     "fast-glob": "^3.3.2",
     "tslib": "^2.3.0"

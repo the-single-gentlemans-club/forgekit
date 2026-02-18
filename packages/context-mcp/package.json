@@ -22,7 +22,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "nx": {
     "tags": [
@@ -31,20 +32,21 @@
     ]
   },
   "scripts": {
-    "build": "tsc --build tsconfig.lib.json",
+    "build": "npx tsup src/index.ts src/cli.ts --format esm --dts --clean --tsconfig tsconfig.build.json",
     "prepublishOnly": "npm run build",
     "start": "node dist/cli.js",
-    "typecheck": "tsc --build --dry",
+    "typecheck": "tsc --noEmit",
     "publish:npm": "npm publish --access public"
   },
   "dependencies": {
-    "@forgekit/mcp-core": "*",
     "@modelcontextprotocol/sdk": "^1.0.0",
-    "forgekit-storybook-mcp": "*",
+    "forgekit-storybook-mcp": "^0.10.6",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@forgekit/mcp-core": "*",
     "@types/node": "^20.11.0",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   },
