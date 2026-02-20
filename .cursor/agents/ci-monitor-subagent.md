@@ -113,7 +113,7 @@ feedback on CI state, even if it's NOT_STARTED.
    ```
    IF main agent has moved on (CI already passed or new cycle started):
      → Output: "[ci-monitor-subagent] Stale instance detected. Exiting."
-     → Return immediately with status: stale_exit
+     → Return immediately with status: polling_timeout
      → Do NOT continue polling
    ```
 
