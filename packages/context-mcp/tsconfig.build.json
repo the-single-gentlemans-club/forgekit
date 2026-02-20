@@ -10,10 +10,10 @@
     "declarationMap": true
   },
   "include": ["src/**/*.ts"],
-  "exclude": [
-    "src/**/*.test.ts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.tsx",
-    "src/**/*.spec.tsx"
+  "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts", "src/**/*.test.tsx", "src/**/*.spec.tsx"],
+  "references": [
+    {
+      "path": "../mcp-core/tsconfig.lib.json"
+    }
   ]
 }

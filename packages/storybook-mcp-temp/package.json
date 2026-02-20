@@ -8,7 +8,7 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "@forgekit/source": "./src/lib/forgekit-storybook-mcp",
+      "@forgekit/source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
@@ -29,8 +29,5 @@
       "type:mcp",
       "scope:storybook"
     ]
-  },
-  "dependencies": {
-    "tslib": "^2.3.0"
   }
 }

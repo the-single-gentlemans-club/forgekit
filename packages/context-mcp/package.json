@@ -39,12 +39,12 @@
     "publish:npm": "npm publish --access public"
   },
   "dependencies": {
+    "@forgekit/mcp-core": "*",
     "@modelcontextprotocol/sdk": "^1.0.0",
-    "forgekit-storybook-mcp": "^0.10.6",
+    "forgekit-storybook-mcp": "*",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@forgekit/mcp-core": "*",
     "@types/node": "^20.11.0",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",

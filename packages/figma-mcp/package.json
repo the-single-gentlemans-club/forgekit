@@ -30,7 +30,6 @@
     ]
   },
   "dependencies": {
-    "@forgekit/mcp-core": "*",
     "@modelcontextprotocol/sdk": "^1.0.0",
     "axios": "^1.13.4",
     "dotenv": "^16.4.5",

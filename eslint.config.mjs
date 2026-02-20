@@ -1,4 +1,7 @@
 import nx from '@nx/eslint-plugin'
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import reactHooks from 'eslint-plugin-react-hooks'
+import importPlugin from 'eslint-plugin-import'
 
 export default [
   ...nx.configs['flat/base'],
@@ -11,6 +14,13 @@ export default [
       '**/vite.config.*.timestamp*',
       '**/vitest.config.*.timestamp*',
     ],
+  },
+  {
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+      'react-hooks': reactHooks,
+      'import': importPlugin,
+    },
   },
   {
     files: ['**/*.ts', '**/*.js'],
@@ -73,33 +83,28 @@ export default [
     },
   },
   {
-    overrides: [
-      {
-        files: ['**/*.ts', '**/*.cts', '**/*.mts', '**/*.js', '**/*.cjs', '**/*.mjs'],
-        rules: {
-          'simple-import-sort/imports': 'error',
-          'simple-import-sort/exports': 'error',
-        },
-      },
-
-      {
-        files: ['*.ts', '*.tsx', '*.js', '*.jsx'],
-        rules: {
-          'simple-import-sort/imports': [
-            'error',
-            {
-              groups: [
-                ['^\\u0000', '^\\.\\u0000'],
-                ['^react', '^@?\\w'],
-                ['^(@|packages|libs|lib|assets|utils|.storybook|hooks|ui|partials)(/.*|$)'],
-                ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
-                ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
-                ['^.+\\.?(css)$'],
-              ],
-            },
+    files: ['**/*.ts', '**/*.cts', '**/*.mts', '**/*.js', '**/*.cjs', '**/*.mjs'],
+    rules: {
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+    },
+  },
+  {
+    files: ['*.ts', '*.tsx', '*.js', '*.jsx'],
+    rules: {
+      'simple-import-sort/imports': [
+        'error',
+        {
+          groups: [
+            ['^\\u0000', '^\\.\\u0000'],
+            ['^react', '^@?\\w'],
+            ['^(@|packages|libs|lib|assets|utils|.storybook|hooks|ui|partials)(/.*|$)'],
+            ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
+            ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
+            ['^.+\\.?(css)$'],
           ],
         },
-      },
-    ],
+      ],
+    },
   },
 ]
