@@ -26,6 +26,9 @@
     },
     {
       "path": "./packages/context-mcp"
+    },
+    {
+      "path": "./packages/storybook-mcp-temp"
     }
   ]
 }

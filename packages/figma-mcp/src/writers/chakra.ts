@@ -4,7 +4,11 @@ import { ThemeToken } from '../types.js'
 import { WriterAdapter } from './adapter.js'
 
 export class ChakraWriter implements WriterAdapter {
-  async write(theme: ThemeToken, outputDir: string, options?: { version: 'v2' | 'v3' }): Promise<string[]> {
+  async write(
+    theme: ThemeToken,
+    outputDir: string,
+    options?: { version: 'v2' | 'v3' }
+  ): Promise<string[]> {
     await fs.mkdir(outputDir, { recursive: true })
     const version = options?.version || 'v2'
 
@@ -22,13 +26,19 @@ export class ChakraWriter implements WriterAdapter {
     }
 
     await write('colors.ts', `export const colors = ${JSON.stringify(theme.colors, null, 2)}`)
-    await write('fontSizes.ts', `export const fontSizes = ${JSON.stringify(theme.fontSizes, null, 2)}`)
+    await write(
+      'fontSizes.ts',
+      `export const fontSizes = ${JSON.stringify(theme.fontSizes, null, 2)}`
+    )
     await write('space.ts', `export const space = ${JSON.stringify(theme.space, null, 2)}`)
     await write('radii.ts', `export const radii = ${JSON.stringify(theme.radii, null, 2)}`)
     await write('shadows.ts', `export const shadows = ${JSON.stringify(theme.shadows, null, 2)}`)
 
     const semanticTokens = theme.semanticTokens || {}
-    await write('semanticTokens.ts', `export const semanticTokens = ${JSON.stringify(semanticTokens, null, 2)}`)
+    await write(
+      'semanticTokens.ts',
+      `export const semanticTokens = ${JSON.stringify(semanticTokens, null, 2)}`
+    )
 
     const indexContent = `import { extendTheme } from '@chakra-ui/react'
 import { colors } from './colors'
@@ -70,7 +80,7 @@ export const theme = extendTheme({
     const transformToV3Semantic = (obj: any): any => {
       if (typeof obj !== 'object' || obj === null) return obj
       const keys = Object.keys(obj)
-      const isModeMap = keys.some(k => k.startsWith('_') || k === 'default')
+      const isModeMap = keys.some((k) => k.startsWith('_') || k === 'default')
       if (isModeMap) return { value: obj }
       const result: any = {}
       for (const [key, value] of Object.entries(obj)) {
@@ -80,7 +90,10 @@ export const theme = extendTheme({
     }
 
     const semanticTokensV3 = transformToV3Semantic(theme.semanticTokens || {})
-    await write('semanticTokens.ts', `export const semanticTokens = ${JSON.stringify(semanticTokensV3, null, 2)}`)
+    await write(
+      'semanticTokens.ts',
+      `export const semanticTokens = ${JSON.stringify(semanticTokensV3, null, 2)}`
+    )
 
     const indexContent = `import { createSystem, defaultConfig } from '@chakra-ui/react'
 import { tokens } from './tokens'

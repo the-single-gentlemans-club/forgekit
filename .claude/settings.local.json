@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm nx show projects:*)",
+      "Bash(xargs -I{} sh -c 'echo \"\"=== {} ===\"\" && pnpm nx show project {} --json 2>/dev/null | jq \"\"{name, root, projectType, tags, targets: \\(.targets | keys\\)}\"\"')",
+      "Bash(while read p)",
+      "Bash(do echo \"=== $p ===\")",
+      "Bash(pnpm nx show project:*)",
+      "Bash(done)",
+      "Bash(for p in \"forgekit-storybook-mcp\" \"forgekit-context\" \"forgekit-figma-mcp\" \"@forgekit/mcp-core\" \"@forgekit/strings\" \"@forgekit/colors\" \"@forgekit/async\" \"@forgekit/utils\" \"@forgekit/source\")"
+    ]
+  }
+}

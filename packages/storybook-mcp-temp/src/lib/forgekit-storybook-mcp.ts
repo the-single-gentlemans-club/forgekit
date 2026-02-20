@@ -6,6 +6,7 @@
  *
  * Framework-agnostic - works with Chakra, shadcn, Tamagui, or vanilla React.
  */
+/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
@@ -16,7 +17,7 @@ import {
   ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js'
 
-import type { StorybookMCPConfig } from './types.js'
+import type { StorybookMCPConfig } from '../types.js'
 import {
   listComponents,
   analyzeComponentTool,
@@ -33,10 +34,10 @@ import {
   generateDocsTool,
   generateCodeConnectTool,
   checkHealthTool,
-} from './tools.js'
+} from '../tools.js'
 
-export type { StorybookMCPConfig } from './types.js'
-export * from './types.js'
+export type { StorybookMCPConfig } from '../types.js'
+export * from '../types.js'
 
 /**
  * Create and configure the MCP server
@@ -597,7 +598,7 @@ export function createStorybookMCPServer(config: StorybookMCPConfig) {
  */
 export async function runServer(config: StorybookMCPConfig) {
   // Import here to avoid circular dependency
-  const { validateLicenseAsync } = await import('./utils/license.js')
+  const { validateLicenseAsync } = await import('../utils/license.js')
 
   // Validate license and cache result for all tool calls
   await validateLicenseAsync(config)

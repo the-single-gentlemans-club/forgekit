@@ -57,10 +57,49 @@ export default [
           ],
         },
       ],
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': [
+        'error',
+        {
+          enableDangerousAutofixThisMayCauseInfiniteLoops: true,
+        },
+      ],
+      'import/default': 'off',
+      'import/no-named-as-default-member': 'off',
+      'import/no-named-as-default': 'off',
+      'no-self-compare': 'warn',
     },
   },
   {
-    files: ['**/*.ts', '**/*.cts', '**/*.mts', '**/*.js', '**/*.cjs', '**/*.mjs'],
-    rules: {},
+    overrides: [
+      {
+        files: ['**/*.ts', '**/*.cts', '**/*.mts', '**/*.js', '**/*.cjs', '**/*.mjs'],
+        rules: {
+          'simple-import-sort/imports': 'error',
+          'simple-import-sort/exports': 'error',
+        },
+      },
+
+      {
+        files: ['*.ts', '*.tsx', '*.js', '*.jsx'],
+        rules: {
+          'simple-import-sort/imports': [
+            'error',
+            {
+              groups: [
+                ['^\\u0000', '^\\.\\u0000'],
+                ['^react', '^@?\\w'],
+                ['^(@|packages|libs|lib|assets|utils|.storybook|hooks|ui|partials)(/.*|$)'],
+                ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
+                ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
+                ['^.+\\.?(css)$'],
+              ],
+            },
+          ],
+        },
+      },
+    ],
   },
 ]

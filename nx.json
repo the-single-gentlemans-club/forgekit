@@ -52,10 +52,10 @@
     }
   ],
   "release": {
-    "projects": ["!utils", "!@forgekit/source"],
+    "projects": ["*", "!utils", "!@forgekit/source"],
     "version": {
-      "conventionalCommits": true,
-      "preVersionCommand": "npx nx run-many -t build"
+      "preVersionCommand": "npx nx run-many -t build",
+      "conventionalCommits": true
     }
   },
   "targetDefaults": {
