@@ -29,6 +29,9 @@
     },
     {
       "path": "./packages/storybook-mcp-temp"
+    },
+    {
+      "path": "./packages/figma-plugin"
     }
   ]
 }

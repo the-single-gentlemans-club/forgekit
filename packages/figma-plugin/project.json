@@ -1,0 +1,9 @@
+{
+  "name": "figma-plugin",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/figma-plugin/src",
+  "projectType": "library",
+  "tags": ["type:plugin", "scope:figma"],
+  "// targets": "to see all targets run: nx show project figma-plugin --web",
+  "targets": {}
+}
