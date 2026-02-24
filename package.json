@@ -22,7 +22,6 @@
     "eslint-config-prettier": "^10.0.0",
     "eslint-plugin-react": "^7.33.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-storybook": "^0.8.0",
     "husky": "^9.0.0",
     "jiti": "2.4.2",
     "jsonc-eslint-parser": "^2.1.0",
@@ -31,12 +30,12 @@
     "prettier": "^3.0.0",
     "prettier-plugin-tailwindcss": "^0.6.0",
     "tslib": "^2.8.1",
+    "tsup": "^8.5.1",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.40.0",
     "verdaccio": "^6.0.5",
     "vite": "^7.0.0",
-    "vitest": "4.0.9",
-    "tsup": "^8.5.1"
+    "vitest": "4.0.9"
   },
   "workspaces": [
     "packages/*"
