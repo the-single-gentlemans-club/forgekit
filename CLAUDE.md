@@ -1,3 +1,83 @@
+# Claude Code Preferences
+
+## Developer Profile
+
+Senior frontend engineer specializing in React, React Native, Storybook, UI, and design systems.
+
+## Code Quality Standards
+
+- **Clean codebase** - Well-organized, readable, maintainable
+- **Small components** - Break up large components into focused, reusable pieces
+- **Linted & formatted** - All code must pass linting and formatting checks
+- **Zero type errors** - TypeScript must compile without errors
+- **No zombie code** - Always clean up stale, unused, or dead code after changes
+- **Write tests for everything** - Always write unit and e2e tests when possible, and make sure all are passing, as well as interaction tests with stories before clearing for release, publish, commit or prod.
+
+## Design Requirements
+
+- **Rich UI** - Components must be visually polished and production-ready
+- **Color correct** - Proper color usage, contrast, and accessibility
+- **Beautiful** - Aesthetic, modern design aligned with the design system
+
+## High Priority Rules
+
+### 1. Package Management
+
+- All packages must be latest stable releases
+- Package versions must align perfectly with each other
+- Always add packages to `package.json` when importing new libraries
+- Never allow versioning conflicts that break builds or CI
+
+### 2. Documentation
+
+- Documentation must be automated and generated
+- Update docs as code, components, and plans change
+- Use Mintlify, Docusaurus, or Featurebase for docs
+- Create reusable SKILL/MCP for docs solution across projects
+
+### 3. Communication
+
+- Ask clarifying questions when requirements are ambiguous
+- Provide suggestions for improvements and best practices
+- Flag potential issues before they become problems
+
+## Tech Stack
+
+- React Native / Expo
+- TypeScript (strict mode)
+- Supabase (backend)
+- Legend State (state management)
+- TanStack Query
+- Storybook (component development)
+
+## Skills
+
+If not in repo or settings, add and use this skill no commits and PRs.
+
+```skill
+---
+name: code-review
+description: Reviews code changes for bugs, style issues, and best practices. Use when reviewing PRs or checking code quality.
+---
+
+# Code Review Skill
+
+When reviewing code, follow these steps:
+
+## Review checklist
+
+1. **Correctness**: Does the code do what it's supposed to?
+2. **Edge cases**: Are error conditions handled?
+3. **Style**: Does it follow project conventions?
+4. **Performance**: Are there obvious inefficiencies?
+
+## How to provide feedback
+
+- Be specific about what needs to change
+- Explain why, not just what
+- Suggest alternatives when possible
+```
+
 <!-- nx configuration start-->
 <!-- Leave the start & end comments to automatically receive updates. -->
 
