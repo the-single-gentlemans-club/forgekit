@@ -1,0 +1,59 @@
+{
+  "name": "forgekit-figma-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for syncing Figma tokens to Design Systems (Chakra, Tailwind, Docs)",
+  "author": "Rich Tillman <richtillman@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "forgekit": "./dist/cli.js"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@forgekit/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "nx": {
+    "tags": [
+      "type:mcp",
+      "scope:figma"
+    ]
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "axios": "^1.13.4",
+    "dotenv": "^16.4.5",
+    "prompts": "^2.4.2",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/prompts": "^2.4.9",
+    "tsup": "^8.5.1",
+    "tsx": "^4.21.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "chakra-ui",
+    "figma",
+    "mcp",
+    "design-tokens",
+    "theme-sync"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/effinrich/forgekit.git"
+  },
+  "homepage": "https://forgekit.cloud"
+}

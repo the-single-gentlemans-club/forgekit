@@ -1,7 +1,7 @@
 {
   "editor.codeActionsOnSave": {
-    "source.fixAll.markdownlint": "explicit",
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.markdownlint": "always",
+    "source.fixAll.eslint": "always"
   },
   "eslint.options": {
     "extensions": [".js", ".jsx", ".md", ".mdx", ".ts", ".tsx"]
@@ -150,5 +150,6 @@
     "apps/docs/public/*.js": true,
     "**/.eslintrc.json": true,
     "**/.vscodeignore": true
-  }
+  },
+  "vitest.disableWorkspaceWarning": true
 }

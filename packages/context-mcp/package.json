@@ -1,0 +1,70 @@
+{
+  "name": "forgekit-context",
+  "version": "0.1.0",
+  "description": "MCP orchestration layer: Figma + Storybook context for AI-assisted design system development",
+  "author": "Rich Tillman <richtillman@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "forgekit-context": "./dist/cli.js",
+    "context-mcp": "./dist/cli.js"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@forgekit/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "nx": {
+    "tags": [
+      "type:mcp",
+      "scope:context"
+    ]
+  },
+  "scripts": {
+    "build": "npx tsup src/index.ts src/cli.ts --format esm --dts --clean --tsconfig tsconfig.build.json",
+    "prepublishOnly": "npm run build",
+    "start": "node dist/cli.js",
+    "typecheck": "tsc --noEmit",
+    "publish:npm": "npm publish --access public"
+  },
+  "dependencies": {
+    "@forgekit/mcp-core": "*",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "forgekit-storybook-mcp": "*",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "figma",
+    "storybook",
+    "mcp",
+    "design-system",
+    "ai",
+    "context",
+    "forgekit"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/effinrich/forgekit.git"
+  },
+  "homepage": "https://forgekit.cloud"
+}

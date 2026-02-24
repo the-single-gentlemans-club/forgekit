@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm nx show projects:*)",
+      "Bash(xargs -I{} sh -c 'echo \"=== {} ===\" && pnpm nx show project {} --json 2>/dev/null | jq \"{name, root, projectType, tags, targets: (.targets | keys)}\"')",
+      "Bash(pnpm nx show project:*)"
+    ]
+  }
+}

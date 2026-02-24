@@ -1,0 +1,527 @@
+/**
+ * Component Scanner
+ * Scans project directories to find React components and their stories
+ */
+
+import fs from 'node:fs'
+import path from 'node:path'
+import fg from 'fast-glob'
+import type {
+  StorybookMCPConfig,
+  ComponentInfo,
+  ComponentAnalysis,
+  PropDefinition,
+  DependencyInfo
+} from '../types.js'
+import {
+  NON_COMPONENT_FILES,
+  THRESHOLDS,
+  FILE_EXTENSIONS,
+  STORY_SEARCH_PATHS
+} from './constants.js'
+import { FileSystemError, ErrorCode } from './errors.js'
+
+/**
+ * Scan for all components in configured libraries
+ */
+export async function scanComponents(
+  config: StorybookMCPConfig,
+  options?: {
+    library?: string
+    hasStory?: boolean
+  }
+): Promise<ComponentInfo[]> {
+  const components: ComponentInfo[] = []
+
+  for (const lib of config.libraries) {
+    // Skip if filtering by library and this isn't it
+    if (
+      options?.library &&
+      options.library !== 'all' &&
+      options.library !== lib.name
+    ) {
+      continue
+    }
+
+    const libPath = path.join(config.rootDir, lib.path)
+
+    if (!fs.existsSync(libPath)) {
+      continue
+    }
+
+    // Find all component files
+    const componentFiles = await fg(config.componentPatterns, {
+      cwd: libPath,
+      ignore: config.excludePatterns,
+      absolute: false
+    })
+
+    for (const file of componentFiles) {
+      const fullPath = path.join(lib.path, file)
+      const componentName = extractComponentName(file)
+
+      if (!componentName) continue
+
+      // Check for story file
+      const storyPath = findStoryFile(config.rootDir, fullPath)
+      const hasStory = storyPath !== null
+
+      // Apply hasStory filter
+      if (options?.hasStory !== undefined && options.hasStory !== hasStory) {
+        continue
+      }
+
+      components.push({
+        name: componentName,
+        filePath: fullPath,
+        library: lib.name,
+        hasStory,
+        storyPath: storyPath ?? undefined,
+        exportType: detectExportType(path.join(config.rootDir, fullPath))
+      })
+    }
+  }
+
+  return components.sort((a, b) => a.name.localeCompare(b.name))
+}
+
+/**
+ * Analyze a component to extract props, dependencies, etc.
+ */
+export async function analyzeComponent(
+  config: StorybookMCPConfig,
+  componentPath: string
+): Promise<ComponentAnalysis> {
+  const fullPath = path.join(config.rootDir, componentPath)
+
+  if (!fs.existsSync(fullPath)) {
+    throw new FileSystemError(
+      `Component not found: ${componentPath}`,
+      ErrorCode.COMPONENT_NOT_FOUND,
+      componentPath
+    )
+  }
+
+  const source = fs.readFileSync(fullPath, 'utf-8')
+  const componentName = extractComponentName(componentPath) || 'Unknown'
+  const library = findLibraryForPath(config, componentPath)
+  const storyPath = findStoryFile(config.rootDir, componentPath)
+
+  // Extract information
+  const props = extractProps(source, componentName)
+  const dependencies = analyzeDependencies(source)
+  const suggestions = generateSuggestions(props, dependencies, !!storyPath)
+  const exportType = detectExportType(fullPath)
+
+  return {
+    name: componentName,
+    filePath: componentPath,
+    library: library?.name || 'unknown',
+    hasStory: storyPath !== null,
+    storyPath: storyPath ?? undefined,
+    exportType,
+    props,
+    dependencies,
+    suggestions,
+    sourcePreview:
+      source.slice(0, THRESHOLDS.SOURCE_PREVIEW_LENGTH) +
+      (source.length > THRESHOLDS.SOURCE_PREVIEW_LENGTH ? '\n// ...' : '')
+  }
+}
+
+/**
+ * Extract component name from file path
+ */
+function extractComponentName(filePath: string): string | null {
+  const basename = path.basename(filePath, path.extname(filePath))
+
+  // Skip index files, look at parent directory
+  if (basename === 'index') {
+    const parentDir = path.basename(path.dirname(filePath))
+    return toPascalCase(parentDir)
+  }
+
+  // Skip common non-component files
+  if ((NON_COMPONENT_FILES as readonly string[]).includes(basename.toLowerCase())) {
+    return null
+  }
+
+  return toPascalCase(basename)
+}
+
+/**
+ * Find story file for a component
+ */
+function findStoryFile(rootDir: string, componentPath: string): string | null {
+  const dir = path.dirname(componentPath)
+  const basename = path.basename(componentPath, path.extname(componentPath))
+
+  const possiblePaths = [
+    path.join(dir, `${basename}${FILE_EXTENSIONS.STORY_TSX}`),
+    path.join(dir, `${basename}${FILE_EXTENSIONS.STORY_TS}`),
+    ...STORY_SEARCH_PATHS.slice(1).map(subdir =>
+      path.join(dir, subdir, `${basename}${FILE_EXTENSIONS.STORY_TSX}`)
+    )
+  ]
+
+  for (const storyPath of possiblePaths) {
+    const fullPath = path.join(rootDir, storyPath)
+    if (fs.existsSync(fullPath)) {
+      return storyPath
+    }
+  }
+
+  return null
+}
+
+/**
+ * Find which library a component belongs to
+ */
+function findLibraryForPath(
+  config: StorybookMCPConfig,
+  componentPath: string
+): StorybookMCPConfig['libraries'][0] | undefined {
+  return config.libraries.find(lib => componentPath.startsWith(lib.path))
+}
+
+/**
+ * Detect if component uses default or named export
+ * Handles various export patterns:
+ * - export default Button
+ * - export { default as Button }
+ * - export { Button } (named)
+ * - export function Button() (named)
+ */
+function detectExportType(filePath: string): 'default' | 'named' {
+  try {
+    const source = fs.readFileSync(filePath, 'utf-8')
+
+    // Remove comments to avoid false positives
+    const cleanSource = source
+      .replace(/\/\*[\s\S]*?\*\//g, '') // Block comments
+      .replace(/\/\/.*/g, '') // Line comments
+
+    // Check for default export patterns
+    const defaultExportPatterns = [
+      /export\s+default\s+/, // export default Button
+      /export\s*\{\s*default\s+as\s+\w+\s*\}/ // export { default as Button }
+    ]
+
+    for (const pattern of defaultExportPatterns) {
+      if (pattern.test(cleanSource)) {
+        return 'default'
+      }
+    }
+
+    return 'named'
+  } catch {
+    // Default to named export on error (safer assumption)
+    return 'named'
+  }
+}
+
+/**
+ * Extract props from component source
+ */
+function extractProps(source: string, componentName: string): PropDefinition[] {
+  const props: PropDefinition[] = []
+
+  // Try multiple prop naming conventions in order of specificity
+  const propPatterns = [
+    `${componentName}Props`, // ButtonProps (most specific)
+    `${componentName}Properties`, // ButtonProperties
+    `${componentName}PropTypes`, // ButtonPropTypes
+    `I${componentName}Props`, // IButtonProps
+    `Props`, // Generic Props
+    `IProps`, // Generic IProps
+    `ComponentProps` // Generic ComponentProps
+  ]
+
+  let match: RegExpMatchArray | null = null
+  for (const propName of propPatterns) {
+    const pattern = new RegExp(
+      `(?:interface|type)\\s+${propName}\\s*(?:extends[^{]+)?\\{([^}]+)\\}`,
+      's'
+    )
+    match = source.match(pattern)
+    if (match) break
+  }
+
+  if (!match) {
+    // Try inline prop types: React.FC<{ ... }> or function Component({ ... })
+    const inlinePattern = new RegExp(
+      `(?:const|export\\s+const|function|export\\s+function)\\s+${componentName}[^{]*\\{([^}]+)\\}`,
+      's'
+    )
+    const inlineMatch = source.match(inlinePattern)
+    if (inlineMatch) {
+      match = inlineMatch
+    } else {
+      return props
+    }
+  }
+
+  const propsBlock = match[1]
+
+  // Parse each prop
+  const propLines = propsBlock.split('\n').filter(line => line.trim())
+
+  for (const line of propLines) {
+    // Trim to handle Windows line endings (\r\n) which leave \r at end of line
+    const trimmedLine = line.trim()
+    const propMatch =
+      trimmedLine.match(/^\s*\/\*\*([^*]*)\*\/\s*(\w+)(\?)?:\s*(.+?)(?:;|$)/s) ||
+      trimmedLine.match(/^\s*(\w+)(\?)?:\s*(.+?)(?:;|$)/)
+
+    if (propMatch) {
+      const hasJsDoc = propMatch.length === 5
+      const description = hasJsDoc ? propMatch[1].trim() : undefined
+      const name = hasJsDoc ? propMatch[2] : propMatch[1]
+      const optional = hasJsDoc ? propMatch[3] === '?' : propMatch[2] === '?'
+      const type = hasJsDoc ? propMatch[4].trim() : propMatch[3].trim()
+
+      props.push({
+        name,
+        type,
+        required: !optional,
+        description,
+        ...inferControlType(type)
+      })
+    }
+  }
+
+  return props
+}
+
+/**
+ * Infer Storybook control type from TypeScript type
+ */
+function inferControlType(type: string): Partial<PropDefinition> {
+  // Boolean
+  if (type === 'boolean') {
+    return { controlType: 'boolean' }
+  }
+
+  // Number
+  if (type === 'number') {
+    return { controlType: 'number' }
+  }
+
+  // String
+  if (type === 'string') {
+    return { controlType: 'text' }
+  }
+
+  // Union of string literals (supports both single and double quotes)
+  const unionMatch = type.match(
+    /^["']([^"']+)["'](?:\s*\|\s*["']([^"']+)["'])+$|^['"](.+?)['"](?:\s*\|\s*['"](.+?)['"])*$/
+  )
+  if (unionMatch || ((type.includes("'") || type.includes('"')) && type.includes('|'))) {
+    const options = type
+      .split('|')
+      .map(s => s.trim().replace(/['"]/g, ''))
+      .filter(Boolean)
+
+    return {
+      controlType: options.length <= 4 ? 'radio' : 'select',
+      controlOptions: options
+    }
+  }
+
+  // Color-like props
+  if (type.toLowerCase().includes('color') || type.includes('Color')) {
+    return { controlType: 'color' }
+  }
+
+  // Date
+  if (type === 'Date' || type.includes('Date')) {
+    return { controlType: 'date' }
+  }
+
+  // Object/complex
+  if (
+    type.startsWith('{') ||
+    type.includes('Record') ||
+    type.includes('Object')
+  ) {
+    return { controlType: 'object' }
+  }
+
+  return {}
+}
+
+/**
+ * Check if source imports from any of the given packages
+ */
+function importsFrom(source: string, packages: string[]): boolean {
+  const patterns = packages.map(pkg => {
+    const escaped = pkg.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    // If package name ends with '-', treat as prefix match (e.g. 'expo-')
+    if (pkg.endsWith('-')) {
+      return escaped
+    }
+    // Otherwise match exact package or subpath (followed by quote or slash)
+    return `${escaped}(?:['"/]|$)`
+  })
+
+  return new RegExp(`from ['"](?:${patterns.join('|')})`).test(source)
+}
+
+/**
+ * Analyze component dependencies
+ * Detects UI frameworks, state management, routing, and other common libraries
+ */
+function analyzeDependencies(source: string): DependencyInfo {
+  return {
+    usesRouter: importsFrom(source, [
+      'react-router',
+      'react-router-dom',
+      '@tanstack/react-router',
+      'next/navigation'
+    ]),
+    usesReactQuery: importsFrom(source, [
+      '@tanstack/react-query',
+      'react-query'
+    ]),
+    usesChakra: importsFrom(source, ['@chakra-ui']),
+    usesShadcn: importsFrom(source, ['@radix-ui', 'class-variance-authority']),
+    usesTamagui: importsFrom(source, ['tamagui', '@tamagui']),
+    usesGluestack: importsFrom(source, ['@gluestack-ui']),
+    usesReactNative: importsFrom(source, ['react-native', 'expo-']),
+    usesEmotion: importsFrom(source, ['@emotion']),
+    // Simplified Tailwind detection - check for common utility classes
+    usesTailwind:
+      /className=(?:['"]|\{['"]).*?\b(flex|grid|p-\d|m-\d|bg-|text-|w-|h-)/.test(
+        source
+      ),
+    usesFramerMotion: importsFrom(source, ['framer-motion']),
+    usesMSW: importsFrom(source, ['msw']),
+    usesGlobalState: importsFrom(source, [
+      'zustand',
+      '@reduxjs',
+      'recoil',
+      'jotai'
+    ]),
+    otherImports: extractNotableImports(source)
+  }
+}
+
+/**
+ * Extract notable imports for context
+ */
+function extractNotableImports(source: string): string[] {
+  const imports: string[] = []
+  const importRegex = /from ['"]([^'"]+)['"]/g
+
+  // Use matchAll for cleaner iteration
+  for (const match of source.matchAll(importRegex)) {
+    const pkg = match[1]
+    // Skip relative imports and common packages
+    if (
+      !pkg.startsWith('.') &&
+      !pkg.startsWith('@types') &&
+      !['react', 'react-dom'].includes(pkg)
+    ) {
+      imports.push(pkg)
+    }
+  }
+
+  return [...new Set(imports)].slice(0, THRESHOLDS.MAX_NOTABLE_IMPORTS)
+}
+
+/**
+ * Generate suggestions for story creation
+ */
+function generateSuggestions(
+  props: PropDefinition[],
+  deps: DependencyInfo,
+  hasStory: boolean
+): string[] {
+  const suggestions: string[] = []
+
+  if (hasStory) {
+    suggestions.push(
+      'Story already exists - consider adding more variants or interaction tests'
+    )
+  } else {
+    suggestions.push('No story found - create one to document this component')
+  }
+
+  // Props-based suggestions
+  const variantProps = props.filter(p =>
+    ['variant', 'size', 'color', 'colorScheme'].includes(p.name)
+  )
+  if (variantProps.length > 0) {
+    suggestions.push(
+      `Add variant stories for: ${variantProps.map(p => p.name).join(', ')}`
+    )
+  }
+
+  // Dependency-based suggestions
+  if (deps.usesRouter) {
+    suggestions.push(
+      'Component uses routing - wrap stories with router decorator'
+    )
+  }
+
+  if (deps.usesReactQuery) {
+    suggestions.push(
+      'Component uses React Query - wrap stories with QueryClientProvider'
+    )
+  }
+
+  if (deps.usesChakra) {
+    suggestions.push(
+      'Component uses Chakra UI - ensure ChakraProvider is in decorators'
+    )
+  }
+
+  if (deps.usesGluestack) {
+    suggestions.push(
+      'Component uses Gluestack UI - ensure GluestackUIProvider is in decorators'
+    )
+  }
+
+  if (deps.usesReactNative) {
+    suggestions.push(
+      'Component uses React Native - ensure stories are configured for on-device or web preview'
+    )
+  }
+
+  if (deps.usesGlobalState) {
+    suggestions.push(
+      'Component uses global state - mock or provide store in stories'
+    )
+  }
+
+  // Interactive suggestions
+  const interactiveProps = props.filter(
+    p => p.name.startsWith('on') && p.type.includes('=>')
+  )
+  if (interactiveProps.length > 0) {
+    suggestions.push(
+      `Add interaction tests for: ${interactiveProps.map(p => p.name).join(', ')}`
+    )
+  }
+
+  return suggestions
+}
+
+/**
+ * Convert string to PascalCase
+ */
+function toPascalCase(str: string): string {
+  return str
+    .replace(/[-_](.)/g, (_, c) => c.toUpperCase())
+    .replace(/^(.)/, (_, c) => c.toUpperCase())
+}
+
+/**
+ * Convert string to kebab-case
+ */
+export function toKebabCase(str: string): string {
+  return str
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/[\s_]+/g, '-')
+    .toLowerCase()
+}

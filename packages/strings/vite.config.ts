@@ -9,7 +9,7 @@ export default defineConfig(() => ({
   //  plugins: [ nxViteTsPaths() ],
   // },
   test: {
-    name: '@org/strings',
+    name: '@forgekit/strings',
     watch: false,
     globals: true,
     environment: 'node',
