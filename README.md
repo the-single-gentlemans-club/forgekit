@@ -117,4 +117,4 @@ New features are developed here and released via the standalone repo:
 
 ## License
 
-Free tier available. Pro license at [forgekit.cloud](https://forgekit.cloud) — $29 launch price.
+MIT
