@@ -1,4 +1,4 @@
-# ForgeKit-Nx-Storybook
+# ForgeKit
 
 > AI-powered MCP tools for Storybook story generation, Figma integration, and design-system automation.
 
