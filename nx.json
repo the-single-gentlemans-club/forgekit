@@ -14,9 +14,7 @@
     {
       "plugin": "@nx/js/typescript",
       "options": {
-        "typecheck": {
-          "targetName": "typecheck"
-        },
+        "typecheck": { "targetName": "typecheck" },
         "build": {
           "targetName": "build",
           "configName": "tsconfig.lib.json",
@@ -38,30 +36,13 @@
         "watchDepsTargetName": "watch-deps"
       }
     },
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "lint"
-      }
-    },
-    {
-      "plugin": "@nx/vitest",
-      "options": {
-        "testTargetName": "test"
-      }
-    }
+    { "plugin": "@nx/eslint/plugin", "options": { "targetName": "lint" } },
+    { "plugin": "@nx/vitest", "options": { "testTargetName": "test" } }
   ],
   "release": {
     "projects": ["*", "!utils", "!@forgekit/source"],
-    "version": {
-      "preVersionCommand": "npx nx run-many -t build",
-      "conventionalCommits": true
-    }
+    "version": { "preVersionCommand": "npx nx run-many -t build", "conventionalCommits": true }
   },
-  "targetDefaults": {
-    "test": {
-      "dependsOn": ["^build"]
-    }
-  },
-  "nxCloudId": "696db08bce9a081c87ebb2d1"
+  "targetDefaults": { "test": { "dependsOn": ["^build"] } },
+  "nxCloudId": "69f96669d356555775810584"
 }
