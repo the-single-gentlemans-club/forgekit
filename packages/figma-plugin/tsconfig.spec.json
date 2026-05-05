@@ -5,6 +5,7 @@
     "types": ["vitest/globals", "vitest/importMeta", "vite/client", "node", "vitest"],
     "forceConsistentCasingInFileNames": true
   },
+  "files": ["../../node_modules/@figma/plugin-typings/index.d.ts"],
   "include": [
     "vite.config.ts",
     "vite.config.mts",
