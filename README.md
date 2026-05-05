@@ -114,7 +114,3 @@ New features are developed here and released via the standalone repo:
 - **Storybook MCP** → [github.com/the-single-gentlemans-club/storybook-mcp](https://github.com/the-single-gentlemans-club/storybook-mcp)
 - **Docs** → [forgekit.cloud](https://forgekit.cloud)
 - **npm** → [forgekit-storybook-mcp](https://npmjs.com/package/forgekit-storybook-mcp)
-
-## License
-
-Free tier available. Pro license at [forgekit.cloud](https://forgekit.cloud) — $29 launch price.
