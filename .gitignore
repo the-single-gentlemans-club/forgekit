@@ -49,6 +49,8 @@ Thumbs.db
 .cursor/rules/nx-rules.mdc
 # Cursor hook machine state (learning/cache; user-specific)
 .cursor/hooks/state/
+# Tool-generated cache markers (Cursor / dev utilities)
+.cache-complete
 .github/instructions/nx.instructions.md
 
 vite.config.*.timestamp*
