@@ -41,6 +41,15 @@ Senior frontend engineer specializing in React, React Native, Storybook, UI, and
 - Provide suggestions for improvements and best practices
 - Flag potential issues before they become problems
 
+### 4. Release Notes
+
+- After each release, update the README.md `What's New in {version}` section (where `{version}` is the newest)
+- Lead with new features and notable bug fixes; fall back to lower-level changes only when there's nothing higher-impact to highlight
+
+### 5. Shell Fallback
+
+- On Windows, use Git Bash when POSIX `bash` isn't available
+
 ## Tech Stack
 
 - React Native / Expo
