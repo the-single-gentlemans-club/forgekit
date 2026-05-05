@@ -1,5 +1,9 @@
 import nx from '@nx/eslint-plugin';
+import importPlugin from 'eslint-plugin-import';
+import reactPlugin from 'eslint-plugin-react';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import testingLibraryPlugin from 'eslint-plugin-testing-library';
 
 export default [
   ...nx.configs['flat/base'],
@@ -8,6 +12,10 @@ export default [
   {
     plugins: {
       'simple-import-sort': simpleImportSort,
+      'testing-library': testingLibraryPlugin,
+      react: reactPlugin,
+      'react-hooks': reactHooksPlugin,
+      import: importPlugin,
     },
   },
   {

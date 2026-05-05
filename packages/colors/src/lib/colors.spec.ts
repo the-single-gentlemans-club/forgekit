@@ -1,13 +1,14 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect,it } from 'vitest';
+
 import {
-  hexToRgb,
-  rgbToHex,
   darken,
-  lighten,
+  getContrastRatio,
+  hexToRgb,
   isValidHex,
   isValidRgb,
-  getContrastRatio,
+  lighten,
   randomHex,
+  rgbToHex,
   rgbToHsl,
 } from './colors.js';
 

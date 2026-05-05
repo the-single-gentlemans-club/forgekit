@@ -1,12 +1,13 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach,beforeEach, describe, expect, it, vi } from 'vitest';
+
 import {
-  retry,
   createRetry,
-  withRetry,
+  retry,
   retryAll,
-  retryRace,
   retryAllSettled,
+  retryRace,
   TimeoutError,
+  withRetry,
 } from './async-retry.js';
 
 describe('async-retry', () => {
