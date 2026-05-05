@@ -5,7 +5,11 @@ export default [
   ...nx.configs['flat/base'],
   ...nx.configs['flat/typescript'],
   ...nx.configs['flat/javascript'],
-  ...simpleImportSort.configs['flat/recommended'],
+  {
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+    },
+  },
   {
     ignores: [
       '**/dist',
