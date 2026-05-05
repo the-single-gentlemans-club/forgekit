@@ -11,7 +11,6 @@ import {
   hexToRgba,
   linearGradient,
   loadInterFonts,
-  makeFrame,
   makeText,
   solidPaint,
   solidPaintFromRgba,

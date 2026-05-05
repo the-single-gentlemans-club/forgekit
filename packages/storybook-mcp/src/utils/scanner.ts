@@ -5,21 +5,23 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
+
 import fg from 'fast-glob'
+
 import type {
-  StorybookMCPConfig,
-  ComponentInfo,
   ComponentAnalysis,
-  PropDefinition,
+  ComponentInfo,
   DependencyInfo,
+  PropDefinition,
+  StorybookMCPConfig,
 } from '../types.js'
 import {
-  NON_COMPONENT_FILES,
-  THRESHOLDS,
   FILE_EXTENSIONS,
+  NON_COMPONENT_FILES,
   STORY_SEARCH_PATHS,
+  THRESHOLDS,
 } from './constants.js'
-import { FileSystemError, ErrorCode } from './errors.js'
+import { ErrorCode,FileSystemError } from './errors.js'
 
 /**
  * Scan for all components in configured libraries

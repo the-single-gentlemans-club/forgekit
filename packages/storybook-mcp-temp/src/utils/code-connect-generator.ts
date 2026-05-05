@@ -6,7 +6,8 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
-import type { StorybookMCPConfig, ComponentAnalysis, PropDefinition } from '../types.js'
+
+import type { ComponentAnalysis, PropDefinition,StorybookMCPConfig } from '../types.js'
 
 export interface GeneratedCodeConnect {
   /** File content for the .figma.tsx Code Connect file */

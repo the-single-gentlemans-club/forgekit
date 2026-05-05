@@ -1,5 +1,5 @@
 import type { ForgeKitOrchestrator } from '../orchestrator.js'
-import type { GapAnalysis, ForgeKitContextConfig } from '../types.js'
+import type { ForgeKitContextConfig,GapAnalysis } from '../types.js'
 import { getDesignSystemState } from './get-design-system-state.js'
 
 export async function getGaps(

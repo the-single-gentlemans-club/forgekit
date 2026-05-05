@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect,it } from 'vitest'
+
+import type { ComponentAnalysis,StorybookMCPConfig } from '../../types.js'
 import { generateStory } from '../generator.js'
-import type { StorybookMCPConfig, ComponentAnalysis } from '../../types.js'
 
 function makeConfig(overrides: Partial<StorybookMCPConfig> = {}): StorybookMCPConfig {
   return {

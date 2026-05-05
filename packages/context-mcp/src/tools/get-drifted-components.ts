@@ -1,7 +1,8 @@
+import type { ComponentInfo } from 'forgekit-storybook-mcp'
+
+import { detectDrift } from '../lib/drift.js'
 import type { ForgeKitOrchestrator } from '../orchestrator.js'
 import type { DriftAnalysis, FigmaVariable, ForgeKitContextConfig } from '../types.js'
-import type { ComponentInfo } from 'forgekit-storybook-mcp'
-import { detectDrift } from '../lib/drift.js'
 
 export async function getDriftedComponents(
   orchestrator: ForgeKitOrchestrator,

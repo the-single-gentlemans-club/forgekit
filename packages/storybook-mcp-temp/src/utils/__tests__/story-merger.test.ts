@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest'
-import { parseStoryExports, extractStoryBlock, mergeStories } from '../story-merger.js'
+import { describe, expect,it } from 'vitest'
+
+import { extractStoryBlock, mergeStories,parseStoryExports } from '../story-merger.js'
 
 const GENERATED = `import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from './Button'

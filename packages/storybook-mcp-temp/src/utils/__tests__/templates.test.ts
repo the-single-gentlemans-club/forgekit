@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest'
-import { getTemplates, getTemplate } from '../templates.js'
+import { describe, expect,it } from 'vitest'
+
+import { getTemplate,getTemplates } from '../templates.js'
 
 describe('templates', () => {
   const templateNames = [

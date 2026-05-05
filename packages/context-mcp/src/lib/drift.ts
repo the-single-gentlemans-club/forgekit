@@ -1,7 +1,9 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import type { FigmaVariable, DriftedComponent, DriftItem, DriftAnalysis } from '../types.js'
+
 import type { ComponentInfo } from 'forgekit-storybook-mcp'
+
+import type { DriftAnalysis,DriftedComponent, DriftItem, FigmaVariable } from '../types.js'
 
 // Regex patterns for detecting hardcoded design values in source files
 const COLOR_PATTERN = /#[0-9a-fA-F]{3,8}\b|rgba?\(\s*\d+[\s,]+\d+[\s,]+\d+[^)]*\)/g

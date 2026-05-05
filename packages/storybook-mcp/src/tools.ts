@@ -5,19 +5,20 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
+
 import type { StorybookMCPConfig, StoryGenerationOptions } from './types.js'
-import { scanComponents, analyzeComponent } from './utils/scanner.js'
+import { generateCodeConnect, writeCodeConnectFile } from './utils/code-connect-generator.js'
+import { generateDocs, writeDocsFile } from './utils/docs-generator.js'
 import { generateStory, writeStoryFile } from './utils/generator.js'
-import { validateStory, validateGeneratedStory } from './utils/validator.js'
+import { initializeComponents, syncSingleComponent } from './utils/initializer.js'
+import { requireFeature,validateLicense } from './utils/license.js'
+import { runPreflight } from './utils/preflight.js'
+import { analyzeComponent,scanComponents } from './utils/scanner.js'
+import { hashContent,recordStoryVersion } from './utils/story-history.js'
+import { mergeStories, parseStoryExports } from './utils/story-merger.js'
 import { getTemplate, getTemplates } from './utils/templates.js'
 import { generateTest, writeTestFile } from './utils/test-generator.js'
-import { generateDocs, writeDocsFile } from './utils/docs-generator.js'
-import { initializeComponents, syncSingleComponent } from './utils/initializer.js'
-import { validateLicense, requireFeature } from './utils/license.js'
-import { runPreflight } from './utils/preflight.js'
-import { mergeStories, parseStoryExports } from './utils/story-merger.js'
-import { recordStoryVersion, hashContent } from './utils/story-history.js'
-import { generateCodeConnect, writeCodeConnectFile } from './utils/code-connect-generator.js'
+import { validateGeneratedStory,validateStory } from './utils/validator.js'
 
 /**
  * Tool: list_components
@@ -333,12 +334,12 @@ export async function syncAll(
   // Force disable Pro features if no license
   if (license.tier === 'free') {
     if (typeof globalThis !== 'undefined' && options.generateTests) {
-      // eslint-disable-next-line no-console
+       
       globalThis.console?.warn?.('[storybook-mcp] Warning: Test generation disabled (Free Tier)')
       options.generateTests = false
     }
     if (typeof globalThis !== 'undefined' && options.generateDocs) {
-      // eslint-disable-next-line no-console
+       
       console.warn('[storybook-mcp] Warning: Docs generation disabled (Free Tier)')
       options.generateDocs = false
     }

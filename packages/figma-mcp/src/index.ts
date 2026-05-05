@@ -1,10 +1,11 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod'
+
+import { loadConfig } from './config.js'
 import { generateThemeTokens } from './utils/chakra.js'
 import { fetchFigmaTokens } from './utils/figma.js'
 import { writeThemeFile } from './utils/writer.js'
-import { loadConfig } from './config.js'
 
 export async function syncTheme(args: {
   figmaFileId?: string

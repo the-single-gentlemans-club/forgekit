@@ -42,7 +42,7 @@
     "@forgekit/mcp-core": "*",
     "@modelcontextprotocol/sdk": "^1.0.0",
     "forgekit-storybook-mcp": "*",
-    "tslib": "^2.3.0"
+    "vitest": "4.0.9"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

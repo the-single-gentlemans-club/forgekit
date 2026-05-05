@@ -5,7 +5,8 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
-import type { StorybookMCPConfig, ValidationResult, ValidationIssue } from '../types.js'
+
+import type { StorybookMCPConfig, ValidationIssue,ValidationResult } from '../types.js'
 
 // ===========================================
 // Pre-write Import Validation

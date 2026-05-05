@@ -5,9 +5,10 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
-import type { StorybookMCPConfig, ComponentAnalysis } from '../types.js'
-import { toKebabCase } from './scanner.js'
+
+import type { ComponentAnalysis,StorybookMCPConfig } from '../types.js'
 import { FILE_EXTENSIONS } from './constants.js'
+import { toKebabCase } from './scanner.js'
 
 export interface GeneratedTest {
   content: string
@@ -227,7 +228,7 @@ function generateVitestTest(
   )
 
   // Build a minimal valid render call
-  const buildRenderProps = (extraProps: string = ''): string => {
+  const buildRenderProps = (extraProps = ''): string => {
     const propStrs: string[] = []
     for (const p of requiredProps) {
       if (p.controlOptions && p.controlOptions.length > 0) {
@@ -381,7 +382,7 @@ function buildTestPath(componentPath: string): string {
 export async function writeTestFile(
   config: StorybookMCPConfig,
   test: GeneratedTest,
-  overwrite: boolean = false
+  overwrite = false
 ): Promise<boolean> {
   const fullPath = path.join(config.rootDir, test.filePath)
 

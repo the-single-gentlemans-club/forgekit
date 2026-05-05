@@ -5,7 +5,8 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
-import type { StorybookMCPConfig, ComponentAnalysis, PropDefinition } from '../types.js'
+
+import type { ComponentAnalysis, PropDefinition,StorybookMCPConfig } from '../types.js'
 import { FILE_EXTENSIONS } from './constants.js'
 
 export interface GeneratedDocs {
@@ -540,7 +541,7 @@ function buildDocsPath(componentPath: string): string {
 export async function writeDocsFile(
   config: StorybookMCPConfig,
   docs: GeneratedDocs,
-  overwrite: boolean = false
+  overwrite = false
 ): Promise<boolean> {
   const fullPath = path.join(config.rootDir, docs.filePath)
 

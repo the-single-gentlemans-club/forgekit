@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest'
-import { validateLicense, checkFeatureAccess, requireFeature } from '../license.js'
+import { describe, expect,it } from 'vitest'
+
 import type { StorybookMCPConfig } from '../../types.js'
 import type { Feature } from '../license.js'
+import { checkFeatureAccess, requireFeature,validateLicense } from '../license.js'
 
 function makeConfig(licenseKey?: string): StorybookMCPConfig {
   return {

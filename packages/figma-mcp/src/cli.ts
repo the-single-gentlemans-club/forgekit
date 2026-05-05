@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 import 'dotenv/config'
-import { runServer, syncTheme } from './index.js'
-import prompts from 'prompts'
+
 import fs from 'fs/promises'
 import path from 'path'
+import prompts from 'prompts'
+
+import { runServer, syncTheme } from './index.js'
 import { OutputConfig } from './types.js'
-import { fetchFigmaTokens } from './utils/figma.js'
 import { detectFramework } from './utils/analyzer.js'
+import { fetchFigmaTokens } from './utils/figma.js'
 
 const args = process.argv.slice(2)
 
@@ -27,7 +29,7 @@ async function runInit() {
   console.log("Let's set up your design system configuration.\n")
 
   // Check for URL arg
-  let initialUrl = args[1] // npx forgekit init [url]
+  const initialUrl = args[1] // npx forgekit init [url]
   let detectedFramework: 'shadcn' | 'chakra' | 'unknown' = 'unknown'
 
   // 1. Get Token first (common to all)

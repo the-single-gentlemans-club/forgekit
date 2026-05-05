@@ -1,14 +1,16 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import fs from 'node:fs'
-import path from 'node:path'
 import os from 'node:os'
+import path from 'node:path'
+
+import { afterEach,beforeEach, describe, expect, it } from 'vitest'
+
+import { FORGEKIT_DIR, STORY_HISTORY_FILENAME } from '../constants.js'
 import {
-  loadStoryHistory,
-  recordStoryVersion,
   getStoryVersions,
   hashContent,
+  loadStoryHistory,
+  recordStoryVersion,
 } from '../story-history.js'
-import { FORGEKIT_DIR, STORY_HISTORY_FILENAME } from '../constants.js'
 
 let tmpDir: string
 

@@ -4,15 +4,16 @@
  * Updates existing files when component changes are detected
  */
 
+import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
-import crypto from 'node:crypto'
-import type { StorybookMCPConfig, ComponentInfo, ComponentAnalysis } from '../types.js'
-import { scanComponents, analyzeComponent } from './scanner.js'
-import { POLAR_UPGRADE_URL, CACHE, FILE_EXTENSIONS } from './constants.js'
-import { generateStory, writeStoryFile } from './generator.js'
-import { generateTest, writeTestFile } from './test-generator.js'
+
+import type { ComponentAnalysis,ComponentInfo, StorybookMCPConfig } from '../types.js'
+import { CACHE, FILE_EXTENSIONS,POLAR_UPGRADE_URL } from './constants.js'
 import { generateDocs, writeDocsFile } from './docs-generator.js'
+import { generateStory, writeStoryFile } from './generator.js'
+import { analyzeComponent,scanComponents } from './scanner.js'
+import { generateTest, writeTestFile } from './test-generator.js'
 
 // ===========================================
 // Types

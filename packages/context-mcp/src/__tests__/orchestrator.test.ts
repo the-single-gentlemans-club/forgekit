@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach,describe, expect, it, vi } from 'vitest'
 
 // Mock mcp-core to prevent any subprocess spawning
 vi.mock('@forgekit/mcp-core', () => ({
@@ -15,9 +15,10 @@ vi.mock('@forgekit/mcp-core', () => ({
   },
 }))
 
+import * as mcpCore from '@forgekit/mcp-core'
+
 import { ForgeKitOrchestrator } from '../orchestrator.js'
 import type { ForgeKitContextConfig } from '../types.js'
-import * as mcpCore from '@forgekit/mcp-core'
 
 const BASE_CONFIG: ForgeKitContextConfig = {
   figma: { accessToken: 'test-token', fileId: 'file-id', useDesktop: true },

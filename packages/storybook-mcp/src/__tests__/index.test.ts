@@ -1,16 +1,16 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: mock handler lookup always finds a call after createStorybookMCPServer */
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { Server } from '@modelcontextprotocol/sdk/server/index.js'
 import {
-  ListToolsRequestSchema,
   CallToolRequestSchema,
   ListResourcesRequestSchema,
+  ListToolsRequestSchema,
   ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { createStorybookMCPServer } from '../index.js'
 import * as tools from '../tools.js'
 import type { StorybookMCPConfig } from '../types.js'
-import { createStorybookMCPServer } from '../index.js'
 
 vi.mock('@modelcontextprotocol/sdk/server/index.js', () => {
   const setRequestHandler = vi.fn()

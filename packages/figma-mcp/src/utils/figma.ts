@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 import { FigmaToken, TokenType } from '../types.js'
 
 interface FigmaVariable {

@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { setupFigmaMock } from './figma-mock.js'
 import { setupPlugin } from './plugin.js'
 import type { PluginTokens } from './types.js'

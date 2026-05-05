@@ -4,10 +4,11 @@
  */
 
 import fs from 'node:fs'
-import path from 'node:path'
 import os from 'node:os'
+import path from 'node:path'
+
 import type { StorybookMCPConfig } from '../types.js'
-import { POLAR_UPGRADE_URL, LICENSE_CACHE_TTL_MS } from './constants.js'
+import { LICENSE_CACHE_TTL_MS,POLAR_UPGRADE_URL } from './constants.js'
 import { LicenseError } from './errors.js'
 
 const POLAR_ORG_ID = process.env.POLAR_ORG_ID || 'c39241cb-629a-4beb-8ec8-31820430d5fd'

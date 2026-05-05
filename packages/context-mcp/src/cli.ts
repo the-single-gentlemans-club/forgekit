@@ -20,11 +20,13 @@
  *   }
  */
 
-import { runContextServer } from './server.js'
-import type { ForgeKitContextConfig } from './types.js'
-import type { LibraryConfig } from 'forgekit-storybook-mcp'
 import fs from 'node:fs'
 import path from 'node:path'
+
+import type { LibraryConfig } from 'forgekit-storybook-mcp'
+
+import { runContextServer } from './server.js'
+import type { ForgeKitContextConfig } from './types.js'
 
 interface ParsedArgs {
   figmaToken: string

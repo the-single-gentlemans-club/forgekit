@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect,it } from 'vitest'
+
+import type { ComponentAnalysis,StorybookMCPConfig } from '../../types.js'
 import { generateTest } from '../test-generator.js'
-import type { StorybookMCPConfig, ComponentAnalysis } from '../../types.js'
 
 function makeConfig(): StorybookMCPConfig {
   return {

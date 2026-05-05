@@ -1,6 +1,7 @@
+import type { ComponentAnalysis } from 'forgekit-storybook-mcp'
+
 import type { ForgeKitOrchestrator } from '../orchestrator.js'
 import type { ForgeKitContextConfig } from '../types.js'
-import type { ComponentAnalysis } from 'forgekit-storybook-mcp'
 
 export interface GetComponentArgs {
   componentName: string

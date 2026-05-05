@@ -1,9 +1,11 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import fs from 'node:fs'
-import path from 'node:path'
 import os from 'node:os'
-import { scanComponents, analyzeComponent, toKebabCase } from '../scanner.js'
+import path from 'node:path'
+
+import { afterAll,beforeAll, describe, expect, it } from 'vitest'
+
 import type { StorybookMCPConfig } from '../../types.js'
+import { analyzeComponent, scanComponents, toKebabCase } from '../scanner.js'
 
 let tmpDir: string
 

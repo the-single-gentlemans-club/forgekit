@@ -5,12 +5,13 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
+
 import type {
-  StorybookMCPConfig,
   ComponentAnalysis,
-  StoryGenerationOptions,
   GeneratedStory,
   PropDefinition,
+  StorybookMCPConfig,
+  StoryGenerationOptions,
 } from '../types.js'
 import { FILE_EXTENSIONS } from './constants.js'
 
@@ -558,7 +559,7 @@ function buildStoryPath(componentPath: string): string {
 export async function writeStoryFile(
   config: StorybookMCPConfig,
   story: GeneratedStory,
-  overwrite: boolean = false
+  overwrite = false
 ): Promise<boolean> {
   const fullPath = path.join(config.rootDir, story.filePath)
 

@@ -7,6 +7,7 @@
 import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
+
 import { FORGEKIT_DIR, STORY_HISTORY_FILENAME } from './constants.js'
 
 const MAX_VERSIONS_PER_STORY = 10

@@ -1,8 +1,10 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import fs from 'node:fs'
-import path from 'node:path'
 import os from 'node:os'
-import { runSetup, detectProjectType, detectFramework, findNxLibName } from '../setup.js'
+import path from 'node:path'
+
+import { afterAll,beforeAll, describe, expect, it } from 'vitest'
+
+import { detectFramework,detectProjectType, runSetup } from '../setup.js'
 
 let tmpDir: string
 
@@ -75,7 +77,7 @@ describe('setup - config generation', () => {
     fs.mkdirSync(dir, { recursive: true })
     fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({ scripts: {} }))
 
-    const result = await runSetup(dir, { dryRun: false, force: true })
+    await runSetup(dir, { dryRun: false, force: true })
 
     const mainPath = path.join(dir, '.storybook', 'main.ts')
     expect(fs.existsSync(mainPath)).toBe(true)

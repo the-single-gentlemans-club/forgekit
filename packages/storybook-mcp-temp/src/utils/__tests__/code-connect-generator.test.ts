@@ -1,18 +1,32 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import fs from 'node:fs'
-import path from 'node:path'
 import os from 'node:os'
-import { generateCodeConnect, writeCodeConnectFile } from '../code-connect-generator.js'
-import type { ComponentAnalysis } from '../../types.js'
+import path from 'node:path'
 
-// Minimal config for tests
-const config = { rootDir: '/project', libraries: [] } as Parameters<typeof writeCodeConnectFile>[0]
+import { afterEach,beforeEach, describe, expect, it } from 'vitest'
+
+import type { ComponentAnalysis, StorybookMCPConfig } from '../../types.js'
+import { generateCodeConnect, writeCodeConnectFile } from '../code-connect-generator.js'
+
+function testConfig(rootDir: string, overrides: Partial<StorybookMCPConfig> = {}): StorybookMCPConfig {
+  return {
+    rootDir,
+    libraries: [],
+    framework: 'vanilla',
+    storyFilePattern: '**/*.stories.{ts,tsx}',
+    componentPatterns: ['**/*.{tsx,ts}'],
+    excludePatterns: ['**/node_modules/**'],
+    ...overrides,
+  }
+}
+
+const config = testConfig('/project')
 
 // Factory for minimal ComponentAnalysis
 function makeAnalysis(overrides: Partial<ComponentAnalysis> = {}): ComponentAnalysis {
   return {
     name: 'Button',
     filePath: 'src/components/Button.tsx',
+    library: 'ui',
     hasStory: false,
     exportType: 'default',
     props: [],
@@ -226,9 +240,7 @@ describe('writeCodeConnectFile', () => {
   })
 
   it('writes the file to disk', async () => {
-    const tmpConfig = { rootDir: tmpDir, libraries: [] } as Parameters<
-      typeof writeCodeConnectFile
-    >[0]
+    const tmpConfig = testConfig(tmpDir)
     const cc = { content: 'hello figma', filePath: 'src/Button.figma.tsx' }
     const written = await writeCodeConnectFile(tmpConfig, cc)
     expect(written).toBe(true)
@@ -238,9 +250,7 @@ describe('writeCodeConnectFile', () => {
   })
 
   it('does not overwrite existing file when overwrite=false', async () => {
-    const tmpConfig = { rootDir: tmpDir, libraries: [] } as Parameters<
-      typeof writeCodeConnectFile
-    >[0]
+    const tmpConfig = testConfig(tmpDir)
     const filePath = 'src/Button.figma.tsx'
     const fullPath = path.join(tmpDir, filePath)
     fs.mkdirSync(path.dirname(fullPath), { recursive: true })
@@ -252,9 +262,7 @@ describe('writeCodeConnectFile', () => {
   })
 
   it('overwrites existing file when overwrite=true', async () => {
-    const tmpConfig = { rootDir: tmpDir, libraries: [] } as Parameters<
-      typeof writeCodeConnectFile
-    >[0]
+    const tmpConfig = testConfig(tmpDir)
     const filePath = 'src/Button.figma.tsx'
     const fullPath = path.join(tmpDir, filePath)
     fs.mkdirSync(path.dirname(fullPath), { recursive: true })
@@ -270,9 +278,7 @@ describe('writeCodeConnectFile', () => {
   })
 
   it('creates intermediate directories if needed', async () => {
-    const tmpConfig = { rootDir: tmpDir, libraries: [] } as Parameters<
-      typeof writeCodeConnectFile
-    >[0]
+    const tmpConfig = testConfig(tmpDir)
     const cc = { content: 'test', filePath: 'deep/nested/dir/Component.figma.tsx' }
     const written = await writeCodeConnectFile(tmpConfig, cc)
     expect(written).toBe(true)

@@ -1,7 +1,7 @@
-import { ThemeToken, ChakraMCPConfig } from '../types.js'
+import { ChakraMCPConfig,ThemeToken } from '../types.js'
 import { ChakraWriter } from '../writers/chakra.js'
-import { TailwindWriter } from '../writers/tailwind.js'
 import { DocsWriter } from '../writers/docs.js'
+import { TailwindWriter } from '../writers/tailwind.js'
 
 export async function writeThemeFile(
   theme: ThemeToken,

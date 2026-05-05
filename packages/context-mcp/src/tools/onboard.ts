@@ -1,7 +1,8 @@
-import type { ForgeKitOrchestrator } from '../orchestrator.js'
-import type { OnboardResult, ForgeKitContextConfig } from '../types.js'
 import fs from 'node:fs'
 import path from 'node:path'
+
+import type { ForgeKitOrchestrator } from '../orchestrator.js'
+import type { ForgeKitContextConfig,OnboardResult } from '../types.js'
 
 export async function onboard(
   orchestrator: ForgeKitOrchestrator,
