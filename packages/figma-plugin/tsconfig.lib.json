@@ -9,7 +9,6 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["node", "vite/client"]
   },
-  "files": ["../../node_modules/@figma/plugin-typings/index.d.ts"],
   "include": ["src/**/*.ts"],
   "references": [],
   "exclude": [

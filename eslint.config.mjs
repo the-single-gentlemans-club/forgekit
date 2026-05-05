@@ -19,7 +19,10 @@ export default [
     plugins: {
       'simple-import-sort': simpleImportSort,
       'react-hooks': reactHooks,
-      import: importPlugin,
+
+      'import': importPlugin,
+
+
     },
   },
   {
