@@ -15,15 +15,14 @@ export async function getDriftedComponents(
   ])
 
   if (tokensResult.status === 'rejected') {
-    throw new Error(
-      `Cannot check drift: Figma tokens unavailable. ${tokensResult.reason}`
-    )
+    throw new Error(`Cannot check drift: Figma tokens unavailable. ${tokensResult.reason}`)
   }
 
   const figmaTokens = (tokensResult.value as FigmaVariable[]) ?? []
-  const components = componentsResult.status === 'fulfilled'
-    ? ((componentsResult.value as { components: ComponentInfo[] }).components ?? [])
-    : []
+  const components =
+    componentsResult.status === 'fulfilled'
+      ? ((componentsResult.value as { components: ComponentInfo[] }).components ?? [])
+      : []
 
   return detectDrift(components, figmaTokens, {
     projectRoot: config.storybook.projectRoot,

@@ -51,9 +51,10 @@ export function detectDrift(
     }
   }
 
-  const summary = drifted.length === 0
-    ? `All ${clean.length} component(s) use design tokens correctly.`
-    : `${drifted.length} component(s) have hardcoded values that should use Figma tokens. ${clean.length} component(s) are clean.`
+  const summary =
+    drifted.length === 0
+      ? `All ${clean.length} component(s) use design tokens correctly.`
+      : `${drifted.length} component(s) have hardcoded values that should use Figma tokens. ${clean.length} component(s) are clean.`
 
   return { drifted, clean, summary }
 }
@@ -97,7 +98,8 @@ function scanSourceForDrift(
       line.includes('theme.') ||
       line.includes('colors.') ||
       line.includes('semantic.')
-    ) return
+    )
+      return
 
     // Check colors
     for (const match of line.matchAll(COLOR_PATTERN)) {

@@ -149,7 +149,12 @@ export async function buildScreensPage(tokens: PluginTokens): Promise<void> {
       iconNode.y = 10
       bar.appendChild(iconNode)
 
-      const labelNode = makeText(tab.label, 10, hexToRgba(color), isActive ? 'Semi Bold' : 'Regular')
+      const labelNode = makeText(
+        tab.label,
+        10,
+        hexToRgba(color),
+        isActive ? 'Semi Bold' : 'Regular'
+      )
       labelNode.x = i * tabW + (tabW - 30) / 2
       labelNode.y = 34
       bar.appendChild(labelNode)
@@ -340,7 +345,7 @@ export async function buildScreensPage(tokens: PluginTokens): Promise<void> {
         task.label,
         14,
         hexToRgba(task.done ? stone400 : stone900),
-        task.done ? 'Regular' : 'Semi Bold',
+        task.done ? 'Regular' : 'Semi Bold'
       )
       taskLabel.x = 52
       taskLabel.y = 14
@@ -420,7 +425,11 @@ export async function buildScreensPage(tokens: PluginTokens): Promise<void> {
       nameNode.y = 16
       card.appendChild(nameNode)
 
-      const taskCount = makeText(`${room.tasks} task${room.tasks > 1 ? 's' : ''}`, 13, hexToRgba(stone400))
+      const taskCount = makeText(
+        `${room.tasks} task${room.tasks > 1 ? 's' : ''}`,
+        13,
+        hexToRgba(stone400)
+      )
       taskCount.x = 72
       taskCount.y = 38
       card.appendChild(taskCount)
@@ -547,7 +556,7 @@ export async function buildScreensPage(tokens: PluginTokens): Promise<void> {
         task.label,
         14,
         hexToRgba(task.done ? stone300 : stone900),
-        task.done ? 'Regular' : 'Semi Bold',
+        task.done ? 'Regular' : 'Semi Bold'
       )
       lbl.x = 50
       lbl.y = 18
@@ -632,7 +641,11 @@ export async function buildScreensPage(tokens: PluginTokens): Promise<void> {
       icon.y = 14
       row.appendChild(icon)
 
-      const lbl = makeText(item.label, 15, hexToRgba(item.label === 'Sign Out' ? '#dc2626' : stone900))
+      const lbl = makeText(
+        item.label,
+        15,
+        hexToRgba(item.label === 'Sign Out' ? '#dc2626' : stone900)
+      )
       lbl.x = 48
       lbl.y = 16
       row.appendChild(lbl)
@@ -671,7 +684,11 @@ export async function buildScreensPage(tokens: PluginTokens): Promise<void> {
     title.y = 92
     heroArea.appendChild(title)
 
-    const sub = makeText('Create or join a household to\nstart organizing your home.', 15, hexToRgba(stone400))
+    const sub = makeText(
+      'Create or join a household to\nstart organizing your home.',
+      15,
+      hexToRgba(stone400)
+    )
     sub.x = 40
     sub.y = 130
     heroArea.appendChild(sub)

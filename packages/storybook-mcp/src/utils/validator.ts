@@ -5,11 +5,7 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
-import type {
-  StorybookMCPConfig,
-  ValidationResult,
-  ValidationIssue,
-} from '../types.js'
+import type { StorybookMCPConfig, ValidationResult, ValidationIssue } from '../types.js'
 
 // ===========================================
 // Pre-write Import Validation
@@ -40,7 +36,7 @@ export function validateGeneratedStory(
     const importPath = m[1]
     const resolved = path.resolve(storyDir, importPath)
     const extensions = ['.tsx', '.ts', '.jsx', '.js', '']
-    const exists = extensions.some(ext => fs.existsSync(resolved + ext))
+    const exists = extensions.some((ext) => fs.existsSync(resolved + ext))
     if (!exists) {
       warnings.push(`Import '${importPath}' could not be resolved relative to story directory`)
     }
@@ -58,10 +54,7 @@ export function validateGeneratedStory(
     ['userEvent', '@storybook/test'],
   ]
   for (const [token, pkg] of decoratorChecks) {
-    if (
-      storyContent.includes(token) &&
-      !fs.existsSync(path.join(rootDir, 'node_modules', pkg))
-    ) {
+    if (storyContent.includes(token) && !fs.existsSync(path.join(rootDir, 'node_modules', pkg))) {
       warnings.push(`Story uses '${token}' but '${pkg}' was not found in node_modules`)
     }
   }
@@ -77,15 +70,17 @@ export async function validateStory(
   storyPath: string
 ): Promise<ValidationResult> {
   const fullPath = path.join(config.rootDir, storyPath)
-  
+
   if (!fs.existsSync(fullPath)) {
     return {
       valid: false,
-      errors: [{
-        type: 'error',
-        code: 'FILE_NOT_FOUND',
-        message: `Story file not found: ${storyPath}`,
-      }],
+      errors: [
+        {
+          type: 'error',
+          code: 'FILE_NOT_FOUND',
+          message: `Story file not found: ${storyPath}`,
+        },
+      ],
       warnings: [],
       suggestions: [],
       score: 0,
@@ -139,7 +134,7 @@ function validateMeta(
   }
 
   // Check for title
-  if (!source.includes("title:") && !source.includes("title :")) {
+  if (!source.includes('title:') && !source.includes('title :')) {
     warnings.push({
       type: 'warning',
       code: 'NO_TITLE',
@@ -180,7 +175,7 @@ function validateStoryExports(
 ): void {
   // Check for at least one story
   const storyExports = source.match(/export const \w+:/g) || []
-  const storyCount = storyExports.filter(s => !s.includes('meta')).length
+  const storyCount = storyExports.filter((s) => !s.includes('meta')).length
 
   if (storyCount === 0) {
     errors.push({
@@ -305,7 +300,8 @@ function validateDocumentation(
   const storyExports = source.match(/export const \w+/g) || []
   const jsDocCount = (source.match(/\/\*\*[\s\S]*?\*\/\s*export const/g) || []).length
 
-  if (storyExports.length > jsDocCount + 1) { // +1 for meta
+  if (storyExports.length > jsDocCount + 1) {
+    // +1 for meta
     suggestions.push({
       type: 'suggestion',
       code: 'MISSING_JSDOC',
@@ -352,7 +348,7 @@ function validateInteractions(
       warnings.push({
         type: 'warning',
         code: 'MISSING_WITHIN',
-        message: "Play functions should use within(canvasElement) for scoped queries",
+        message: 'Play functions should use within(canvasElement) for scoped queries',
         fix: 'Add: const canvas = within(canvasElement)',
       })
     }
@@ -383,12 +379,16 @@ function validateAccessibility(
       type: 'suggestion',
       code: 'NO_A11Y_STORIES',
       message: 'Consider adding stories that demonstrate accessibility features',
-      fix: "Add stories with aria-label, role, and other a11y attributes",
+      fix: 'Add stories with aria-label, role, and other a11y attributes',
     })
   }
 
   // Check for keyboard navigation tests
-  if (source.includes('play:') && !source.includes('userEvent.tab') && !source.includes('keyboard')) {
+  if (
+    source.includes('play:') &&
+    !source.includes('userEvent.tab') &&
+    !source.includes('keyboard')
+  ) {
     suggestions.push({
       type: 'suggestion',
       code: 'NO_KEYBOARD_TESTS',
@@ -457,13 +457,13 @@ function calculateScore(
   suggestions: ValidationIssue[]
 ): number {
   const maxScore = 100
-  
+
   // Deductions
   const errorDeduction = errors.length * 20
   const warningDeduction = warnings.length * 5
   const suggestionDeduction = suggestions.length * 1
-  
+
   const totalDeduction = errorDeduction + warningDeduction + suggestionDeduction
-  
+
   return Math.max(0, maxScore - totalDeduction)
 }

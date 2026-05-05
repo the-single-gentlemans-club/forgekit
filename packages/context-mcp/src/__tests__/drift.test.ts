@@ -14,8 +14,20 @@ interface ComponentInfo {
 }
 
 const MOCK_TOKENS: FigmaVariable[] = [
-  { name: 'color/primary', value: '#FF0000', type: 'COLOR', collection: 'Global', isSemantic: false },
-  { name: 'color/background', value: '#FFFFFF', type: 'COLOR', collection: 'Global', isSemantic: false },
+  {
+    name: 'color/primary',
+    value: '#FF0000',
+    type: 'COLOR',
+    collection: 'Global',
+    isSemantic: false,
+  },
+  {
+    name: 'color/background',
+    value: '#FFFFFF',
+    type: 'COLOR',
+    collection: 'Global',
+    isSemantic: false,
+  },
   { name: 'spacing/md', value: '16px', type: 'STRING', collection: 'Spacing', isSemantic: false },
   { name: 'spacing/sm', value: '8px', type: 'STRING', collection: 'Spacing', isSemantic: false },
 ]
@@ -44,21 +56,15 @@ export function Button() {
 `
     )
 
-    const components: ComponentInfo[] = [
-      { name: 'Button', filePath, hasStory: false },
-    ]
+    const components: ComponentInfo[] = [{ name: 'Button', filePath, hasStory: false }]
 
-    const result = detectDrift(
-      components as Parameters<typeof detectDrift>[0],
-      MOCK_TOKENS,
-      {}
-    )
+    const result = detectDrift(components as Parameters<typeof detectDrift>[0], MOCK_TOKENS, {})
 
     expect(result.drifted).toHaveLength(1)
     expect(result.drifted[0].componentName).toBe('Button')
     const items = result.drifted[0].driftItems
 
-    const colorDrift = items.find(i => i.type === 'color')
+    const colorDrift = items.find((i) => i.type === 'color')
     expect(colorDrift).toBeDefined()
     expect(colorDrift?.hardcodedValue.toLowerCase()).toBe('#ff0000')
     expect(colorDrift?.expectedToken).toBe('color/primary')
@@ -75,17 +81,11 @@ export function Card() {
 `
     )
 
-    const components: ComponentInfo[] = [
-      { name: 'Card', filePath, hasStory: false },
-    ]
+    const components: ComponentInfo[] = [{ name: 'Card', filePath, hasStory: false }]
 
-    const result = detectDrift(
-      components as Parameters<typeof detectDrift>[0],
-      MOCK_TOKENS,
-      {}
-    )
+    const result = detectDrift(components as Parameters<typeof detectDrift>[0], MOCK_TOKENS, {})
 
-    const spacingDrift = result.drifted[0]?.driftItems.find(i => i.type === 'spacing')
+    const spacingDrift = result.drifted[0]?.driftItems.find((i) => i.type === 'spacing')
     expect(spacingDrift).toBeDefined()
     expect(spacingDrift?.hardcodedValue).toBe('16px')
     expect(spacingDrift?.expectedToken).toBe('spacing/md')
@@ -102,15 +102,9 @@ export function Clean() {
 `
     )
 
-    const components: ComponentInfo[] = [
-      { name: 'Clean', filePath, hasStory: false },
-    ]
+    const components: ComponentInfo[] = [{ name: 'Clean', filePath, hasStory: false }]
 
-    const result = detectDrift(
-      components as Parameters<typeof detectDrift>[0],
-      MOCK_TOKENS,
-      {}
-    )
+    const result = detectDrift(components as Parameters<typeof detectDrift>[0], MOCK_TOKENS, {})
 
     expect(result.drifted).toHaveLength(0)
     expect(result.clean).toContain('Clean')
@@ -129,15 +123,9 @@ export function Commented() {
 `
     )
 
-    const components: ComponentInfo[] = [
-      { name: 'Commented', filePath, hasStory: false },
-    ]
+    const components: ComponentInfo[] = [{ name: 'Commented', filePath, hasStory: false }]
 
-    const result = detectDrift(
-      components as Parameters<typeof detectDrift>[0],
-      MOCK_TOKENS,
-      {}
-    )
+    const result = detectDrift(components as Parameters<typeof detectDrift>[0], MOCK_TOKENS, {})
 
     expect(result.drifted).toHaveLength(0)
   })
@@ -153,15 +141,9 @@ export function Any() {
 `
     )
 
-    const components: ComponentInfo[] = [
-      { name: 'Any', filePath, hasStory: false },
-    ]
+    const components: ComponentInfo[] = [{ name: 'Any', filePath, hasStory: false }]
 
-    const result = detectDrift(
-      components as Parameters<typeof detectDrift>[0],
-      [],
-      {}
-    )
+    const result = detectDrift(components as Parameters<typeof detectDrift>[0], [], {})
 
     expect(result.drifted).toHaveLength(0)
     expect(result.clean).toContain('Any')

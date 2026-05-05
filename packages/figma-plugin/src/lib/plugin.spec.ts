@@ -56,9 +56,7 @@ describe('setupPlugin', () => {
   it('posts stats after syncTokens', async () => {
     setupPlugin(tokens)
     await send('syncTokens')
-    expect(mock.ui.postMessage).toHaveBeenCalledWith(
-      expect.objectContaining({ type: 'stats' }),
-    )
+    expect(mock.ui.postMessage).toHaveBeenCalledWith(expect.objectContaining({ type: 'stats' }))
   })
 
   it('handles buildComponents command and posts done', async () => {
@@ -95,7 +93,7 @@ describe('setupPlugin', () => {
     setupPlugin(tokens, { buildComponentsPage })
     await send('buildComponents')
     expect(mock.ui.postMessage).toHaveBeenCalledWith(
-      expect.objectContaining({ type: 'error', message: expect.stringContaining('builder failed') }),
+      expect.objectContaining({ type: 'error', message: expect.stringContaining('builder failed') })
     )
   })
 

@@ -33,7 +33,12 @@ export const FILE_EXTENSIONS = {
 // ===========================================
 export const DEFAULT_STORY_PATTERN = '**/*.stories.{ts,tsx}'
 export const DEFAULT_COMPONENT_PATTERNS = ['**/*.tsx', '!**/*.stories.tsx', '!**/*.test.tsx']
-export const DEFAULT_EXCLUDE_PATTERNS = ['**/node_modules/**', '**/dist/**', '**/.next/**', '**/build/**']
+export const DEFAULT_EXCLUDE_PATTERNS = [
+  '**/node_modules/**',
+  '**/dist/**',
+  '**/.next/**',
+  '**/build/**',
+]
 
 // ===========================================
 // Special File Names (Non-Components)

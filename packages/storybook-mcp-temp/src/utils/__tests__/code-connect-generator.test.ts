@@ -203,7 +203,11 @@ describe('generateCodeConnect', () => {
   })
 
   it('handles component with no props (empty props array)', async () => {
-    const analysis = makeAnalysis({ name: 'Spinner', filePath: 'src/components/Spinner.tsx', props: [] })
+    const analysis = makeAnalysis({
+      name: 'Spinner',
+      filePath: 'src/components/Spinner.tsx',
+      props: [],
+    })
     const result = await generateCodeConnect(config, analysis)
     expect(result.content).toContain('figma.connect(Spinner,')
     expect(result.filePath).toBe(path.join('src/components', 'Spinner.figma.tsx'))
@@ -222,7 +226,9 @@ describe('writeCodeConnectFile', () => {
   })
 
   it('writes the file to disk', async () => {
-    const tmpConfig = { rootDir: tmpDir, libraries: [] } as Parameters<typeof writeCodeConnectFile>[0]
+    const tmpConfig = { rootDir: tmpDir, libraries: [] } as Parameters<
+      typeof writeCodeConnectFile
+    >[0]
     const cc = { content: 'hello figma', filePath: 'src/Button.figma.tsx' }
     const written = await writeCodeConnectFile(tmpConfig, cc)
     expect(written).toBe(true)
@@ -232,7 +238,9 @@ describe('writeCodeConnectFile', () => {
   })
 
   it('does not overwrite existing file when overwrite=false', async () => {
-    const tmpConfig = { rootDir: tmpDir, libraries: [] } as Parameters<typeof writeCodeConnectFile>[0]
+    const tmpConfig = { rootDir: tmpDir, libraries: [] } as Parameters<
+      typeof writeCodeConnectFile
+    >[0]
     const filePath = 'src/Button.figma.tsx'
     const fullPath = path.join(tmpDir, filePath)
     fs.mkdirSync(path.dirname(fullPath), { recursive: true })
@@ -244,19 +252,27 @@ describe('writeCodeConnectFile', () => {
   })
 
   it('overwrites existing file when overwrite=true', async () => {
-    const tmpConfig = { rootDir: tmpDir, libraries: [] } as Parameters<typeof writeCodeConnectFile>[0]
+    const tmpConfig = { rootDir: tmpDir, libraries: [] } as Parameters<
+      typeof writeCodeConnectFile
+    >[0]
     const filePath = 'src/Button.figma.tsx'
     const fullPath = path.join(tmpDir, filePath)
     fs.mkdirSync(path.dirname(fullPath), { recursive: true })
     fs.writeFileSync(fullPath, 'original content')
 
-    const written = await writeCodeConnectFile(tmpConfig, { content: 'new content', filePath }, true)
+    const written = await writeCodeConnectFile(
+      tmpConfig,
+      { content: 'new content', filePath },
+      true
+    )
     expect(written).toBe(true)
     expect(fs.readFileSync(fullPath, 'utf-8')).toBe('new content')
   })
 
   it('creates intermediate directories if needed', async () => {
-    const tmpConfig = { rootDir: tmpDir, libraries: [] } as Parameters<typeof writeCodeConnectFile>[0]
+    const tmpConfig = { rootDir: tmpDir, libraries: [] } as Parameters<
+      typeof writeCodeConnectFile
+    >[0]
     const cc = { content: 'test', filePath: 'deep/nested/dir/Component.figma.tsx' }
     const written = await writeCodeConnectFile(tmpConfig, cc)
     expect(written).toBe(true)

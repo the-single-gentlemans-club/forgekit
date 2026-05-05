@@ -95,7 +95,7 @@ describe('mergeStories', () => {
 
     expect(result.preserved).toContain('MyCustomStory')
     expect(result.content).toContain('export const MyCustomStory: Story')
-    expect(result.content).toContain("disabled: true")
+    expect(result.content).toContain('disabled: true')
   })
 
   it('user story appears after the generated content', () => {

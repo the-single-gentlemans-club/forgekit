@@ -85,10 +85,7 @@ export function recordStoryVersion(
  * Get version history for a specific story file.
  * Returns empty array if no history exists.
  */
-export function getStoryVersions(
-  rootDir: string,
-  storyPath: string
-): StoryHistoryEntry[] {
+export function getStoryVersions(rootDir: string, storyPath: string): StoryHistoryEntry[] {
   const history = loadStoryHistory(rootDir)
   return history.entries[storyPath] ?? []
 }

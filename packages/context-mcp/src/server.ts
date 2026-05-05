@@ -1,9 +1,6 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js'
+import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js'
 import { ForgeKitOrchestrator } from './orchestrator.js'
 import type { ForgeKitContextConfig } from './types.js'
 import { getDesignSystemState } from './tools/get-design-system-state.js'
@@ -137,7 +134,8 @@ export function createContextMCPServer(
         case 'sync_stories_to_figma':
           result = await syncStoriesToFigma(orchestrator, {
             library: typedArgs['library'] as string | undefined,
-            storybookUrl: (typedArgs['storybookUrl'] as string | undefined) ?? config.storybook.storybookUrl,
+            storybookUrl:
+              (typedArgs['storybookUrl'] as string | undefined) ?? config.storybook.storybookUrl,
             dryRun: typedArgs['dryRun'] as boolean | undefined,
           })
           break

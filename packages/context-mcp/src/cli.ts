@@ -41,7 +41,7 @@ interface ParsedArgs {
 function parseArgs(): ParsedArgs {
   const argv = process.argv.slice(2)
   const get = (flag: string) => {
-    const entry = argv.find(a => a.startsWith(`--${flag}=`))
+    const entry = argv.find((a) => a.startsWith(`--${flag}=`))
     return entry ? entry.split('=').slice(1).join('=') : undefined
   }
   const has = (flag: string) => argv.includes(`--${flag}`)
@@ -53,9 +53,7 @@ function parseArgs(): ParsedArgs {
     figmaRemoteUrl: get('figma-remote-url'),
     projectRoot: get('project-root') ?? process.cwd(),
     licenseKey:
-      get('license-key') ??
-      process.env['FORGEKIT_LICENSE'] ??
-      process.env['STORYBOOK_MCP_LICENSE'],
+      get('license-key') ?? process.env['FORGEKIT_LICENSE'] ?? process.env['STORYBOOK_MCP_LICENSE'],
     outputDir: get('output-dir') ?? '.forgekit',
     storybookUrl: get('storybook-url') ?? 'http://localhost:6006',
     help: has('help') || has('h'),
@@ -101,7 +99,12 @@ function detectLibraries(projectRoot: string): LibraryConfig[] {
     { check: 'src/components', path: '.', name: 'components', prefix: 'Components' },
     { check: 'src/lib', path: '.', name: 'lib', prefix: 'Lib' },
     { check: 'packages/ui/src', path: 'packages/ui', name: 'ui', prefix: 'UI' },
-    { check: 'packages/components/src', path: 'packages/components', name: 'components', prefix: 'Components' },
+    {
+      check: 'packages/components/src',
+      path: 'packages/components',
+      name: 'components',
+      prefix: 'Components',
+    },
     { check: 'libs/ui/src', path: 'libs/ui', name: 'ui', prefix: 'UI' },
   ]
 
@@ -112,9 +115,7 @@ function detectLibraries(projectRoot: string): LibraryConfig[] {
     }
   }
 
-  return found.length > 0
-    ? found
-    : [{ name: 'src', path: '.', storyTitlePrefix: 'Components' }]
+  return found.length > 0 ? found : [{ name: 'src', path: '.', storyTitlePrefix: 'Components' }]
 }
 
 async function main(): Promise<void> {
@@ -128,13 +129,13 @@ async function main(): Promise<void> {
   if (!args.figmaToken) {
     process.stderr.write(
       '[context-mcp] WARNING: No Figma access token. Set --figma-token or FIGMA_ACCESS_TOKEN.\n' +
-      '[context-mcp] Figma tools will be unavailable until a token is provided.\n'
+        '[context-mcp] Figma tools will be unavailable until a token is provided.\n'
     )
   }
 
   const libraries: LibraryConfig[] = detectLibraries(args.projectRoot)
   process.stderr.write(
-    `[context-mcp] Detected ${libraries.length} library(ies): ${libraries.map(l => l.name).join(', ')}\n`
+    `[context-mcp] Detected ${libraries.length} library(ies): ${libraries.map((l) => l.name).join(', ')}\n`
   )
 
   const config: ForgeKitContextConfig = {
@@ -156,7 +157,7 @@ async function main(): Promise<void> {
   await runContextServer(config)
 }
 
-main().catch(err => {
+main().catch((err) => {
   process.stderr.write(`[context-mcp] Fatal error: ${err instanceof Error ? err.message : err}\n`)
   process.exit(1)
 })

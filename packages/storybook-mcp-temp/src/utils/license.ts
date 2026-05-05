@@ -90,7 +90,7 @@ async function validateWithPolar(key: string): Promise<boolean> {
       return false
     }
 
-    const data = await response.json() as {
+    const data = (await response.json()) as {
       id?: string
       status?: string
       expires_at?: string | null
@@ -131,7 +131,7 @@ export function validateLicense(config: StorybookMCPConfig): LicenseStatus {
     return {
       isValid: true,
       tier: 'free',
-      maxSyncLimit: 5
+      maxSyncLimit: 5,
     }
   }
 
@@ -148,7 +148,7 @@ export function validateLicense(config: StorybookMCPConfig): LicenseStatus {
       return {
         isValid: cached.valid,
         tier: cached.valid ? 'pro' : 'free',
-        maxSyncLimit: cached.valid ? Infinity : 5
+        maxSyncLimit: cached.valid ? Infinity : 5,
       }
     }
   }
@@ -158,7 +158,7 @@ export function validateLicense(config: StorybookMCPConfig): LicenseStatus {
   return {
     isValid: true,
     tier: 'free',
-    maxSyncLimit: 5
+    maxSyncLimit: 5,
   }
 }
 
@@ -175,7 +175,7 @@ export async function validateLicenseAsync(config: StorybookMCPConfig): Promise<
     const status: LicenseStatus = {
       isValid: true,
       tier: 'free',
-      maxSyncLimit: 5
+      maxSyncLimit: 5,
     }
     cachedValidation = status
     return status
@@ -189,7 +189,7 @@ export async function validateLicenseAsync(config: StorybookMCPConfig): Promise<
       const status: LicenseStatus = {
         isValid: cached.valid,
         tier: cached.valid ? 'pro' : 'free',
-        maxSyncLimit: cached.valid ? Infinity : 5
+        maxSyncLimit: cached.valid ? Infinity : 5,
       }
       cachedValidation = status
       return status
@@ -203,14 +203,14 @@ export async function validateLicenseAsync(config: StorybookMCPConfig): Promise<
   writeCache({
     key,
     valid: isValid,
-    checkedAt: Date.now()
+    checkedAt: Date.now(),
   })
 
   // Create status object
   const status: LicenseStatus = {
     isValid,
     tier: isValid ? 'pro' : 'free',
-    maxSyncLimit: isValid ? Infinity : 5
+    maxSyncLimit: isValid ? Infinity : 5,
   }
 
   // Store in module-level cache for synchronous access
@@ -257,8 +257,8 @@ export function requireFeature(feature: Feature, status: LicenseStatus): void {
   if (!checkFeatureAccess(feature, status)) {
     throw new LicenseError(
       `Feature '${feature}' requires a Pro license.\n` +
-      `Please add a valid license key to your config or environment variable STORYBOOK_MCP_LICENSE.\n` +
-      `Get your license at: ${POLAR_UPGRADE_URL}`,
+        `Please add a valid license key to your config or environment variable STORYBOOK_MCP_LICENSE.\n` +
+        `Get your license at: ${POLAR_UPGRADE_URL}`,
       feature
     )
   }

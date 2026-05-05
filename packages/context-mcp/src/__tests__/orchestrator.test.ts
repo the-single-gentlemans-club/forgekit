@@ -6,7 +6,10 @@ vi.mock('@forgekit/mcp-core', () => ({
   createHttpMcpClient: vi.fn(),
   callTool: vi.fn(),
   McpConnectionError: class McpConnectionError extends Error {
-    constructor(public readonly serverName: string, cause: unknown) {
+    constructor(
+      public readonly serverName: string,
+      cause: unknown
+    ) {
       super(`Failed to connect to ${serverName}: ${cause}`)
     }
   },

@@ -35,27 +35,36 @@ describe('setup - detection', () => {
   it('detectFramework detects Chakra', () => {
     const dir = path.join(tmpDir, 'chakra-proj')
     fs.mkdirSync(dir, { recursive: true })
-    fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({
-      dependencies: { '@chakra-ui/react': '^2.0.0' }
-    }))
+    fs.writeFileSync(
+      path.join(dir, 'package.json'),
+      JSON.stringify({
+        dependencies: { '@chakra-ui/react': '^2.0.0' },
+      })
+    )
     expect(detectFramework(dir)).toBe('chakra')
   })
 
   it('detectFramework detects shadcn', () => {
     const dir = path.join(tmpDir, 'shadcn-proj')
     fs.mkdirSync(dir, { recursive: true })
-    fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({
-      dependencies: { 'class-variance-authority': '^1.0.0' }
-    }))
+    fs.writeFileSync(
+      path.join(dir, 'package.json'),
+      JSON.stringify({
+        dependencies: { 'class-variance-authority': '^1.0.0' },
+      })
+    )
     expect(detectFramework(dir)).toBe('shadcn')
   })
 
   it('detectFramework detects Gluestack', () => {
     const dir = path.join(tmpDir, 'gluestack-proj')
     fs.mkdirSync(dir, { recursive: true })
-    fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({
-      dependencies: { '@gluestack-ui/themed': '^1.0.0' }
-    }))
+    fs.writeFileSync(
+      path.join(dir, 'package.json'),
+      JSON.stringify({
+        dependencies: { '@gluestack-ui/themed': '^1.0.0' },
+      })
+    )
     expect(detectFramework(dir)).toBe('gluestack')
   })
 })
@@ -67,23 +76,23 @@ describe('setup - config generation', () => {
     fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({ scripts: {} }))
 
     const result = await runSetup(dir, { dryRun: false, force: true })
-    
+
     const mainPath = path.join(dir, '.storybook', 'main.ts')
     expect(fs.existsSync(mainPath)).toBe(true)
-    
+
     const mainContent = fs.readFileSync(mainPath, 'utf-8')
-    
+
     // Check addons
     expect(mainContent).toContain('@storybook/addon-docs')
     expect(mainContent).toContain('@storybook/addon-a11y')
-    
+
     // Check stories glob
     expect(mainContent).toContain('../src/**/*.@(mdx|stories.@(js|jsx|ts|tsx))')
-    
+
     // Check NO autodocs config
     expect(mainContent).not.toContain("autodocs: 'tag'")
     expect(mainContent).not.toContain('autodocs')
-    
+
     // Check framework
     expect(mainContent).toContain('@storybook/react-vite')
   })
@@ -91,13 +100,16 @@ describe('setup - config generation', () => {
   it('generates Chakra preview with ChakraProvider', async () => {
     const dir = path.join(tmpDir, 'chakra-gen')
     fs.mkdirSync(dir, { recursive: true })
-    fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({
-      scripts: {},
-      dependencies: { '@chakra-ui/react': '^2.0.0' }
-    }))
-    
+    fs.writeFileSync(
+      path.join(dir, 'package.json'),
+      JSON.stringify({
+        scripts: {},
+        dependencies: { '@chakra-ui/react': '^2.0.0' },
+      })
+    )
+
     await runSetup(dir, { force: true })
-    
+
     const previewPath = path.join(dir, '.storybook', 'preview.tsx')
     expect(fs.existsSync(previewPath)).toBe(true)
     const content = fs.readFileSync(previewPath, 'utf-8')
@@ -107,13 +119,16 @@ describe('setup - config generation', () => {
   it('generates shadcn preview with Tailwind CSS import', async () => {
     const dir = path.join(tmpDir, 'shadcn-gen')
     fs.mkdirSync(dir, { recursive: true })
-    fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({
-      scripts: {},
-      dependencies: { 'class-variance-authority': '^1.0.0' }
-    }))
-    
+    fs.writeFileSync(
+      path.join(dir, 'package.json'),
+      JSON.stringify({
+        scripts: {},
+        dependencies: { 'class-variance-authority': '^1.0.0' },
+      })
+    )
+
     await runSetup(dir, { force: true })
-    
+
     const previewPath = path.join(dir, '.storybook', 'preview.tsx')
     const content = fs.readFileSync(previewPath, 'utf-8')
     expect(content).toContain('index.css')
@@ -122,13 +137,16 @@ describe('setup - config generation', () => {
   it('generates Gluestack preview with GluestackUIProvider', async () => {
     const dir = path.join(tmpDir, 'gluestack-gen')
     fs.mkdirSync(dir, { recursive: true })
-    fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({
-      scripts: {},
-      dependencies: { '@gluestack-ui/themed': '^1.0.0' }
-    }))
-    
+    fs.writeFileSync(
+      path.join(dir, 'package.json'),
+      JSON.stringify({
+        scripts: {},
+        dependencies: { '@gluestack-ui/themed': '^1.0.0' },
+      })
+    )
+
     await runSetup(dir, { force: true })
-    
+
     const previewPath = path.join(dir, '.storybook', 'preview.tsx')
     const content = fs.readFileSync(previewPath, 'utf-8')
     expect(content).toContain('GluestackUIProvider')
@@ -137,17 +155,20 @@ describe('setup - config generation', () => {
   it('generates Tamagui preview with TamaguiProvider', async () => {
     const dir = path.join(tmpDir, 'tamagui-gen')
     fs.mkdirSync(dir, { recursive: true })
-    fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({
-      scripts: {},
-      dependencies: { 'tamagui': '^1.0.0' }
-    }))
-    
+    fs.writeFileSync(
+      path.join(dir, 'package.json'),
+      JSON.stringify({
+        scripts: {},
+        dependencies: { tamagui: '^1.0.0' },
+      })
+    )
+
     await runSetup(dir, { force: true })
-    
+
     const previewPath = path.join(dir, '.storybook', 'preview.tsx')
     const content = fs.readFileSync(previewPath, 'utf-8')
     expect(content).toContain('TamaguiProvider')
-    
+
     // Tamagui uses webpack
     const mainPath = path.join(dir, '.storybook', 'main.ts')
     const mainContent = fs.readFileSync(mainPath, 'utf-8')
@@ -158,9 +179,9 @@ describe('setup - config generation', () => {
     const dir = path.join(tmpDir, 'scripts-test')
     fs.mkdirSync(dir, { recursive: true })
     fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({ scripts: {} }))
-    
+
     const result = await runSetup(dir, { force: true })
-    
+
     const pkg = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf-8'))
     expect(pkg.scripts.storybook).toBe('storybook dev -p 6006')
     expect(pkg.scripts['build-storybook']).toBe('storybook build')

@@ -21,15 +21,35 @@ function makeAnalysis(overrides: Partial<ComponentAnalysis> = {}): ComponentAnal
     hasStory: false,
     exportType: 'named',
     props: [
-      { name: 'variant', type: "'solid' | 'outline'", required: false, controlType: 'select', controlOptions: ['solid', 'outline'] },
-      { name: 'size', type: "'sm' | 'md'", required: false, controlType: 'select', controlOptions: ['sm', 'md'] },
+      {
+        name: 'variant',
+        type: "'solid' | 'outline'",
+        required: false,
+        controlType: 'select',
+        controlOptions: ['solid', 'outline'],
+      },
+      {
+        name: 'size',
+        type: "'sm' | 'md'",
+        required: false,
+        controlType: 'select',
+        controlOptions: ['sm', 'md'],
+      },
       { name: 'children', type: 'React.ReactNode', required: true },
     ],
     dependencies: {
-      usesRouter: false, usesReactQuery: false, usesChakra: false,
-      usesShadcn: false, usesTamagui: false, usesGluestack: false,
-      usesReactNative: false, usesEmotion: false, usesTailwind: false,
-      usesFramerMotion: false, usesMSW: false, usesGlobalState: false,
+      usesRouter: false,
+      usesReactQuery: false,
+      usesChakra: false,
+      usesShadcn: false,
+      usesTamagui: false,
+      usesGluestack: false,
+      usesReactNative: false,
+      usesEmotion: false,
+      usesTailwind: false,
+      usesFramerMotion: false,
+      usesMSW: false,
+      usesGlobalState: false,
       otherImports: [],
     },
     suggestions: [],
@@ -41,7 +61,9 @@ function makeAnalysis(overrides: Partial<ComponentAnalysis> = {}): ComponentAnal
 describe('docs-generator', () => {
   it('starts with correct addon-docs/blocks import', async () => {
     const docs = await generateDocs(makeConfig(), makeAnalysis())
-    expect(docs.content).toMatch(/^import \{ Canvas, Meta, ArgTypes \} from '@storybook\/addon-docs\/blocks'/)
+    expect(docs.content).toMatch(
+      /^import \{ Canvas, Meta, ArgTypes \} from '@storybook\/addon-docs\/blocks'/
+    )
   })
 
   it('does NOT contain YAML frontmatter', async () => {

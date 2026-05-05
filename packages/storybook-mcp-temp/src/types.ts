@@ -14,14 +14,7 @@ export interface StorybookMCPConfig {
   libraries: LibraryConfig[]
 
   /** UI framework being used */
-  framework:
-    | 'chakra'
-    | 'shadcn'
-    | 'tamagui'
-    | 'gluestack'
-    | 'react-native'
-    | 'vanilla'
-    | 'custom'
+  framework: 'chakra' | 'shadcn' | 'tamagui' | 'gluestack' | 'react-native' | 'vanilla' | 'custom'
 
   /** Story file naming convention */
   storyFilePattern: string
@@ -114,15 +107,7 @@ export interface PropDefinition {
   description?: string
 
   /** Suggested Storybook control type */
-  controlType?:
-    | 'text'
-    | 'boolean'
-    | 'number'
-    | 'select'
-    | 'radio'
-    | 'color'
-    | 'date'
-    | 'object'
+  controlType?: 'text' | 'boolean' | 'number' | 'select' | 'radio' | 'color' | 'date' | 'object'
 
   /** Options for select/radio controls */
   controlOptions?: string[]
@@ -190,13 +175,7 @@ export interface StoryGenerationOptions {
   includeResponsive?: boolean
 
   /** Template to use */
-  template?:
-    | 'basic'
-    | 'with-controls'
-    | 'with-variants'
-    | 'with-msw'
-    | 'with-router'
-    | 'page'
+  template?: 'basic' | 'with-controls' | 'with-variants' | 'with-msw' | 'with-router' | 'page'
 
   /** Custom args to include */
   customArgs?: Record<string, unknown>
@@ -324,13 +303,8 @@ export const DEFAULT_CONFIG: Partial<StorybookMCPConfig> = {
     '**/lib/**/*.tsx',
     '!**/*.stories.tsx',
     '!**/*.test.tsx',
-    '!**/*.spec.tsx'
+    '!**/*.spec.tsx',
   ],
-  excludePatterns: [
-    '**/node_modules/**',
-    '**/dist/**',
-    '**/build/**',
-    '**/.storybook/**'
-  ],
-  storybookVersion: 10
+  excludePatterns: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/.storybook/**'],
+  storybookVersion: 10,
 }

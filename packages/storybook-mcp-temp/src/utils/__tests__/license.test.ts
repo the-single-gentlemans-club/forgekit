@@ -70,7 +70,13 @@ describe('license', () => {
     const proStatus = { isValid: true, tier: 'pro' as const, maxSyncLimit: Infinity }
 
     it('allows all features', () => {
-      const features: Feature[] = ['basic_stories', 'advanced_templates', 'test_generation', 'docs_generation', 'unlimited_sync']
+      const features: Feature[] = [
+        'basic_stories',
+        'advanced_templates',
+        'test_generation',
+        'docs_generation',
+        'unlimited_sync',
+      ]
       for (const feature of features) {
         expect(checkFeatureAccess(feature, proStatus)).toBe(true)
       }
@@ -81,7 +87,13 @@ describe('license', () => {
     })
 
     it('requireFeature does not throw for any feature', () => {
-      const features: Feature[] = ['basic_stories', 'advanced_templates', 'test_generation', 'docs_generation', 'unlimited_sync']
+      const features: Feature[] = [
+        'basic_stories',
+        'advanced_templates',
+        'test_generation',
+        'docs_generation',
+        'unlimited_sync',
+      ]
       for (const feature of features) {
         expect(() => requireFeature(feature, proStatus)).not.toThrow()
       }

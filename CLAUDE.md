@@ -104,6 +104,7 @@ When reviewing code, follow these steps:
 <!-- nx configuration end-->
 
 <!-- IMPORTANT NOTE start -->
+
 ## IMPORTANT NOTE
 
 ### React Compiler
@@ -135,7 +136,7 @@ export default function Page() {
 }
 ```
 
-- **2.** Use a  types as documentation philosophy
+- **2.** Use a types as documentation philosophy
 
 ```JS
 // Don't do this

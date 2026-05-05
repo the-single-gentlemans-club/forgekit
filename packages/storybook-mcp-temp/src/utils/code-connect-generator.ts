@@ -27,11 +27,7 @@ function mapPropToFigma(prop: PropDefinition): string {
   const displayName = toPascalCase(prop.name)
 
   // Children / ReactNode → figma.children
-  if (
-    prop.name === 'children' ||
-    prop.type === 'ReactNode' ||
-    prop.type.includes('ReactNode')
-  ) {
+  if (prop.name === 'children' || prop.type === 'ReactNode' || prop.type.includes('ReactNode')) {
     return `figma.children(['*'])`
   }
 
@@ -41,15 +37,11 @@ function mapPropToFigma(prop: PropDefinition): string {
   }
 
   // Select / Radio / Union enum → figma.enum
-  if (
-    prop.controlType === 'select' ||
-    prop.controlType === 'radio' ||
-    prop.type.includes('|')
-  ) {
+  if (prop.controlType === 'select' || prop.controlType === 'radio' || prop.type.includes('|')) {
     const options = prop.controlOptions ?? parseUnionOptions(prop.type)
     if (options.length > 0) {
       const entries = options
-        .map(o => `      ${JSON.stringify(o)}: ${JSON.stringify(o)}`)
+        .map((o) => `      ${JSON.stringify(o)}: ${JSON.stringify(o)}`)
         .join(',\n')
       return `figma.enum('${displayName}', {\n${entries},\n    })`
     }
@@ -68,15 +60,19 @@ function mapPropToFigma(prop: PropDefinition): string {
 function parseUnionOptions(type: string): string[] {
   return type
     .split('|')
-    .map(t => t.trim().replace(/^['"]|['"]$/g, ''))
-    .filter(t => t.length > 0 && !['undefined', 'null', 'ReactNode', 'string', 'number', 'boolean'].includes(t))
+    .map((t) => t.trim().replace(/^['"]|['"]$/g, ''))
+    .filter(
+      (t) =>
+        t.length > 0 &&
+        !['undefined', 'null', 'ReactNode', 'string', 'number', 'boolean'].includes(t)
+    )
 }
 
 /** Convert camelCase or snake_case to PascalCase for Figma display names */
 function toPascalCase(str: string): string {
   return str
     .replace(/[-_](.)/g, (_, c: string) => c.toUpperCase())
-    .replace(/^(.)/, c => c.toUpperCase())
+    .replace(/^(.)/, (c) => c.toUpperCase())
 }
 
 // ===========================================
@@ -101,7 +97,7 @@ export async function generateCodeConnect(
   const componentBase = path.basename(filePath, path.extname(filePath))
 
   // Filter out props that shouldn't appear in Code Connect
-  const connectProps = props.filter(p => {
+  const connectProps = props.filter((p) => {
     // Skip internal/callback-only props
     if (p.name.startsWith('on') && p.type.includes('=>')) return false
     if (p.name === 'className' || p.name === 'style' || p.name === 'ref') return false
@@ -109,34 +105,32 @@ export async function generateCodeConnect(
   })
 
   // Build props block
-  const propsLines = connectProps.map(prop => {
+  const propsLines = connectProps.map((prop) => {
     const figmaBinding = mapPropToFigma(prop)
     return `    ${prop.name}: ${figmaBinding},`
   })
 
   // Build example function args
-  const argNames = connectProps.map(p => p.name)
+  const argNames = connectProps.map((p) => p.name)
   const argsDestructure = argNames.length > 0 ? `{ ${argNames.join(', ')} }` : '_'
 
   // Build JSX for the example
   const jsxProps = connectProps
-    .map(p => {
+    .map((p) => {
       if (p.name === 'children') return `{children}`
       return `${p.name}={${p.name}}`
     })
-    .filter(p => p !== 'children')
+    .filter((p) => p !== 'children')
     .join(' ')
 
-  const hasChildren = connectProps.some(p => p.name === 'children')
+  const hasChildren = connectProps.some((p) => p.name === 'children')
 
   const exampleJsx = hasChildren
     ? `<${name} ${jsxProps}>{children}</${name}>`
     : `<${name} ${jsxProps} />`
 
   const propsSection =
-    connectProps.length > 0
-      ? `  props: {\n${propsLines.join('\n')}\n  },\n  `
-      : '  '
+    connectProps.length > 0 ? `  props: {\n${propsLines.join('\n')}\n  },\n  ` : '  '
 
   const content = `import figma from '@figma/code-connect/react'
 import { ${name} } from './${componentBase}'

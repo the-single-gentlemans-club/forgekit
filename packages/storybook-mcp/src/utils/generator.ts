@@ -29,7 +29,7 @@ export async function generateStory(
     includeResponsive = false,
   } = options
 
-  const library = config.libraries.find(l => l.name === analysis.library)
+  const library = config.libraries.find((l) => l.name === analysis.library)
   const storyTitle = buildStoryTitle(library?.storyTitlePrefix, analysis.name)
   const imports = buildImports(analysis, config.framework, options)
   const decorators = buildDecorators(analysis, library?.decorators, options)
@@ -58,13 +58,21 @@ export async function generateStory(
   }
 
   // Interactive story (Web only)
-  if (includeInteractive && config.framework !== 'react-native' && !analysis.dependencies.usesReactNative) {
+  if (
+    includeInteractive &&
+    config.framework !== 'react-native' &&
+    !analysis.dependencies.usesReactNative
+  ) {
     content += '\n' + buildInteractiveStory(analysis)
     stories.push('Interactive')
   }
 
   // Accessibility story (Web only)
-  if (includeA11y && config.framework !== 'react-native' && !analysis.dependencies.usesReactNative) {
+  if (
+    includeA11y &&
+    config.framework !== 'react-native' &&
+    !analysis.dependencies.usesReactNative
+  ) {
     content += '\n' + buildA11yStory(analysis)
     stories.push('Accessibility')
   }
@@ -79,17 +87,19 @@ export async function generateStory(
   const storyPath = analysis.storyPath || buildStoryPath(analysis.filePath)
 
   const warnings: string[] = []
-  
+
   if (analysis.dependencies.usesRouter && !options.decorators?.includes('withRouter')) {
     warnings.push('Component uses routing - add withRouter decorator if not already configured')
   }
-  
+
   if (analysis.dependencies.usesReactQuery) {
     warnings.push('Component uses React Query - ensure QueryClientProvider is in decorators')
   }
 
   if (analysis.dependencies.usesGluestack) {
-    warnings.push('Component uses Gluestack UI - ensure GluestackUIProvider is in decorators (usually in .storybook/preview.tsx)')
+    warnings.push(
+      'Component uses Gluestack UI - ensure GluestackUIProvider is in decorators (usually in .storybook/preview.tsx)'
+    )
   }
 
   if (analysis.dependencies.usesReactNative) {
@@ -99,7 +109,7 @@ export async function generateStory(
   return {
     content,
     filePath: storyPath,
-    imports: imports.map(i => i.replace(/^import .+ from ['"](.+)['"].*$/, '$1')),
+    imports: imports.map((i) => i.replace(/^import .+ from ['"](.+)['"].*$/, '$1')),
     stories,
     warnings,
   }
@@ -123,21 +133,21 @@ function buildImports(
   framework: StorybookMCPConfig['framework'],
   options: StoryGenerationOptions
 ): string[] {
-  const imports: string[] = [
-    `import type { Meta, StoryObj } from '@storybook/react'`,
-  ]
+  const imports: string[] = [`import type { Meta, StoryObj } from '@storybook/react'`]
 
   // Add test utilities if interactive (only for web)
-  if ((options.includeInteractive || options.includeA11y) && 
-      framework !== 'react-native' && 
-      !analysis.dependencies.usesReactNative) {
+  if (
+    (options.includeInteractive || options.includeA11y) &&
+    framework !== 'react-native' &&
+    !analysis.dependencies.usesReactNative
+  ) {
     imports.push(`import { expect, userEvent, within } from 'storybook/test'`)
   }
 
   // Add component import
   const componentFile = path.basename(analysis.filePath, path.extname(analysis.filePath))
   const importPath = `./${componentFile === 'index' ? '' : componentFile}`
-  
+
   if (analysis.exportType === 'default') {
     imports.push(`import ${analysis.name} from '${importPath}'`)
   } else {
@@ -153,13 +163,13 @@ function buildImports(
   if (framework === 'react-native' || analysis.dependencies.usesReactNative) {
     // React Native specific imports
     imports.push(`import { View } from 'react-native'`)
-    
+
     // Remove web-only imports that might have been added by default
     const webImports = [
       `import { expect, userEvent, within } from 'storybook/test'`,
-      `import { withRouter } from 'storybook-addon-remix-react-router'`
+      `import { withRouter } from 'storybook-addon-remix-react-router'`,
     ]
-    
+
     for (const imp of webImports) {
       const index = imports.indexOf(imp)
       if (index !== -1) {
@@ -205,11 +215,11 @@ function buildArgTypes(props: PropDefinition[]): string {
   for (const prop of props) {
     if (prop.controlType) {
       const argType: Record<string, unknown> = {
-        control: prop.controlOptions 
+        control: prop.controlOptions
           ? { type: prop.controlType, options: prop.controlOptions }
           : prop.controlType,
       }
-      
+
       if (prop.description) {
         argType.description = prop.description
       }
@@ -243,35 +253,30 @@ function buildDefaultArgs(props: PropDefinition[]): Record<string, unknown> {
     // Priority 3: Sensible defaults based on prop name and type
     else if (prop.name === 'children') {
       args[prop.name] = 'Content'
-    }
-    else if (prop.name === 'title' && prop.type === 'string') {
+    } else if (prop.name === 'title' && prop.type === 'string') {
       args[prop.name] = 'Title'
-    }
-    else if (prop.name === 'label' && prop.type === 'string') {
+    } else if (prop.name === 'label' && prop.type === 'string') {
       args[prop.name] = 'Label'
-    }
-    else if (prop.name === 'placeholder' && prop.type === 'string') {
+    } else if (prop.name === 'placeholder' && prop.type === 'string') {
       args[prop.name] = 'Enter text...'
-    }
-    else if (prop.name === 'text' && prop.type === 'string') {
+    } else if (prop.name === 'text' && prop.type === 'string') {
       args[prop.name] = 'Text'
-    }
-    else if (prop.name === 'value' && prop.type === 'string') {
+    } else if (prop.name === 'value' && prop.type === 'string') {
       args[prop.name] = 'Value'
-    }
-    else if (prop.name === 'name' && prop.type === 'string') {
+    } else if (prop.name === 'name' && prop.type === 'string') {
       args[prop.name] = 'Name'
-    }
-    else if (prop.name === 'id' && prop.type === 'string') {
+    } else if (prop.name === 'id' && prop.type === 'string') {
       args[prop.name] = 'example-id'
-    }
-    else if (prop.type === 'boolean' && !prop.required) {
+    } else if (prop.type === 'boolean' && !prop.required) {
       // Optional booleans default to false
       args[prop.name] = false
-    }
-    else if (prop.type === 'number' && !prop.required) {
+    } else if (prop.type === 'number' && !prop.required) {
       // Optional numbers: use 0 for generic, 1 for count/index props
-      if (prop.name.includes('count') || prop.name.includes('index') || prop.name.includes('Index')) {
+      if (
+        prop.name.includes('count') ||
+        prop.name.includes('index') ||
+        prop.name.includes('Index')
+      ) {
         args[prop.name] = 1
       } else {
         args[prop.name] = 0
@@ -296,21 +301,21 @@ function buildMeta(
   meta += `  title: '${title}',\n`
   meta += `  component: ${analysis.name},\n`
   meta += `  tags: [],\n`
-  
+
   if (decorators.length > 0) {
     meta += `  decorators: [${decorators.join(', ')}],\n`
   }
-  
+
   if (argTypes) {
     meta += `  ${argTypes},\n`
   }
-  
+
   if (Object.keys(defaultArgs).length > 0) {
     meta += `  args: ${JSON.stringify(defaultArgs, null, 4).replace(/"(\w+)":/g, '$1:')},\n`
   }
-  
+
   meta += `}\n\nexport default meta`
-  
+
   return meta
 }
 
@@ -323,13 +328,13 @@ function buildDefaultStory(
 ): string {
   let story = `/**\n * Default ${analysis.name}\n */\n`
   story += `export const Default: Story = {\n`
-  
+
   if (Object.keys(defaultArgs).length > 0) {
     story += `  args: ${JSON.stringify(defaultArgs, null, 4).replace(/"(\w+)":/g, '$1:')},\n`
   }
-  
+
   story += `}\n`
-  
+
   return story
 }
 
@@ -337,19 +342,19 @@ function buildDefaultStory(
  * Build variant stories (sizes, variants, etc.)
  */
 function buildVariantStories(analysis: ComponentAnalysis): string | null {
-  const variantProps = analysis.props.filter(p => 
-    ['variant', 'size', 'colorScheme'].includes(p.name) && p.controlOptions
+  const variantProps = analysis.props.filter(
+    (p) => ['variant', 'size', 'colorScheme'].includes(p.name) && p.controlOptions
   )
 
   if (variantProps.length === 0) {
     return null
   }
 
-  const hasChildren = analysis.props.some(p => p.name === 'children')
+  const hasChildren = analysis.props.some((p) => p.name === 'children')
   let stories = ''
 
   // Size story
-  const sizeProp = variantProps.find(p => p.name === 'size')
+  const sizeProp = variantProps.find((p) => p.name === 'size')
   if (sizeProp?.controlOptions) {
     stories += `/**\n * All size variants\n */\n`
     stories += `export const Sizes: Story = {\n`
@@ -368,7 +373,7 @@ function buildVariantStories(analysis: ComponentAnalysis): string | null {
   }
 
   // Variant story
-  const variantProp = variantProps.find(p => p.name === 'variant')
+  const variantProp = variantProps.find((p) => p.name === 'variant')
   if (variantProp?.controlOptions) {
     stories += `/**\n * All style variants\n */\n`
     stories += `export const Variants: Story = {\n`
@@ -394,9 +399,9 @@ function buildVariantStories(analysis: ComponentAnalysis): string | null {
  * Adapts query strategy based on component props
  */
 function buildInteractiveStory(analysis: ComponentAnalysis): string {
-  const hasChildren = analysis.props.some(p => p.name === 'children')
-  const hasOnClick = analysis.props.some(p => p.name === 'onClick')
-  const hasRole = analysis.props.some(p => p.name === 'role')
+  const hasChildren = analysis.props.some((p) => p.name === 'children')
+  const hasOnClick = analysis.props.some((p) => p.name === 'onClick')
+  const hasRole = analysis.props.some((p) => p.name === 'role')
 
   let story = `/**\n * Interactive test\n */\n`
   story += `export const Interactive: Story = {\n`
@@ -456,9 +461,9 @@ function buildInteractiveStory(analysis: ComponentAnalysis): string {
  * Only adds aria-label if component accepts it
  */
 function buildA11yStory(analysis: ComponentAnalysis): string {
-  const hasChildren = analysis.props.some(p => p.name === 'children')
-  const hasAriaLabel = analysis.props.some(p => p.name === 'aria-label' || p.name === 'ariaLabel')
-  const hasRole = analysis.props.some(p => p.name === 'role')
+  const hasChildren = analysis.props.some((p) => p.name === 'children')
+  const hasAriaLabel = analysis.props.some((p) => p.name === 'aria-label' || p.name === 'ariaLabel')
+  const hasRole = analysis.props.some((p) => p.name === 'role')
 
   let story = `/**\n * Accessibility test\n */\n`
   story += `export const Accessibility: Story = {\n`
@@ -493,7 +498,10 @@ function buildA11yStory(analysis: ComponentAnalysis): string {
   story += `    await expect(element).toBeInTheDocument()\n`
 
   // Only test keyboard navigation if element is likely focusable
-  const likelyFocusable = hasAriaLabel || hasRole || analysis.props.some(p => p.name === 'onClick' || p.name === 'onKeyDown')
+  const likelyFocusable =
+    hasAriaLabel ||
+    hasRole ||
+    analysis.props.some((p) => p.name === 'onClick' || p.name === 'onKeyDown')
   if (likelyFocusable) {
     story += `    \n`
     story += `    // Test keyboard navigation\n`
@@ -522,7 +530,7 @@ function buildResponsiveStories(analysis: ComponentAnalysis): string {
   stories += `    },\n`
   stories += `  },\n`
   stories += `}\n\n`
-  
+
   stories += `/**\n * Desktop viewport\n */\n`
   stories += `export const Desktop: Story = {\n`
   stories += `  parameters: {\n`
@@ -531,7 +539,7 @@ function buildResponsiveStories(analysis: ComponentAnalysis): string {
   stories += `    },\n`
   stories += `  },\n`
   stories += `}\n`
-  
+
   return stories
 }
 
@@ -553,16 +561,16 @@ export async function writeStoryFile(
   overwrite: boolean = false
 ): Promise<boolean> {
   const fullPath = path.join(config.rootDir, story.filePath)
-  
+
   if (fs.existsSync(fullPath) && !overwrite) {
     return false
   }
-  
+
   const dir = path.dirname(fullPath)
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true })
   }
-  
+
   fs.writeFileSync(fullPath, story.content, 'utf-8')
   return true
 }

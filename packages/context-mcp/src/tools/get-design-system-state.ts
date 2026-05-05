@@ -1,5 +1,10 @@
 import type { ForgeKitOrchestrator } from '../orchestrator.js'
-import type { DesignSystemState, FigmaVariable, CodeConnectEntry, ForgeKitContextConfig } from '../types.js'
+import type {
+  DesignSystemState,
+  FigmaVariable,
+  CodeConnectEntry,
+  ForgeKitContextConfig,
+} from '../types.js'
 import type { ComponentInfo } from 'forgekit-storybook-mcp'
 import { mergeSummaries } from '@forgekit/mcp-core'
 
@@ -17,20 +22,21 @@ export async function getDesignSystemState(
     orchestrator.callStorybook('list_components', { library: 'all' }),
   ])
 
-  const figmaTokens = tokensResult.status === 'fulfilled'
-    ? ((tokensResult.value as FigmaVariable[]) ?? [])
-    : []
+  const figmaTokens =
+    tokensResult.status === 'fulfilled' ? ((tokensResult.value as FigmaVariable[]) ?? []) : []
 
-  const codeConnectMap = connectMapResult.status === 'fulfilled'
-    ? ((connectMapResult.value as CodeConnectEntry[]) ?? [])
-    : []
+  const codeConnectMap =
+    connectMapResult.status === 'fulfilled'
+      ? ((connectMapResult.value as CodeConnectEntry[]) ?? [])
+      : []
 
-  const componentsData = componentsResult.status === 'fulfilled'
-    ? (componentsResult.value as { components: ComponentInfo[] })
-    : { components: [] }
+  const componentsData =
+    componentsResult.status === 'fulfilled'
+      ? (componentsResult.value as { components: ComponentInfo[] })
+      : { components: [] }
 
   const components = componentsData.components ?? []
-  const withStories = components.filter(c => c.hasStory).length
+  const withStories = components.filter((c) => c.hasStory).length
 
   const summaryParts: string[] = [
     `${figmaTokens.length} Figma tokens`,

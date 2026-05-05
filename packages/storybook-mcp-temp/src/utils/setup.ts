@@ -11,12 +11,7 @@ import { THRESHOLDS } from './constants.js'
 // Types
 // ===========================================
 
-export type FrameworkType =
-  | 'chakra'
-  | 'shadcn'
-  | 'tamagui'
-  | 'gluestack'
-  | 'vanilla'
+export type FrameworkType = 'chakra' | 'shadcn' | 'tamagui' | 'gluestack' | 'vanilla'
 export type ProjectType = 'nx' | 'standard'
 
 export interface SetupConfig {
@@ -64,18 +59,14 @@ export function detectFramework(rootDir: string): FrameworkType {
     const pkg = JSON.parse(fs.readFileSync(packagePath, 'utf-8'))
     const deps = {
       ...pkg.dependencies,
-      ...pkg.devDependencies
+      ...pkg.devDependencies,
     }
 
     // Check in order of specificity
     if (deps['@chakra-ui/react']) {
       return 'chakra'
     }
-    if (
-      deps['@radix-ui/react-slot'] ||
-      deps['class-variance-authority'] ||
-      deps.tailwindcss
-    ) {
+    if (deps['@radix-ui/react-slot'] || deps['class-variance-authority'] || deps.tailwindcss) {
       // Likely shadcn/ui
       return 'shadcn'
     }
@@ -101,13 +92,13 @@ export function findNxLibName(rootDir: string): string | undefined {
   const libsDir = path.join(rootDir, 'libs')
   const packagesDir = path.join(rootDir, 'packages')
 
-  const searchDirs = [libsDir, packagesDir].filter(d => fs.existsSync(d))
+  const searchDirs = [libsDir, packagesDir].filter((d) => fs.existsSync(d))
 
   // Check for nested structure like libs/shared/ui first
   const nestedUiPaths = [
     { dir: path.join(libsDir, 'shared', 'ui'), name: 'shared-ui' },
     { dir: path.join(libsDir, 'ui'), name: 'ui' },
-    { dir: path.join(packagesDir, 'ui'), name: 'ui' }
+    { dir: path.join(packagesDir, 'ui'), name: 'ui' },
   ]
 
   for (const { dir, name } of nestedUiPaths) {
@@ -117,13 +108,7 @@ export function findNxLibName(rootDir: string): string | undefined {
   }
 
   // Prioritize libraries with UI-related names
-  const uiRelatedNames = [
-    'ui',
-    'components',
-    'design-system',
-    'shared-ui',
-    'core-ui'
-  ]
+  const uiRelatedNames = ['ui', 'components', 'design-system', 'shared-ui', 'core-ui']
   const allLibs: Array<{
     name: string
     hasStorybook: boolean
@@ -162,7 +147,7 @@ export function findNxLibName(rootDir: string): string | undefined {
           allLibs.push({
             name: entry.name,
             hasStorybook,
-            isUiRelated
+            isUiRelated,
           })
         }
       }
@@ -211,7 +196,8 @@ function resolveNxLibPath(rootDir: string, nxLibName: string): string | null {
       if (depth > 2) return null
       const entries = fs.readdirSync(dir, { withFileTypes: true })
       for (const entry of entries) {
-        if (!entry.isDirectory() || entry.name.startsWith('.') || entry.name === 'node_modules') continue
+        if (!entry.isDirectory() || entry.name.startsWith('.') || entry.name === 'node_modules')
+          continue
         const entryPath = path.join(dir, entry.name)
         const projectJsonPath = path.join(entryPath, 'project.json')
 
@@ -222,7 +208,9 @@ function resolveNxLibPath(rootDir: string, nxLibName: string): string | null {
             if (project.name === nxLibName) {
               return path.relative(rootDir, entryPath).replace(/\\/g, '/')
             }
-          } catch { /* ignore */ }
+          } catch {
+            /* ignore */
+          }
 
           // Also check by derived name from path
           const nameParts = path.relative(baseDir, entryPath).split(path.sep)
@@ -254,10 +242,7 @@ function resolveNxLibPath(rootDir: string, nxLibName: string): string | null {
 function generateMainTs(config: SetupConfig): string {
   const { framework } = config
 
-  const addons: string[] = [
-    '@storybook/addon-docs',
-    '@storybook/addon-a11y',
-  ]
+  const addons: string[] = ['@storybook/addon-docs', '@storybook/addon-a11y']
 
   // Detect if this is a React Native/Expo project
   const packagePath = path.join(config.rootDir, 'package.json')
@@ -273,9 +258,7 @@ function generateMainTs(config: SetupConfig): string {
   }
 
   // Stories glob — include app directory for React Native/Expo projects
-  const storiesGlob = [
-    '../src/**/*.@(mdx|stories.@(js|jsx|ts|tsx))',
-  ]
+  const storiesGlob = ['../src/**/*.@(mdx|stories.@(js|jsx|ts|tsx))']
 
   // Add app directory for Expo Router / React Native projects
   if (isReactNative) {
@@ -540,14 +523,14 @@ function getScripts(config: SetupConfig): PackageScripts {
     return {
       storybook: `nx storybook ${config.nxLibName}`,
       'build-storybook': `nx build-storybook ${config.nxLibName}`,
-      'test-storybook': 'test-storybook'
+      'test-storybook': 'test-storybook',
     }
   }
 
   return {
     storybook: 'storybook dev -p 6006',
     'build-storybook': 'storybook build',
-    'test-storybook': 'test-storybook'
+    'test-storybook': 'test-storybook',
   }
 }
 
@@ -567,7 +550,7 @@ function getDependencies(config: SetupConfig): Dependencies {
     'storybook@^10.2.0',
     '@storybook/react@^10.2.0',
     '@storybook/addon-docs@^10.2.0',
-    '@storybook/addon-a11y@^10.2.0'
+    '@storybook/addon-a11y@^10.2.0',
   ]
 
   // Add framework-specific bundler
@@ -616,23 +599,19 @@ export interface SetupOptions {
   libName?: string
 }
 
-export async function runSetup(
-  rootDir: string,
-  options: SetupOptions = {}
-): Promise<SetupResult> {
+export async function runSetup(rootDir: string, options: SetupOptions = {}): Promise<SetupResult> {
   const { dryRun = false, force = false, libName } = options
 
   // Detect configuration
   const projectType = detectProjectType(rootDir)
   const framework = detectFramework(rootDir)
-  const nxLibName =
-    libName || (projectType === 'nx' ? findNxLibName(rootDir) : undefined)
+  const nxLibName = libName || (projectType === 'nx' ? findNxLibName(rootDir) : undefined)
 
   const config: SetupConfig = {
     projectType,
     framework,
     nxLibName,
-    rootDir
+    rootDir,
   }
 
   const result: SetupResult = {
@@ -641,13 +620,11 @@ export async function runSetup(
     nxLibName,
     filesCreated: [],
     scriptsAdded: [],
-    dependencies: getDependencies(config)
+    dependencies: getDependencies(config),
   }
 
   console.log('\n🔧 Storybook Setup\n')
-  console.log(
-    `  Project type: ${projectType === 'nx' ? 'Nx Monorepo' : 'Standard'}`
-  )
+  console.log(`  Project type: ${projectType === 'nx' ? 'Nx Monorepo' : 'Standard'}`)
   console.log(`  UI Framework: ${framework}`)
   if (nxLibName) {
     console.log(`  Nx Library: ${nxLibName}`)
@@ -683,7 +660,9 @@ export async function runSetup(
       path.join(rootDir, 'node_modules', '@nx', 'storybook')
     )
     if (nxStorybookInstalled) {
-      console.log(`  💡 Tip: You can also use \`npx nx g @nx/storybook:configuration ${targetLib}\` for Nx-native setup`)
+      console.log(
+        `  💡 Tip: You can also use \`npx nx g @nx/storybook:configuration ${targetLib}\` for Nx-native setup`
+      )
     }
     console.log('')
   } else {
@@ -709,13 +688,9 @@ export async function runSetup(
       fs.writeFileSync(mainPath, mainContent)
     }
     result.filesCreated.push('.storybook/main.ts')
-    console.log(
-      `  📄 ${mainExists ? 'Overwrote' : 'Created'} .storybook/main.ts`
-    )
+    console.log(`  📄 ${mainExists ? 'Overwrote' : 'Created'} .storybook/main.ts`)
   } else {
-    console.log(
-      `  ⏭️  Skipped .storybook/main.ts (already exists, use --force to overwrite)`
-    )
+    console.log(`  ⏭️  Skipped .storybook/main.ts (already exists, use --force to overwrite)`)
   }
 
   // Generate preview.tsx (uses JSX in decorators)
@@ -745,9 +720,7 @@ export async function runSetup(
       if (!dryRun) {
         fs.renameSync(legacyPreviewPath, previewTsxPath)
       }
-      console.log(
-        `  📄 Renamed .storybook/preview.ts → preview.tsx (contains JSX)`
-      )
+      console.log(`  📄 Renamed .storybook/preview.ts → preview.tsx (contains JSX)`)
     } else if (force) {
       // --force: overwrite with generated content as .tsx
       const previewContent = generatePreviewTs(framework)
@@ -782,9 +755,7 @@ export async function runSetup(
     result.filesCreated.push('.storybook/preview.tsx')
     console.log(`  📄 Overwrote .storybook/preview.tsx`)
   } else {
-    console.log(
-      `  ⏭️  Skipped .storybook/preview.tsx (already exists, use --force to overwrite)`
-    )
+    console.log(`  ⏭️  Skipped .storybook/preview.tsx (already exists, use --force to overwrite)`)
   }
 
   // Update package.json scripts
@@ -808,9 +779,7 @@ export async function runSetup(
         fs.writeFileSync(packagePath, `${JSON.stringify(pkg, null, 2)}\n`)
       }
       result.scriptsAdded = scriptsToAdd
-      console.log(
-        `  📦 Added scripts to package.json: ${scriptsToAdd.join(', ')}`
-      )
+      console.log(`  📦 Added scripts to package.json: ${scriptsToAdd.join(', ')}`)
     } else {
       console.log(`  ⏭️  Scripts already exist in package.json`)
     }
@@ -851,9 +820,7 @@ export async function runSetup(
         console.log(`  💡 Note: Add react-native-web to your dependencies for Storybook`)
       }
     } else {
-      console.log(
-        `  ⏭️  Skipped vite.config.ts (already exists, use --force to overwrite)`
-      )
+      console.log(`  ⏭️  Skipped vite.config.ts (already exists, use --force to overwrite)`)
     }
   }
 
@@ -874,13 +841,9 @@ export async function runSetup(
   console.log('  1. Run the install command above')
   console.log('  2. Review .storybook/preview.tsx and customize as needed')
   if (framework !== 'vanilla') {
-    console.log(
-      `  3. Ensure your ${framework} theme/config is properly imported in preview.tsx`
-    )
+    console.log(`  3. Ensure your ${framework} theme/config is properly imported in preview.tsx`)
   }
-  console.log(
-    `  ${framework !== 'vanilla' ? '4' : '3'}. Run: npm run storybook`
-  )
+  console.log(`  ${framework !== 'vanilla' ? '4' : '3'}. Run: npm run storybook`)
   console.log('')
 
   if (dryRun) {

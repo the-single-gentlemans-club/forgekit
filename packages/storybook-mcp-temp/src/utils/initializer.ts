@@ -7,11 +7,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import crypto from 'node:crypto'
-import type {
-  StorybookMCPConfig,
-  ComponentInfo,
-  ComponentAnalysis,
-} from '../types.js'
+import type { StorybookMCPConfig, ComponentInfo, ComponentAnalysis } from '../types.js'
 import { scanComponents, analyzeComponent } from './scanner.js'
 import { POLAR_UPGRADE_URL, CACHE, FILE_EXTENSIONS } from './constants.js'
 import { generateStory, writeStoryFile } from './generator.js'
@@ -78,10 +74,13 @@ export interface InitResult {
 
 interface HashCache {
   version: string
-  components: Record<string, {
-    hash: string
-    lastSync: string
-  }>
+  components: Record<
+    string,
+    {
+      hash: string
+      lastSync: string
+    }
+  >
 }
 
 function loadCache(rootDir: string): HashCache {
@@ -186,7 +185,9 @@ export async function initializeComponents(
     limitApplied = true
   }
 
-  console.error(`[storybook-mcp] Scanning ${components.length} components...${limitApplied ? ` (limited from ${result.scanned})` : ''}`)
+  console.error(
+    `[storybook-mcp] Scanning ${components.length} components...${limitApplied ? ` (limited from ${result.scanned})` : ''}`
+  )
 
   for (const component of components) {
     // Apply filter if specified
@@ -196,19 +197,13 @@ export async function initializeComponents(
     }
 
     try {
-      const syncResult = await syncComponent(
-        config,
-        component,
-        cache,
-        newCache,
-        {
-          generateStories,
-          generateTests,
-          generateDocs,
-          updateExisting,
-          dryRun,
-        }
-      )
+      const syncResult = await syncComponent(config, component, cache, newCache, {
+        generateStories,
+        generateTests,
+        generateDocs,
+        updateExisting,
+        dryRun,
+      })
 
       result.details.push(syncResult)
 
@@ -219,7 +214,6 @@ export async function initializeComponents(
       if (syncResult.test.action === 'updated') result.updated.tests++
       if (syncResult.docs.action === 'created') result.created.docs++
       if (syncResult.docs.action === 'updated') result.updated.docs++
-
     } catch (error) {
       result.errors.push({
         component: component.name,
@@ -236,10 +230,12 @@ export async function initializeComponents(
   // Log summary
   const totalCreated = result.created.stories + result.created.tests + result.created.docs
   const totalUpdated = result.updated.stories + result.updated.tests + result.updated.docs
-  
+
   console.error(`[storybook-mcp] Sync complete:`)
   console.error(`  Scanned: ${result.scanned} components`)
-  console.error(`  Created: ${totalCreated} files (${result.created.stories} stories, ${result.created.tests} tests, ${result.created.docs} docs)`)
+  console.error(
+    `  Created: ${totalCreated} files (${result.created.stories} stories, ${result.created.tests} tests, ${result.created.docs} docs)`
+  )
   console.error(`  Updated: ${totalUpdated} files`)
   console.error(`  Skipped: ${result.skipped}`)
   if (result.errors.length > 0) {
@@ -269,8 +265,14 @@ async function syncComponent(
     dryRun: boolean
   }
 ): Promise<SyncResult> {
-  const { generateStories: shouldGenStories, generateTests: shouldGenTests, generateDocs: shouldGenDocs, updateExisting, dryRun } = options
-  
+  const {
+    generateStories: shouldGenStories,
+    generateTests: shouldGenTests,
+    generateDocs: shouldGenDocs,
+    updateExisting,
+    dryRun,
+  } = options
+
   const componentFullPath = path.join(config.rootDir, component.filePath)
   const componentHash = hashFile(componentFullPath)
   const cachedComponent = oldCache.components[component.filePath]
@@ -318,7 +320,6 @@ async function syncComponent(
       }
 
       result.story = { action: 'created', path: storyPath }
-
     } else if (updateExisting && componentChanged) {
       // Update existing story if component changed
       const componentAnalysis = await getAnalysis()
@@ -334,7 +335,6 @@ async function syncComponent(
       }
 
       result.story = { action: 'updated', path: storyPath, reason: 'component changed' }
-
     } else {
       result.story = { action: 'unchanged', path: storyPath }
     }
@@ -354,7 +354,6 @@ async function syncComponent(
       }
 
       result.test = { action: 'created', path: testPath }
-
     } else if (updateExisting && componentChanged) {
       const componentAnalysis = await getAnalysis()
       const test = await generateTest(config, componentAnalysis)
@@ -364,7 +363,6 @@ async function syncComponent(
       }
 
       result.test = { action: 'updated', path: testPath, reason: 'component changed' }
-
     } else {
       result.test = { action: 'unchanged', path: testPath }
     }
@@ -384,7 +382,6 @@ async function syncComponent(
       }
 
       result.docs = { action: 'created', path: docsPath }
-
     } else if (updateExisting && componentChanged) {
       const componentAnalysis = await getAnalysis()
       const docs = await generateDocs(config, componentAnalysis)
@@ -394,7 +391,6 @@ async function syncComponent(
       }
 
       result.docs = { action: 'updated', path: docsPath, reason: 'component changed' }
-
     } else {
       result.docs = { action: 'unchanged', path: docsPath }
     }
@@ -412,7 +408,7 @@ export async function syncSingleComponent(
   options: Partial<InitOptions> = {}
 ): Promise<SyncResult> {
   const analysis = await analyzeComponent(config, componentPath)
-  
+
   const component: ComponentInfo = {
     name: analysis.name,
     filePath: componentPath,

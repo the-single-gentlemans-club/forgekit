@@ -5,11 +5,7 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
-import type {
-  StorybookMCPConfig,
-  ComponentAnalysis,
-  PropDefinition,
-} from '../types.js'
+import type { StorybookMCPConfig, ComponentAnalysis, PropDefinition } from '../types.js'
 import { FILE_EXTENSIONS } from './constants.js'
 
 export interface GeneratedDocs {
@@ -26,7 +22,7 @@ export async function generateDocs(
 ): Promise<GeneratedDocs> {
   const { name, props, dependencies } = analysis
   const docsPath = buildDocsPath(analysis.filePath)
-  
+
   const storiesImportName = `${name}Stories`
   const storiesFileName = path.basename(analysis.filePath, path.extname(analysis.filePath))
 
@@ -53,7 +49,7 @@ ${generateDescription(name, props, dependencies)}
 `
 
   // Add variants section if applicable
-  const variantProp = props.find(p => p.name === 'variant' && p.controlOptions)
+  const variantProp = props.find((p) => p.name === 'variant' && p.controlOptions)
   if (variantProp?.controlOptions) {
     content += `
 ### Variants
@@ -63,13 +59,13 @@ The \`${name}\` supports ${variantProp.controlOptions.length} visual variants:
 <Canvas of={${name}Stories.Variants} />
 
 \`\`\`tsx
-${variantProp.controlOptions.map(v => `<${name} variant="${v}">${v}</${name}>`).join('\n')}
+${variantProp.controlOptions.map((v) => `<${name} variant="${v}">${v}</${name}>`).join('\n')}
 \`\`\`
 `
   }
 
   // Add sizes section if applicable
-  const sizeProp = props.find(p => p.name === 'size' && p.controlOptions)
+  const sizeProp = props.find((p) => p.name === 'size' && p.controlOptions)
   if (sizeProp?.controlOptions) {
     content += `
 ### Sizes
@@ -79,7 +75,7 @@ Available in ${sizeProp.controlOptions.length} sizes:
 <Canvas of={${name}Stories.Sizes} />
 
 \`\`\`tsx
-${sizeProp.controlOptions.map(s => `<${name} size="${s}">${s}</${name}>`).join('\n')}
+${sizeProp.controlOptions.map((s) => `<${name} size="${s}">${s}</${name}>`).join('\n')}
 \`\`\`
 `
   }
@@ -146,14 +142,14 @@ function generateDescription(
   dependencies: ComponentAnalysis['dependencies']
 ): string {
   const features: string[] = []
-  
-  if (props.some(p => p.name === 'variant')) {
+
+  if (props.some((p) => p.name === 'variant')) {
     features.push('multiple visual variants')
   }
-  if (props.some(p => p.name === 'size')) {
+  if (props.some((p) => p.name === 'size')) {
     features.push('configurable sizes')
   }
-  if (props.some(p => p.name === 'disabled')) {
+  if (props.some((p) => p.name === 'disabled')) {
     features.push('disabled state support')
   }
   if (dependencies.usesFramerMotion) {
@@ -163,7 +159,7 @@ function generateDescription(
   if (features.length > 0) {
     return `The \`${name}\` component provides ${features.join(', ')}.`
   }
-  
+
   return `The \`${name}\` component is a reusable UI element.`
 }
 
@@ -172,14 +168,15 @@ function generateDescription(
  */
 function generateExampleProps(props: PropDefinition[]): string {
   const exampleProps: string[] = []
-  
-  const variantProp = props.find(p => p.name === 'variant' && p.controlOptions)
+
+  const variantProp = props.find((p) => p.name === 'variant' && p.controlOptions)
   if (variantProp?.controlOptions?.[0]) {
     exampleProps.push(`variant="${variantProp.controlOptions[0]}"`)
   }
-  
-  const sizeProp = props.find(p => p.name === 'size' && p.controlOptions)
-  if (sizeProp?.controlOptions?.[1]) { // Use middle size
+
+  const sizeProp = props.find((p) => p.name === 'size' && p.controlOptions)
+  if (sizeProp?.controlOptions?.[1]) {
+    // Use middle size
     exampleProps.push(`size="${sizeProp.controlOptions[1]}"`)
   }
 
@@ -218,7 +215,7 @@ function generateA11ySection(name: string, props: PropDefinition[]): string {
     '- Compatible with screen readers',
   ]
 
-  if (props.some(p => p.name === 'disabled')) {
+  if (props.some((p) => p.name === 'disabled')) {
     features.push('- Correctly announces disabled state')
   }
 
@@ -290,15 +287,15 @@ This component relies on global state. Ensure the appropriate store provider is 
  * Generate best practices
  */
 function generateBestPractices(name: string, props: PropDefinition[]): string {
-  const practices = [
-    `1. **Accessibility**: Always provide meaningful content or aria-label`,
-  ]
+  const practices = [`1. **Accessibility**: Always provide meaningful content or aria-label`]
 
-  if (props.some(p => p.name === 'variant')) {
-    practices.push(`2. **Variants**: Choose the appropriate variant for the context (e.g., primary actions vs secondary)`)
+  if (props.some((p) => p.name === 'variant')) {
+    practices.push(
+      `2. **Variants**: Choose the appropriate variant for the context (e.g., primary actions vs secondary)`
+    )
   }
 
-  if (props.some(p => p.name === 'size')) {
+  if (props.some((p) => p.name === 'size')) {
     practices.push(`3. **Sizing**: Use consistent sizes within the same section of your UI`)
   }
 
@@ -313,10 +310,7 @@ function generateBestPractices(name: string, props: PropDefinition[]): string {
 /**
  * Generate related components section
  */
-function generateRelatedComponents(
-  name: string,
-  deps: ComponentAnalysis['dependencies']
-): string {
+function generateRelatedComponents(name: string, deps: ComponentAnalysis['dependencies']): string {
   const related: string[] = []
 
   if (deps.usesChakra) {
@@ -326,9 +320,7 @@ function generateRelatedComponents(
       '- [Flex](/components/flex) - Flexbox layout'
     )
   } else {
-    related.push(
-      '- See your design system documentation for related components'
-    )
+    related.push('- See your design system documentation for related components')
   }
 
   return related.join('\n')
@@ -551,16 +543,16 @@ export async function writeDocsFile(
   overwrite: boolean = false
 ): Promise<boolean> {
   const fullPath = path.join(config.rootDir, docs.filePath)
-  
+
   if (fs.existsSync(fullPath) && !overwrite) {
     return false
   }
-  
+
   const dir = path.dirname(fullPath)
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true })
   }
-  
+
   fs.writeFileSync(fullPath, docs.content, 'utf-8')
   return true
 }

@@ -15,7 +15,9 @@ beforeAll(() => {
   fs.mkdirSync(compDir, { recursive: true })
 
   // Simple component
-  fs.writeFileSync(path.join(compDir, 'Button.tsx'), `
+  fs.writeFileSync(
+    path.join(compDir, 'Button.tsx'),
+    `
 import React from 'react'
 
 interface ButtonProps {
@@ -29,10 +31,13 @@ interface ButtonProps {
 export const Button: React.FC<ButtonProps> = ({ children, ...props }) => {
   return <button {...props}>{children}</button>
 }
-`)
+`
+  )
 
   // Component with Chakra import
-  fs.writeFileSync(path.join(compDir, 'ChakraCard.tsx'), `
+  fs.writeFileSync(
+    path.join(compDir, 'ChakraCard.tsx'),
+    `
 import React from 'react'
 import { Box, Text } from '@chakra-ui/react'
 
@@ -43,37 +48,47 @@ interface ChakraCardProps {
 export const ChakraCard: React.FC<ChakraCardProps> = ({ title }) => {
   return <Box><Text>{title}</Text></Box>
 }
-`)
+`
+  )
 
   // Component with router import
-  fs.writeFileSync(path.join(compDir, 'NavLink.tsx'), `
+  fs.writeFileSync(
+    path.join(compDir, 'NavLink.tsx'),
+    `
 import React from 'react'
 import { Link } from 'react-router-dom'
 
 export const NavLink = ({ to, children }: { to: string; children: React.ReactNode }) => {
   return <Link to={to}>{children}</Link>
 }
-`)
+`
+  )
 
   // Component with Gluestack import
-  fs.writeFileSync(path.join(compDir, 'GluestackButton.tsx'), `
+  fs.writeFileSync(
+    path.join(compDir, 'GluestackButton.tsx'),
+    `
 import React from 'react'
 import { Button, ButtonText } from '@gluestack-ui/themed'
 
 export const GluestackButton = ({ label }: { label: string }) => {
   return <Button><ButtonText>{label}</ButtonText></Button>
 }
-`)
+`
+  )
 
   // Existing story file for Button
-  fs.writeFileSync(path.join(compDir, 'Button.stories.tsx'), `
+  fs.writeFileSync(
+    path.join(compDir, 'Button.stories.tsx'),
+    `
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from './Button'
 const meta: Meta<typeof Button> = { title: 'Components/Button', component: Button, tags: [] }
 export default meta
 type Story = StoryObj<typeof Button>
 export const Default: Story = {}
-`)
+`
+  )
 
   // Non-component file that should be skipped
   fs.writeFileSync(path.join(compDir, 'utils.ts'), `export const noop = () => {}`)
@@ -98,7 +113,7 @@ function makeConfig(): StorybookMCPConfig {
 describe('scanner', () => {
   it('finds components in temp directory', async () => {
     const components = await scanComponents(makeConfig())
-    const names = components.map(c => c.name)
+    const names = components.map((c) => c.name)
     expect(names).toContain('Button')
     expect(names).toContain('ChakraCard')
     expect(names).toContain('NavLink')
@@ -107,32 +122,32 @@ describe('scanner', () => {
 
   it('skips non-component files (utils, types)', async () => {
     const components = await scanComponents(makeConfig())
-    const names = components.map(c => c.name)
+    const names = components.map((c) => c.name)
     expect(names).not.toContain('Utils')
     expect(names).not.toContain('Types')
   })
 
   it('detects existing story files', async () => {
     const components = await scanComponents(makeConfig())
-    const button = components.find(c => c.name === 'Button')!
+    const button = components.find((c) => c.name === 'Button')!
     expect(button.hasStory).toBe(true)
-    
-    const chakraCard = components.find(c => c.name === 'ChakraCard')!
+
+    const chakraCard = components.find((c) => c.name === 'ChakraCard')!
     expect(chakraCard.hasStory).toBe(false)
   })
 
   it('filters by hasStory', async () => {
     const withStory = await scanComponents(makeConfig(), { hasStory: true })
-    expect(withStory.every(c => c.hasStory)).toBe(true)
-    
+    expect(withStory.every((c) => c.hasStory)).toBe(true)
+
     const withoutStory = await scanComponents(makeConfig(), { hasStory: false })
-    expect(withoutStory.every(c => !c.hasStory)).toBe(true)
+    expect(withoutStory.every((c) => !c.hasStory)).toBe(true)
   })
 
   it('analyzeComponent extracts props', async () => {
     const analysis = await analyzeComponent(makeConfig(), 'src/components/Button.tsx')
     expect(analysis.name).toBe('Button')
-    const propNames = analysis.props.map(p => p.name)
+    const propNames = analysis.props.map((p) => p.name)
     expect(propNames).toContain('variant')
     expect(propNames).toContain('size')
     expect(propNames).toContain('disabled')

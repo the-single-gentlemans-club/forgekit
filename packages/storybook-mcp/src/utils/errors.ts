@@ -168,10 +168,7 @@ export function getErrorCode(error: unknown): ErrorCode {
  */
 export function formatError(error: unknown): string {
   if (error instanceof StorybookMCPError) {
-    const parts = [
-      `[${error.code}]`,
-      error.message,
-    ]
+    const parts = [`[${error.code}]`, error.message]
     if (error.details) {
       parts.push(`Details: ${JSON.stringify(error.details)}`)
     }
@@ -186,7 +183,10 @@ export function formatError(error: unknown): string {
 /**
  * Wrap unknown errors in StorybookMCPError
  */
-export function wrapError(error: unknown, code: ErrorCode = ErrorCode.UNKNOWN_ERROR): StorybookMCPError {
+export function wrapError(
+  error: unknown,
+  code: ErrorCode = ErrorCode.UNKNOWN_ERROR
+): StorybookMCPError {
   if (error instanceof StorybookMCPError) {
     return error
   }

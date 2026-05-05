@@ -74,7 +74,7 @@ describe('syncVariables', () => {
     await syncVariables(tokens)
     const paletteVarCount = Object.values(tokens.palettes).reduce(
       (n, p) => n + Object.keys(p).length,
-      0,
+      0
     )
     const absoluteCount = Object.keys(tokens.absolutes).length
     const colorVars = mock._variables.filter((v) => v.resolvedType === 'COLOR')
@@ -110,7 +110,9 @@ describe('syncVariables', () => {
 
   it('assigns correct scopes to color variables', async () => {
     await syncVariables(tokens)
-    const colorVar = mock._variables.find((v) => v.resolvedType === 'COLOR' && v.name.includes('primary'))
+    const colorVar = mock._variables.find(
+      (v) => v.resolvedType === 'COLOR' && v.name.includes('primary')
+    )
     expect(colorVar?.scopes).toContain('ALL_FILLS')
   })
 
@@ -215,7 +217,7 @@ describe('buildSpacingPage', () => {
     await buildSpacingPage(tokens)
     // Radius boxes are rectangles too
     expect(mock.createRectangle.mock.calls.length).toBeGreaterThanOrEqual(
-      Object.keys(tokens.borderRadius).length,
+      Object.keys(tokens.borderRadius).length
     )
   })
 
