@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: <explanation> */
+/** biome-ignore-all lint/style/noNonNullAssertion: mock handler lookup always finds a call after createStorybookMCPServer */
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { Server } from '@modelcontextprotocol/sdk/server/index.js'
 import {
