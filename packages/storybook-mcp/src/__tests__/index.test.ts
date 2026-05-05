@@ -1,5 +1,5 @@
+/** biome-ignore-all lint/style/noNonNullAssertion: <explanation> */
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { createStorybookMCPServer } from '../index.js'
 import { Server } from '@modelcontextprotocol/sdk/server/index.js'
 import {
   ListToolsRequestSchema,
@@ -7,8 +7,10 @@ import {
   ListResourcesRequestSchema,
   ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js'
+
 import * as tools from '../tools.js'
 import type { StorybookMCPConfig } from '../types.js'
+import { createStorybookMCPServer } from '../index.js'
 
 vi.mock('@modelcontextprotocol/sdk/server/index.js', () => {
   const setRequestHandler = vi.fn()
@@ -68,7 +70,7 @@ describe('createStorybookMCPServer', () => {
     config = makeConfig()
     createStorybookMCPServer(config)
     expect(Server).toHaveBeenCalledTimes(1)
-    mockServerInstance = vi.mocked(Server).mock.results[0]!.value as {
+    mockServerInstance = vi.mocked(Server).mock.results[0]?.value as {
       setRequestHandler: ReturnType<typeof vi.fn>
     }
   })

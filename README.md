@@ -6,18 +6,18 @@ ForgeKit is an [Nx](https://nx.dev) monorepo: multiple **Model Context Protocol 
 
 ## Repository contents
 
-| Package | npm / scope | Role |
-|---------|----------------|------|
-| [`packages/storybook-mcp`](packages/storybook-mcp/README.md) | [`forgekit-storybook-mcp`](https://www.npmjs.com/package/forgekit-storybook-mcp) | MCP server: Storybook stories, tests, docs, Code Connect, sync, health (15 tools). CLI: `forgekit-storybook-mcp`, `storybook-mcp`. |
-| [`packages/context-mcp`](packages/context-mcp/README.md) | `forgekit-context` (publish target; **not on npm yet** — use this repo or link locally) | MCP orchestration: wires Figma developer MCP + Storybook MCP for gaps, drift, onboarding, Code to Canvas (7 tools). CLI: `forgekit-context`, `context-mcp`. |
-| [`packages/figma-mcp`](packages/figma-mcp/) | [`forgekit-figma-mcp`](https://www.npmjs.com/package/forgekit-figma-mcp) | MCP server: sync Figma variables into Chakra UI theme files (`sync-theme`). CLI binary: `forgekit`. |
-| [`packages/mcp-core`](packages/mcp-core/README.md) | `@forgekit/mcp-core` (internal) | Shared MCP transports: `createStdioMcpClient`, `createHttpMcpClient`, `callTool` — used by `forgekit-context`. |
-| [`packages/figma-plugin`](packages/figma-plugin/) | `@forgekit/figma-plugin` | Reusable Figma plugin helpers: token sync, palette/spacing/typography builders, components/screens pages — `setupPlugin()` orchestration for custom plugins. |
-| [`packages/utils`](packages/utils/) | `@forgekit/utils` (internal) | Shared utilities. |
-| [`packages/strings`](packages/strings/) | `@forgekit/strings` | String helpers (workspace library). |
-| [`packages/colors`](packages/colors/) | `@forgekit/colors` | Color helpers (workspace library). |
-| [`packages/async`](packages/async/) | `@forgekit/async` | Async helpers (workspace library). |
-| [`packages/storybook-mcp-temp`](packages/storybook-mcp-temp/) | — | Nx scaffold / experimental sibling of Storybook MCP (not the published package). |
+| Package                                                       | npm / scope                                                                             | Role                                                                                                                                                         |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [`packages/storybook-mcp`](packages/storybook-mcp/README.md)  | [`forgekit-storybook-mcp`](https://www.npmjs.com/package/forgekit-storybook-mcp)        | MCP server: Storybook stories, tests, docs, Code Connect, sync, health (15 tools). CLI: `forgekit-storybook-mcp`, `storybook-mcp`.                           |
+| [`packages/context-mcp`](packages/context-mcp/README.md)      | `forgekit-context` (publish target; **not on npm yet** — use this repo or link locally) | MCP orchestration: wires Figma developer MCP + Storybook MCP for gaps, drift, onboarding, Code to Canvas (7 tools). CLI: `forgekit-context`, `context-mcp`.  |
+| [`packages/figma-mcp`](packages/figma-mcp/)                   | [`forgekit-figma-mcp`](https://www.npmjs.com/package/forgekit-figma-mcp)                | MCP server: sync Figma variables into Chakra UI theme files (`sync-theme`). CLI binary: `forgekit`.                                                          |
+| [`packages/mcp-core`](packages/mcp-core/README.md)            | `@forgekit/mcp-core` (internal)                                                         | Shared MCP transports: `createStdioMcpClient`, `createHttpMcpClient`, `callTool` — used by `forgekit-context`.                                               |
+| [`packages/figma-plugin`](packages/figma-plugin/)             | `@forgekit/figma-plugin`                                                                | Reusable Figma plugin helpers: token sync, palette/spacing/typography builders, components/screens pages — `setupPlugin()` orchestration for custom plugins. |
+| [`packages/utils`](packages/utils/)                           | `@forgekit/utils` (internal)                                                            | Shared utilities.                                                                                                                                            |
+| [`packages/strings`](packages/strings/)                       | `@forgekit/strings`                                                                     | String helpers (workspace library).                                                                                                                          |
+| [`packages/colors`](packages/colors/)                         | `@forgekit/colors`                                                                      | Color helpers (workspace library).                                                                                                                           |
+| [`packages/async`](packages/async/)                           | `@forgekit/async`                                                                       | Async helpers (workspace library).                                                                                                                           |
+| [`packages/storybook-mcp-temp`](packages/storybook-mcp-temp/) | —                                                                                       | Nx scaffold / experimental sibling of Storybook MCP (not the published package).                                                                             |
 
 ## What the MCP servers do
 
@@ -50,16 +50,16 @@ Details: [`packages/context-mcp/README.md`](packages/context-mcp/README.md).
 
 This workspace is managed with **Nx** and **npm workspaces** (`packages/*`).
 
-| Concern | How it works here |
-|--------|-------------------|
-| **Tasks** | Prefer `npx nx run <project>:<target>` or `npx nx run-many -t <target>`. Common targets are inferred or defined per package: `build`, `test`, `lint`, `typecheck` (see `@nx/js`, `@nx/vite`, `@nx/eslint`, `@nx/vitest` in [`nx.json`](nx.json)). |
-| **Build** | Libraries use TypeScript (`tsconfig.lib.json`) and/or **tsup** where packages define it (e.g. MCP packages). |
-| **Tests** | **Vitest** (`nx test <project>`). Tests depend on upstream `build` where configured (`targetDefaults` in `nx.json`). |
-| **Lint** | **ESLint** flat config ([`eslint.config.mjs`](eslint.config.mjs)), Nx ESLint plugin for project boundaries. |
-| **Formatting** | **Prettier** (repo-wide; Tailwind plugin available for Tailwind-aware formatting). |
-| **Release** | `npm run release` → `nx release` with conventional commits; `preVersionCommand` runs `nx run-many -t build`. Some packages are excluded from versioning (see `release.projects` in `nx.json`). |
-| **Local npm registry** | `npx nx run @forgekit/source:local-registry` — Verdaccio on port **4873** for testing publishes ([`package.json`](package.json) `nx.targets`). |
-| **Figma plugin package** | [`packages/figma-plugin`](packages/figma-plugin/) — typings via `@figma/plugin-typings`; publish script at root: `npm run publish:figma-plugin`. |
+| Concern                  | How it works here                                                                                                                                                                                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Tasks**                | Prefer `npx nx run <project>:<target>` or `npx nx run-many -t <target>`. Common targets are inferred or defined per package: `build`, `test`, `lint`, `typecheck` (see `@nx/js`, `@nx/vite`, `@nx/eslint`, `@nx/vitest` in [`nx.json`](nx.json)). |
+| **Build**                | Libraries use TypeScript (`tsconfig.lib.json`) and/or **tsup** where packages define it (e.g. MCP packages).                                                                                                                                      |
+| **Tests**                | **Vitest** (`nx test <project>`). Tests depend on upstream `build` where configured (`targetDefaults` in `nx.json`).                                                                                                                              |
+| **Lint**                 | **ESLint** flat config ([`eslint.config.mjs`](eslint.config.mjs)), Nx ESLint plugin for project boundaries.                                                                                                                                       |
+| **Formatting**           | **Prettier** (repo-wide; Tailwind plugin available for Tailwind-aware formatting).                                                                                                                                                                |
+| **Release**              | `npm run release` → `nx release` with conventional commits; `preVersionCommand` runs `nx run-many -t build`. Some packages are excluded from versioning (see `release.projects` in `nx.json`).                                                    |
+| **Local npm registry**   | `npx nx run @forgekit/source:local-registry` — Verdaccio on port **4873** for testing publishes ([`package.json`](package.json) `nx.targets`).                                                                                                    |
+| **Figma plugin package** | [`packages/figma-plugin`](packages/figma-plugin/) — typings via `@figma/plugin-typings`; publish script at root: `npm run publish:figma-plugin`.                                                                                                  |
 
 **Requirements:** Node **20+** is recommended (several packages declare `>=20` or `>=18`; `forgekit-context` README specifies Node 20+).
 
@@ -129,7 +129,7 @@ Runs stdio MCP with the `sync-theme` tool. Configure your assistant to launch th
 
 ## Project structure
 
-```
+```MD
 forgekit/
 ├── packages/
 │   ├── storybook-mcp/       # forgekit-storybook-mcp — Storybook MCP
