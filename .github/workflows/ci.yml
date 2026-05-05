@@ -44,9 +44,7 @@ jobs:
 
       - run: npm ci
 
-      # Prepend any command with "nx-cloud record --" to record its logs to Nx Cloud
-      - run: npm exec nx-cloud record -- npm exec nx format:check -- --base="$NX_BASE"
-          --head="$NX_HEAD"
+      - run: npm exec nx format:check -- --base="$NX_BASE" --head="$NX_HEAD"
       - run: npm exec nx affected -t lint test build typecheck --base="$NX_BASE"
           --head="$NX_HEAD"
 
