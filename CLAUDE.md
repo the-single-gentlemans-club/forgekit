@@ -52,7 +52,7 @@ Senior frontend engineer specializing in React, React Native, Storybook, UI, and
 
 ## Skills
 
-If not in repo or settings, add and use this skill no commits and PRs.
+If not in repo or settings, add and use this skill before commits and PRs.
 
 ```skill
 ---
@@ -136,7 +136,7 @@ export default function Page() {
 }
 ```
 
-- **2.** Use a types as documentation philosophy
+- **2.** Use types as documentation
 
 ```JS
 // Don't do this
@@ -174,8 +174,8 @@ const [error, submitAction, isPending] = useActionState(
 ```
 
 EVERYTHING IN THIS ARTICLE SHOULD BE APPLIED IN MY/OUR PROJECTS:
-<https://medium.com/@mernstackdevbykevin/react-hooks-are-getting-a-major-upgrade-heres-what-every-developer-needs-to-know-in-2026-9f2a14158793>>
+<https://medium.com/@mernstackdevbykevin/react-hooks-are-getting-a-major-upgrade-heres-what-every-developer-needs-to-know-in-2026-9f2a14158793>
 
 LET ME KNOW IF THAT LINK CAN'T BE OPENED.
 
-<!-- IMPORTANT NOTE end-->
+<!-- IMPORTANT NOTE end -->
