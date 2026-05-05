@@ -1,0 +1,151 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1777975299531,
+  "projectRoot": "/Users/richtillman/Documents/GitHub/forgekit",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "tsconfig.json"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "vite",
+        "version": "7.0.0",
+        "category": "build"
+      },
+      {
+        "name": "vitest",
+        "version": "4.0.9",
+        "category": "testing"
+      }
+    ],
+    "packageManager": "npm",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": true,
+    "workspaces": [
+      "packages/*"
+    ],
+    "mainDirectories": [
+      "docs"
+    ],
+    "gitBranches": {
+      "defaultBranch": "master",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "ContextPool": {
+      "path": "ContextPool",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1777975299380,
+      "keyFiles": []
+    },
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 0,
+      "lastAccessed": 1777975299380,
+      "keyFiles": []
+    },
+    "packages": {
+      "path": "packages",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1777975299514,
+      "keyFiles": []
+    },
+    "packages/utils": {
+      "path": "packages/utils",
+      "purpose": "Utility functions",
+      "fileCount": 5,
+      "lastAccessed": 1777975299515,
+      "keyFiles": [
+        "README.md",
+        "eslint.config.mjs",
+        "package.json"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "packages/async/package.json",
+      "accessCount": 1,
+      "lastAccessed": 1777710388618,
+      "type": "file"
+    },
+    {
+      "path": "packages/colors/package.json",
+      "accessCount": 1,
+      "lastAccessed": 1777710388808,
+      "type": "file"
+    },
+    {
+      "path": "packages/strings/package.json",
+      "accessCount": 1,
+      "lastAccessed": 1777710389040,
+      "type": "file"
+    },
+    {
+      "path": "packages/utils/package.json",
+      "accessCount": 1,
+      "lastAccessed": 1777710389123,
+      "type": "file"
+    },
+    {
+      "path": "packages/utils/src/index.ts",
+      "accessCount": 1,
+      "lastAccessed": 1777710409773,
+      "type": "file"
+    },
+    {
+      "path": "packages/async/src/index.ts",
+      "accessCount": 1,
+      "lastAccessed": 1777710410006,
+      "type": "file"
+    },
+    {
+      "path": "packages/colors/src/index.ts",
+      "accessCount": 1,
+      "lastAccessed": 1777710410297,
+      "type": "file"
+    },
+    {
+      "path": "packages/strings/src/index.ts",
+      "accessCount": 1,
+      "lastAccessed": 1777710410318,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
