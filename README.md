@@ -148,10 +148,6 @@ forgekit/
 
 Features are developed in this monorepo; published artifacts include:
 
-- **Storybook MCP** — also tracked at [github.com/the-single-gentlemans-club/storybook-mcp](https://github.com/the-single-gentlemans-club/storybook-mcp) per package README
-- **Docs** — [forgekit.cloud](https://forgekit.cloud)
-- **npm** — [forgekit-storybook-mcp](https://www.npmjs.com/package/forgekit-storybook-mcp)
-
-## License
-
-Free tier available. Pro license at [forgekit.cloud](https://forgekit.cloud) — $29 launch price.
+- **Storybook MCP** → [github.com/the-single-gentlemans-club/storybook-mcp](https://github.com/the-single-gentlemans-club/storybook-mcp)
+- **Docs** → [forgekit.cloud](https://forgekit.cloud)
+- **npm** → [forgekit-storybook-mcp](https://npmjs.com/package/forgekit-storybook-mcp)
