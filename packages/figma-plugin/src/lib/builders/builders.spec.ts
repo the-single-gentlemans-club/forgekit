@@ -1,6 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { setupFigmaMock } from '../figma-mock.js'
-import type { PluginTokens } from '../types.js'
+import type { ColorPalette, PluginTokens } from '../types.js'
+
+type MockFigma = ReturnType<typeof setupFigmaMock>
+type MockVariable = MockFigma['_variables'][number]
 import { buildPalettePage } from './palette.js'
 import { buildSpacingPage } from './spacing.js'
 import { buildTypographyPage } from './typography.js'
@@ -72,37 +76,41 @@ describe('syncVariables', () => {
 
   it('creates the correct number of primitive color variables', async () => {
     await syncVariables(tokens)
-    const paletteVarCount = Object.values(tokens.palettes).reduce(
-      (n, p) => n + Object.keys(p).length,
-      0,
+    const paletteVarCount = Object.values(tokens.palettes).reduce<number>(
+      (n: number, p: ColorPalette) => n + Object.keys(p).length,
+      0
     )
     const absoluteCount = Object.keys(tokens.absolutes).length
-    const colorVars = mock._variables.filter((v) => v.resolvedType === 'COLOR')
+    const colorVars = mock._variables.filter((v: MockVariable) => v.resolvedType === 'COLOR')
     // Primitives + semantics
     expect(colorVars.length).toBeGreaterThanOrEqual(paletteVarCount + absoluteCount)
   })
 
   it('creates FLOAT variables for spacing entries', async () => {
     await syncVariables(tokens)
-    const floatVars = mock._variables.filter((v) => v.resolvedType === 'FLOAT')
+    const floatVars = mock._variables.filter((v: MockVariable) => v.resolvedType === 'FLOAT')
     expect(floatVars.length).toBeGreaterThan(0)
-    const spacingVar = floatVars.find((v) => v.name.startsWith('spacing/'))
+    const spacingVar = floatVars.find((v: MockVariable) => v.name.startsWith('spacing/'))
     expect(spacingVar).toBeDefined()
   })
 
   it('creates FLOAT variables for border radius', async () => {
     await syncVariables(tokens)
-    const floatVars = mock._variables.filter((v) => v.resolvedType === 'FLOAT')
-    const radiusVar = floatVars.find((v) => v.name.startsWith('radius/'))
+    const floatVars = mock._variables.filter((v: MockVariable) => v.resolvedType === 'FLOAT')
+    const radiusVar = floatVars.find((v: MockVariable) => v.name.startsWith('radius/'))
     expect(radiusVar).toBeDefined()
   })
 
   it('creates FLOAT variables for typography scales', async () => {
     await syncVariables(tokens)
-    const floatVars = mock._variables.filter((v) => v.resolvedType === 'FLOAT')
-    const fontSizeVar = floatVars.find((v) => v.name.startsWith('typography/size/'))
-    const fontWeightVar = floatVars.find((v) => v.name.startsWith('typography/weight/'))
-    const lineHeightVar = floatVars.find((v) => v.name.startsWith('typography/lineHeight/'))
+    const floatVars = mock._variables.filter((v: MockVariable) => v.resolvedType === 'FLOAT')
+    const fontSizeVar = floatVars.find((v: MockVariable) => v.name.startsWith('typography/size/'))
+    const fontWeightVar = floatVars.find((v: MockVariable) =>
+      v.name.startsWith('typography/weight/')
+    )
+    const lineHeightVar = floatVars.find((v: MockVariable) =>
+      v.name.startsWith('typography/lineHeight/')
+    )
     expect(fontSizeVar).toBeDefined()
     expect(fontWeightVar).toBeDefined()
     expect(lineHeightVar).toBeDefined()
@@ -110,13 +118,15 @@ describe('syncVariables', () => {
 
   it('assigns correct scopes to color variables', async () => {
     await syncVariables(tokens)
-    const colorVar = mock._variables.find((v) => v.resolvedType === 'COLOR' && v.name.includes('primary'))
+    const colorVar = mock._variables.find(
+      (v: MockVariable) => v.resolvedType === 'COLOR' && v.name.includes('primary')
+    )
     expect(colorVar?.scopes).toContain('ALL_FILLS')
   })
 
   it('sets variable values via setValueForMode', async () => {
     await syncVariables(tokens)
-    const primVar = mock._variables.find((v) => v.name === 'primary/500')
+    const primVar = mock._variables.find((v: MockVariable) => v.name === 'primary/500')
     expect(primVar?.setValueForMode).toHaveBeenCalled()
   })
 
@@ -215,7 +225,7 @@ describe('buildSpacingPage', () => {
     await buildSpacingPage(tokens)
     // Radius boxes are rectangles too
     expect(mock.createRectangle.mock.calls.length).toBeGreaterThanOrEqual(
-      Object.keys(tokens.borderRadius).length,
+      Object.keys(tokens.borderRadius).length
     )
   })
 

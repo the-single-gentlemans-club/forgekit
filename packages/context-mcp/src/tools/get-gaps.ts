@@ -1,5 +1,5 @@
 import type { ForgeKitOrchestrator } from '../orchestrator.js'
-import type { GapAnalysis, ForgeKitContextConfig } from '../types.js'
+import type { ForgeKitContextConfig,GapAnalysis } from '../types.js'
 import { getDesignSystemState } from './get-design-system-state.js'
 
 export async function getGaps(
@@ -11,19 +11,15 @@ export async function getGaps(
 
   // Figma components with no code mapping (no filePath or codeComponentName)
   const figmaComponentsWithoutCode = codeConnectMap.filter(
-    entry => !entry.filePath && !entry.codeComponentName
+    (entry) => !entry.filePath && !entry.codeComponentName
   )
 
   // Code components not referenced in any Code Connect entry
-  const connectedNames = new Set(
-    codeConnectMap.map(e => e.codeComponentName).filter(Boolean)
-  )
-  const codeComponentsWithoutFigma = components.filter(
-    c => !connectedNames.has(c.name)
-  )
+  const connectedNames = new Set(codeConnectMap.map((e) => e.codeComponentName).filter(Boolean))
+  const codeComponentsWithoutFigma = components.filter((c) => !connectedNames.has(c.name))
 
   // Components that exist in code but have no Storybook story
-  const componentsWithoutStories = components.filter(c => !c.hasStory)
+  const componentsWithoutStories = components.filter((c) => !c.hasStory)
 
   const summary = [
     `${figmaComponentsWithoutCode.length} Figma component(s) without code`,

@@ -1,8 +1,18 @@
-import { describe, it, expect } from 'vitest'
-import { getTemplates, getTemplate } from '../templates.js'
+import { describe, expect,it } from 'vitest'
+
+import { getTemplate,getTemplates } from '../templates.js'
 
 describe('templates', () => {
-  const templateNames = ['basic', 'with-controls', 'with-variants', 'with-msw', 'with-router', 'page', 'interactive', 'form']
+  const templateNames = [
+    'basic',
+    'with-controls',
+    'with-variants',
+    'with-msw',
+    'with-router',
+    'page',
+    'interactive',
+    'form',
+  ]
 
   it('getTemplates returns all expected templates', () => {
     const templates = getTemplates()

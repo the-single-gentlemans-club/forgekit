@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 import { FigmaToken, TokenType } from '../types.js'
 
 interface FigmaVariable {
@@ -68,8 +69,8 @@ export async function fetchFigmaTokens(fileId: string, accessToken: string): Pro
       if (typeof value === 'object' && 'type' in value && value.type === 'VARIABLE_ALIAS') {
         const refId = value.id
         if (visited.has(refId)) {
-            console.warn(`Circular dependency detected for variable ${refId}`)
-            return null
+          console.warn(`Circular dependency detected for variable ${refId}`)
+          return null
         }
 
         const refVar = variablesMap.get(refId)
@@ -83,10 +84,10 @@ export async function fetchFigmaTokens(fileId: string, accessToken: string): Pro
         // 2. Fallback to default mode (e.g. Light -> Primitive Default)
         // 3. Fallback to first available mode
         let refModeId = contextModeId
-        const modeExists = refCollection.modes.some(m => m.modeId === contextModeId)
-        
+        const modeExists = refCollection.modes.some((m) => m.modeId === contextModeId)
+
         if (!modeExists) {
-            refModeId = refCollection.defaultModeId || refCollection.modes[0]?.modeId
+          refModeId = refCollection.defaultModeId || refCollection.modes[0]?.modeId
         }
 
         const refValue = refVar.valuesByMode[refModeId]
@@ -110,7 +111,7 @@ export async function fetchFigmaTokens(fileId: string, accessToken: string): Pro
       // Determine if this is a semantic token (has multiple modes or is in a collection named like one)
       // For simplicity, if a collection has > 1 mode, we treat it as semantic.
       const isSemantic = collection.modes.length > 1
-      
+
       let tokenValue: string | Record<string, string>
       let tokenType: TokenType = 'other'
 
@@ -118,45 +119,53 @@ export async function fetchFigmaTokens(fileId: string, accessToken: string): Pro
       if (variable.resolvedType === 'COLOR') {
         tokenType = 'color'
       } else if (variable.resolvedType === 'FLOAT') {
-         const name = variable.name.toLowerCase()
-         const collName = collection.name.toLowerCase()
-         if (name.includes('radius') || collName.includes('radius')) tokenType = 'borderRadius'
-         else if (name.includes('space') || name.includes('gap') || collName.includes('space')) tokenType = 'spacing'
-         else if (name.includes('size') || name.includes('font')) tokenType = 'typography'
-         else tokenType = 'spacing' // Default float to spacing
+        const name = variable.name.toLowerCase()
+        const collName = collection.name.toLowerCase()
+        if (name.includes('radius') || collName.includes('radius')) tokenType = 'borderRadius'
+        else if (name.includes('space') || name.includes('gap') || collName.includes('space'))
+          tokenType = 'spacing'
+        else if (name.includes('size') || name.includes('font')) tokenType = 'typography'
+        else tokenType = 'spacing' // Default float to spacing
       }
 
       if (isSemantic) {
         tokenValue = {} as Record<string, string>
         for (const mode of collection.modes) {
-            const rawVal = variable.valuesByMode[mode.modeId]
-            const resolved = resolveValue(rawVal, mode.modeId)
-            if (resolved !== null) {
-                // Normalize mode name (e.g. "Light Mode" -> "light", "Dark" -> "dark")
-                const modeKey = sanitizeModeName(mode.name)
-                tokenValue[modeKey] = resolved
-                
-                // Add px to numbers if needed
-                if (tokenType === 'spacing' || tokenType === 'borderRadius' || tokenType === 'typography') {
-                     if (typeof resolved === 'number') {
-                         tokenValue[modeKey] = `${resolved}px`
-                     }
-                }
+          const rawVal = variable.valuesByMode[mode.modeId]
+          const resolved = resolveValue(rawVal, mode.modeId)
+          if (resolved !== null) {
+            // Normalize mode name (e.g. "Light Mode" -> "light", "Dark" -> "dark")
+            const modeKey = sanitizeModeName(mode.name)
+            tokenValue[modeKey] = resolved
+
+            // Add px to numbers if needed
+            if (
+              tokenType === 'spacing' ||
+              tokenType === 'borderRadius' ||
+              tokenType === 'typography'
+            ) {
+              if (typeof resolved === 'number') {
+                tokenValue[modeKey] = `${resolved}px`
+              }
             }
+          }
         }
       } else {
         // Primitive / Single Mode
         const modeId = collection.defaultModeId || collection.modes[0]?.modeId
         if (!modeId) continue
-        
+
         const rawVal = variable.valuesByMode[modeId]
         const resolved = resolveValue(rawVal, modeId)
-        
+
         if (resolved === null) continue
-        
+
         tokenValue = resolved
-        if ((tokenType === 'spacing' || tokenType === 'borderRadius' || tokenType === 'typography') && typeof resolved === 'number') {
-            tokenValue = `${resolved}px`
+        if (
+          (tokenType === 'spacing' || tokenType === 'borderRadius' || tokenType === 'typography') &&
+          typeof resolved === 'number'
+        ) {
+          tokenValue = `${resolved}px`
         }
       }
 
@@ -166,17 +175,16 @@ export async function fetchFigmaTokens(fileId: string, accessToken: string): Pro
         type: tokenType,
         collection: collection.name,
         isSemantic,
-        description: variable.description
+        description: variable.description,
       })
     }
 
     console.error(`Found ${tokens.length} tokens.`)
     return tokens
-
   } catch (error: any) {
     console.error('Error fetching Figma variables:', error.message)
     if (axios.isAxiosError(error) && error.response) {
-        console.error('Response data:', error.response.data)
+      console.error('Response data:', error.response.data)
     }
     throw error
   }
@@ -187,12 +195,15 @@ function sanitizeName(name: string): string {
 }
 
 function sanitizeModeName(name: string): string {
-    return name.toLowerCase().replace(/\s+mode/g, '').replace(/\s+/g, '')
+  return name
+    .toLowerCase()
+    .replace(/\s+mode/g, '')
+    .replace(/\s+/g, '')
 }
 
 function rgbaToHex(color: { r: number; g: number; b: number; a?: number } | any): string {
   if (!color || typeof color !== 'object') return '#000000'
-  
+
   const toHex = (n: number) => {
     const hex = Math.round(n * 255).toString(16)
     return hex.length === 1 ? '0' + hex : hex
@@ -201,10 +212,10 @@ function rgbaToHex(color: { r: number; g: number; b: number; a?: number } | any)
   const r = toHex(color.r)
   const g = toHex(color.g)
   const b = toHex(color.b)
-  
+
   if (color.a !== undefined && color.a < 1) {
-      const a = toHex(color.a)
-      return `#${r}${g}${b}${a}`
+    const a = toHex(color.a)
+    return `#${r}${g}${b}${a}`
   }
 
   return `#${r}${g}${b}`

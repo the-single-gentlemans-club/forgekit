@@ -1,7 +1,8 @@
-import type { ForgeKitOrchestrator } from '../orchestrator.js'
-import type { OnboardResult, ForgeKitContextConfig } from '../types.js'
 import fs from 'node:fs'
 import path from 'node:path'
+
+import type { ForgeKitOrchestrator } from '../orchestrator.js'
+import type { ForgeKitContextConfig,OnboardResult } from '../types.js'
 
 export async function onboard(
   orchestrator: ForgeKitOrchestrator,
@@ -16,9 +17,8 @@ export async function onboard(
     const rulesResult = await orchestrator.callFigma('create_design_system_rules', {
       ...(config.figma.fileId ? { fileId: config.figma.fileId } : {}),
     })
-    const rulesContent = typeof rulesResult === 'string'
-      ? rulesResult
-      : JSON.stringify(rulesResult, null, 2)
+    const rulesContent =
+      typeof rulesResult === 'string' ? rulesResult : JSON.stringify(rulesResult, null, 2)
 
     fs.mkdirSync(path.dirname(rulesPath), { recursive: true })
     fs.writeFileSync(rulesPath, rulesContent, 'utf-8')

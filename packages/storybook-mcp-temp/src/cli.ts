@@ -14,14 +14,15 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
+
 import { runServer } from './index.js'
 import type { StorybookMCPConfig } from './types.js'
 import { DEFAULT_CONFIG } from './types.js'
+import { POLAR_UPGRADE_URL } from './utils/constants.js'
 import { initializeComponents } from './utils/initializer.js'
 import { validateLicenseAsync } from './utils/license.js'
-import { runSetup } from './utils/setup.js'
 import { runPreflight } from './utils/preflight.js'
-import { POLAR_UPGRADE_URL } from './utils/constants.js'
+import { runSetup } from './utils/setup.js'
 
 // Parse CLI arguments
 function parseArgs(): {

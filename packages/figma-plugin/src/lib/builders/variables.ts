@@ -5,7 +5,13 @@
  * Generic — no project-specific references.
  */
 import type { PluginTokens } from '../types.js'
-import { getOrCreateCollection, getOrCreateVariable, hexToRgba, uiLog, uiProgress } from '../utils.js'
+import {
+  getOrCreateCollection,
+  getOrCreateVariable,
+  hexToRgba,
+  uiLog,
+  uiProgress,
+} from '../utils.js'
 
 /** Build all Variable collections from the token set. Returns total variable count. */
 export async function syncVariables(tokens: PluginTokens): Promise<number> {

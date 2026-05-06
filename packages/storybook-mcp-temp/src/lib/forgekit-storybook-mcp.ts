@@ -12,29 +12,29 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import {
   CallToolRequestSchema,
-  ListToolsRequestSchema,
   ListResourcesRequestSchema,
+  ListToolsRequestSchema,
   ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js'
 
-import type { StorybookMCPConfig } from '../types.js'
 import {
-  listComponents,
   analyzeComponentTool,
+  checkHealthTool,
+  generateCodeConnectTool,
+  generateDocsTool,
   generateStoryTool,
-  updateStoryTool,
-  validateStoryTool,
-  getStoryTemplate,
-  listTemplates,
+  generateTestTool,
   getComponentCoverage,
+  getStoryTemplate,
+  listComponents,
+  listTemplates,
   suggestStories,
   syncAll,
   syncComponentTool,
-  generateTestTool,
-  generateDocsTool,
-  generateCodeConnectTool,
-  checkHealthTool,
+  updateStoryTool,
+  validateStoryTool,
 } from '../tools.js'
+import type { StorybookMCPConfig } from '../types.js'
 
 export type { StorybookMCPConfig } from '../types.js'
 export * from '../types.js'

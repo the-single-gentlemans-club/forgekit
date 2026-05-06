@@ -1,11 +1,11 @@
-import { validateType } from '@forgekit/utils';
+import { validateType } from '@forgekit/utils'
 
 /**
  * Convert text to URL-friendly slug
  */
 export function slugify(text: string): string {
   if (!validateType(text, 'string')) {
-    throw new TypeError('Input must be a string');
+    throw new TypeError('Input must be a string')
   }
 
   return text
@@ -13,5 +13,5 @@ export function slugify(text: string): string {
     .trim()
     .replace(/[^\w\s-]/g, '') // Remove non-word chars
     .replace(/[\s_-]+/g, '-') // Replace spaces, underscores, multiple hyphens with single hyphen
-    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+    .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
 }

@@ -1,8 +1,10 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import fs from 'node:fs'
-import path from 'node:path'
 import os from 'node:os'
-import { generateStoryTool, generateTestTool, generateDocsTool, syncAll } from '../tools.js'
+import path from 'node:path'
+
+import { afterAll,beforeAll, describe, expect, it } from 'vitest'
+
+import { generateDocsTool, generateStoryTool, generateTestTool, syncAll } from '../tools.js'
 import type { StorybookMCPConfig } from '../types.js'
 
 let tmpDir: string

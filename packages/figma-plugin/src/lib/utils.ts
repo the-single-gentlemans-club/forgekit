@@ -76,7 +76,7 @@ export function getOrCreateCollection(name: string): VariableCollection {
 export function getOrCreateVariable(
   name: string,
   collection: VariableCollection,
-  resolvedType: VariableResolvedDataType,
+  resolvedType: VariableResolvedDataType
 ): Variable {
   return (
     figma.variables
@@ -92,7 +92,7 @@ export function getOrCreateVariable(
  */
 export function getOrResetPage(name: string): PageNode {
   const existing = figma.root.children.find(
-    (p): p is PageNode => p.type === 'PAGE' && p.name === name,
+    (p): p is PageNode => p.type === 'PAGE' && p.name === name
   )
   if (existing) {
     existing.children.forEach((c) => c.remove())
@@ -118,7 +118,7 @@ export function makeText(
   chars: string,
   fontSize: number,
   color: RGBA,
-  weight: 'Regular' | 'Medium' | 'Semi Bold' | 'Bold' = 'Regular',
+  weight: 'Regular' | 'Medium' | 'Semi Bold' | 'Bold' = 'Regular'
 ): TextNode {
   const node = figma.createText()
   node.fontName = { family: 'Inter', style: weight }

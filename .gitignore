@@ -41,9 +41,16 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# Windows installers — do not commit (GitHub blocks >100MB; not test fixtures)
+*.exe
+
 .nx/cache
 .nx/workspace-data
 .cursor/rules/nx-rules.mdc
+# Cursor hook machine state (learning/cache; user-specific)
+.cursor/hooks/state/
+# Tool-generated cache markers (Cursor / dev utilities)
+.cache-complete
 .github/instructions/nx.instructions.md
 
 vite.config.*.timestamp*

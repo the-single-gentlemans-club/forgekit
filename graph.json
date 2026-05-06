@@ -8,17 +8,13 @@
           "root": "packages/strings",
           "targets": {
             "typecheck": {
-              "dependsOn": [
-                "^typecheck"
-              ],
+              "dependsOn": ["^typecheck"],
               "cache": true,
               "inputs": [
                 "production",
                 "^production",
                 {
-                  "externalDependencies": [
-                    "typescript"
-                  ]
+                  "externalDependencies": ["typescript"]
                 }
               ],
               "outputs": [
@@ -40,21 +36,14 @@
                 "{projectRoot}/out-tsc/vitest/**/*.d.ts",
                 "{projectRoot}/out-tsc/vitest/tsconfig.tsbuildinfo"
               ],
-              "syncGenerators": [
-                "@nx/js:typescript-sync"
-              ],
+              "syncGenerators": ["@nx/js:typescript-sync"],
               "metadata": {
-                "technologies": [
-                  "typescript",
-                  "typescript"
-                ],
+                "technologies": ["typescript", "typescript"],
                 "description": "Runs type-checking for the project.",
                 "help": {
                   "command": "npx tsc --build --help",
                   "example": {
-                    "args": [
-                      "--force"
-                    ]
+                    "args": ["--force"]
                   }
                 }
               },
@@ -67,9 +56,7 @@
               "parallelism": true
             },
             "build": {
-              "dependsOn": [
-                "build-base"
-              ],
+              "dependsOn": ["build-base"],
               "cache": true,
               "inputs": [
                 "production",
@@ -77,23 +64,15 @@
                   "dependentTasksOutputFiles": "**/*.d.ts"
                 }
               ],
-              "outputs": [
-                "{projectRoot}/dist"
-              ],
-              "syncGenerators": [
-                "@nx/js:typescript-sync"
-              ],
+              "outputs": ["{projectRoot}/dist"],
+              "syncGenerators": ["@nx/js:typescript-sync"],
               "metadata": {
-                "technologies": [
-                  "typescript"
-                ],
+                "technologies": ["typescript"],
                 "description": "Builds the project with `tsc`.",
                 "help": {
                   "command": "npx tsc --build --help",
                   "example": {
-                    "args": [
-                      "--force"
-                    ]
+                    "args": ["--force"]
                   }
                 }
               },
@@ -106,9 +85,7 @@
               "parallelism": true
             },
             "build-deps": {
-              "dependsOn": [
-                "^build"
-              ],
+              "dependsOn": ["^build"],
               "configurations": {},
               "options": {},
               "parallelism": true,
@@ -116,9 +93,7 @@
             },
             "watch-deps": {
               "continuous": true,
-              "dependsOn": [
-                "build-deps"
-              ],
+              "dependsOn": ["build-deps"],
               "executor": "nx:run-commands",
               "options": {
                 "command": "npx nx watch --projects @forgekit/strings --includeDependentProjects -- npx nx build-deps @forgekit/strings"
@@ -132,22 +107,15 @@
                 "default",
                 "^production",
                 {
-                  "externalDependencies": [
-                    "vitest"
-                  ]
+                  "externalDependencies": ["vitest"]
                 },
                 {
                   "env": "CI"
                 }
               ],
-              "outputs": [
-                "{projectRoot}\\test-output\\vitest\\coverage"
-              ],
+              "outputs": ["{projectRoot}\\test-output\\vitest\\coverage"],
               "metadata": {
-                "technologies": [
-                  "vite",
-                  "vitest"
-                ],
+                "technologies": ["vite", "vitest"],
                 "description": "Run Vitest tests",
                 "help": {
                   "command": "npx vitest --help",
@@ -166,9 +134,7 @@
               },
               "configurations": {},
               "parallelism": true,
-              "dependsOn": [
-                "^build"
-              ]
+              "dependsOn": ["^build"]
             },
             "lint": {
               "cache": true,
@@ -186,18 +152,12 @@
                 "{workspaceRoot}/packages/strings/eslint.config.mjs",
                 "{workspaceRoot}/tools/eslint-rules/**/*",
                 {
-                  "externalDependencies": [
-                    "eslint"
-                  ]
+                  "externalDependencies": ["eslint"]
                 }
               ],
-              "outputs": [
-                "{options.outputFile}"
-              ],
+              "outputs": ["{options.outputFile}"],
               "metadata": {
-                "technologies": [
-                  "eslint"
-                ],
+                "technologies": ["eslint"],
                 "description": "Runs ESLint on project",
                 "help": {
                   "command": "npx eslint --help",
@@ -223,9 +183,7 @@
             },
             "nx-release-publish": {
               "executor": "@nx/js:release-publish",
-              "dependsOn": [
-                "^nx-release-publish"
-              ],
+              "dependsOn": ["^nx-release-publish"],
               "options": {},
               "configurations": {},
               "parallelism": true
@@ -251,10 +209,7 @@
           },
           "projectType": "library",
           "name": "@forgekit/strings",
-          "tags": [
-            "npm:public",
-            "scope:strings"
-          ],
+          "tags": ["npm:public", "scope:strings"],
           "implicitDependencies": []
         }
       },
@@ -265,17 +220,13 @@
           "root": "packages/colors",
           "targets": {
             "typecheck": {
-              "dependsOn": [
-                "^typecheck"
-              ],
+              "dependsOn": ["^typecheck"],
               "cache": true,
               "inputs": [
                 "production",
                 "^production",
                 {
-                  "externalDependencies": [
-                    "typescript"
-                  ]
+                  "externalDependencies": ["typescript"]
                 }
               ],
               "outputs": [
@@ -297,21 +248,14 @@
                 "{projectRoot}/out-tsc/vitest/**/*.d.ts",
                 "{projectRoot}/out-tsc/vitest/tsconfig.tsbuildinfo"
               ],
-              "syncGenerators": [
-                "@nx/js:typescript-sync"
-              ],
+              "syncGenerators": ["@nx/js:typescript-sync"],
               "metadata": {
-                "technologies": [
-                  "typescript",
-                  "typescript"
-                ],
+                "technologies": ["typescript", "typescript"],
                 "description": "Runs type-checking for the project.",
                 "help": {
                   "command": "npx tsc --build --help",
                   "example": {
-                    "args": [
-                      "--force"
-                    ]
+                    "args": ["--force"]
                   }
                 }
               },
@@ -324,35 +268,22 @@
               "parallelism": true
             },
             "build": {
-              "dependsOn": [
-                "^build"
-              ],
+              "dependsOn": ["^build"],
               "options": {
                 "cwd": "packages\\colors",
                 "command": "tsc --build tsconfig.lib.json"
               },
               "cache": true,
-              "inputs": [
-                "production",
-                "^production"
-              ],
-              "outputs": [
-                "{projectRoot}/dist"
-              ],
-              "syncGenerators": [
-                "@nx/js:typescript-sync"
-              ],
+              "inputs": ["production", "^production"],
+              "outputs": ["{projectRoot}/dist"],
+              "syncGenerators": ["@nx/js:typescript-sync"],
               "metadata": {
-                "technologies": [
-                  "typescript"
-                ],
+                "technologies": ["typescript"],
                 "description": "Builds the project with `tsc`.",
                 "help": {
                   "command": "npx tsc --build --help",
                   "example": {
-                    "args": [
-                      "--force"
-                    ]
+                    "args": ["--force"]
                   }
                 }
               },
@@ -361,9 +292,7 @@
               "parallelism": true
             },
             "build-deps": {
-              "dependsOn": [
-                "^build"
-              ],
+              "dependsOn": ["^build"],
               "configurations": {},
               "options": {},
               "parallelism": true,
@@ -371,9 +300,7 @@
             },
             "watch-deps": {
               "continuous": true,
-              "dependsOn": [
-                "build-deps"
-              ],
+              "dependsOn": ["build-deps"],
               "executor": "nx:run-commands",
               "options": {
                 "command": "npx nx watch --projects @forgekit/colors --includeDependentProjects -- npx nx build-deps @forgekit/colors"
@@ -387,22 +314,15 @@
                 "default",
                 "^production",
                 {
-                  "externalDependencies": [
-                    "vitest"
-                  ]
+                  "externalDependencies": ["vitest"]
                 },
                 {
                   "env": "CI"
                 }
               ],
-              "outputs": [
-                "{projectRoot}\\test-output\\vitest\\coverage"
-              ],
+              "outputs": ["{projectRoot}\\test-output\\vitest\\coverage"],
               "metadata": {
-                "technologies": [
-                  "vite",
-                  "vitest"
-                ],
+                "technologies": ["vite", "vitest"],
                 "description": "Run Vitest tests",
                 "help": {
                   "command": "npx vitest --help",
@@ -421,9 +341,7 @@
               },
               "configurations": {},
               "parallelism": true,
-              "dependsOn": [
-                "^build"
-              ]
+              "dependsOn": ["^build"]
             },
             "lint": {
               "cache": true,
@@ -441,18 +359,12 @@
                 "{workspaceRoot}/packages/colors/eslint.config.mjs",
                 "{workspaceRoot}/tools/eslint-rules/**/*",
                 {
-                  "externalDependencies": [
-                    "eslint"
-                  ]
+                  "externalDependencies": ["eslint"]
                 }
               ],
-              "outputs": [
-                "{options.outputFile}"
-              ],
+              "outputs": ["{options.outputFile}"],
               "metadata": {
-                "technologies": [
-                  "eslint"
-                ],
+                "technologies": ["eslint"],
                 "description": "Runs ESLint on project",
                 "help": {
                   "command": "npx eslint --help",
@@ -469,9 +381,7 @@
             },
             "nx-release-publish": {
               "executor": "@nx/js:release-publish",
-              "dependsOn": [
-                "^nx-release-publish"
-              ],
+              "dependsOn": ["^nx-release-publish"],
               "options": {},
               "configurations": {},
               "parallelism": true
@@ -497,10 +407,7 @@
           },
           "projectType": "library",
           "name": "@forgekit/colors",
-          "tags": [
-            "npm:public",
-            "scope:colors"
-          ],
+          "tags": ["npm:public", "scope:colors"],
           "implicitDependencies": []
         }
       },
@@ -511,17 +418,13 @@
           "root": "packages/async",
           "targets": {
             "typecheck": {
-              "dependsOn": [
-                "^typecheck"
-              ],
+              "dependsOn": ["^typecheck"],
               "cache": true,
               "inputs": [
                 "production",
                 "^production",
                 {
-                  "externalDependencies": [
-                    "typescript"
-                  ]
+                  "externalDependencies": ["typescript"]
                 }
               ],
               "outputs": [
@@ -543,21 +446,14 @@
                 "{projectRoot}/out-tsc/vitest/**/*.d.ts",
                 "{projectRoot}/out-tsc/vitest/tsconfig.tsbuildinfo"
               ],
-              "syncGenerators": [
-                "@nx/js:typescript-sync"
-              ],
+              "syncGenerators": ["@nx/js:typescript-sync"],
               "metadata": {
-                "technologies": [
-                  "typescript",
-                  "typescript"
-                ],
+                "technologies": ["typescript", "typescript"],
                 "description": "Runs type-checking for the project.",
                 "help": {
                   "command": "npx tsc --build --help",
                   "example": {
-                    "args": [
-                      "--force"
-                    ]
+                    "args": ["--force"]
                   }
                 }
               },
@@ -570,35 +466,22 @@
               "parallelism": true
             },
             "build": {
-              "dependsOn": [
-                "^build"
-              ],
+              "dependsOn": ["^build"],
               "options": {
                 "cwd": "packages\\async",
                 "command": "tsc --build tsconfig.lib.json"
               },
               "cache": true,
-              "inputs": [
-                "production",
-                "^production"
-              ],
-              "outputs": [
-                "{projectRoot}/dist"
-              ],
-              "syncGenerators": [
-                "@nx/js:typescript-sync"
-              ],
+              "inputs": ["production", "^production"],
+              "outputs": ["{projectRoot}/dist"],
+              "syncGenerators": ["@nx/js:typescript-sync"],
               "metadata": {
-                "technologies": [
-                  "typescript"
-                ],
+                "technologies": ["typescript"],
                 "description": "Builds the project with `tsc`.",
                 "help": {
                   "command": "npx tsc --build --help",
                   "example": {
-                    "args": [
-                      "--force"
-                    ]
+                    "args": ["--force"]
                   }
                 }
               },
@@ -607,9 +490,7 @@
               "parallelism": true
             },
             "build-deps": {
-              "dependsOn": [
-                "^build"
-              ],
+              "dependsOn": ["^build"],
               "configurations": {},
               "options": {},
               "parallelism": true,
@@ -617,9 +498,7 @@
             },
             "watch-deps": {
               "continuous": true,
-              "dependsOn": [
-                "build-deps"
-              ],
+              "dependsOn": ["build-deps"],
               "executor": "nx:run-commands",
               "options": {
                 "command": "npx nx watch --projects @forgekit/async --includeDependentProjects -- npx nx build-deps @forgekit/async"
@@ -633,22 +512,15 @@
                 "default",
                 "^production",
                 {
-                  "externalDependencies": [
-                    "vitest"
-                  ]
+                  "externalDependencies": ["vitest"]
                 },
                 {
                   "env": "CI"
                 }
               ],
-              "outputs": [
-                "{projectRoot}\\test-output\\vitest\\coverage"
-              ],
+              "outputs": ["{projectRoot}\\test-output\\vitest\\coverage"],
               "metadata": {
-                "technologies": [
-                  "vite",
-                  "vitest"
-                ],
+                "technologies": ["vite", "vitest"],
                 "description": "Run Vitest tests",
                 "help": {
                   "command": "npx vitest --help",
@@ -667,9 +539,7 @@
               },
               "configurations": {},
               "parallelism": true,
-              "dependsOn": [
-                "^build"
-              ]
+              "dependsOn": ["^build"]
             },
             "lint": {
               "cache": true,
@@ -687,18 +557,12 @@
                 "{workspaceRoot}/packages/async/eslint.config.mjs",
                 "{workspaceRoot}/tools/eslint-rules/**/*",
                 {
-                  "externalDependencies": [
-                    "eslint"
-                  ]
+                  "externalDependencies": ["eslint"]
                 }
               ],
-              "outputs": [
-                "{options.outputFile}"
-              ],
+              "outputs": ["{options.outputFile}"],
               "metadata": {
-                "technologies": [
-                  "eslint"
-                ],
+                "technologies": ["eslint"],
                 "description": "Runs ESLint on project",
                 "help": {
                   "command": "npx eslint --help",
@@ -715,9 +579,7 @@
             },
             "nx-release-publish": {
               "executor": "@nx/js:release-publish",
-              "dependsOn": [
-                "^nx-release-publish"
-              ],
+              "dependsOn": ["^nx-release-publish"],
               "options": {},
               "configurations": {},
               "parallelism": true
@@ -743,10 +605,7 @@
           },
           "projectType": "library",
           "name": "@forgekit/async",
-          "tags": [
-            "npm:public",
-            "scope:async"
-          ],
+          "tags": ["npm:public", "scope:async"],
           "implicitDependencies": []
         }
       },
@@ -757,19 +616,13 @@
           "root": "packages/utils",
           "targets": {
             "typecheck": {
-              "dependsOn": [
-                "build",
-                "^typecheck"
-              ],
+              "dependsOn": ["build", "^typecheck"],
               "options": {
                 "cwd": "packages\\utils",
                 "command": "tsc --build --emitDeclarationOnly"
               },
               "cache": true,
-              "inputs": [
-                "production",
-                "^production"
-              ],
+              "inputs": ["production", "^production"],
               "outputs": [
                 "{projectRoot}/**/*.js",
                 "{projectRoot}/**/*.cjs",
@@ -787,20 +640,14 @@
                 "{projectRoot}/dist/**/*.d.ts",
                 "{projectRoot}/dist/tsconfig.lib.tsbuildinfo"
               ],
-              "syncGenerators": [
-                "@nx/js:typescript-sync"
-              ],
+              "syncGenerators": ["@nx/js:typescript-sync"],
               "metadata": {
-                "technologies": [
-                  "typescript"
-                ],
+                "technologies": ["typescript"],
                 "description": "Runs type-checking for the project.",
                 "help": {
                   "command": "npx tsc --build --help",
                   "example": {
-                    "args": [
-                      "--force"
-                    ]
+                    "args": ["--force"]
                   }
                 }
               },
@@ -809,35 +656,22 @@
               "parallelism": true
             },
             "build": {
-              "dependsOn": [
-                "^build"
-              ],
+              "dependsOn": ["^build"],
               "options": {
                 "cwd": "packages\\utils",
                 "command": "tsc --build tsconfig.lib.json"
               },
               "cache": true,
-              "inputs": [
-                "production",
-                "^production"
-              ],
-              "outputs": [
-                "{projectRoot}/dist"
-              ],
-              "syncGenerators": [
-                "@nx/js:typescript-sync"
-              ],
+              "inputs": ["production", "^production"],
+              "outputs": ["{projectRoot}/dist"],
+              "syncGenerators": ["@nx/js:typescript-sync"],
               "metadata": {
-                "technologies": [
-                  "typescript"
-                ],
+                "technologies": ["typescript"],
                 "description": "Builds the project with `tsc`.",
                 "help": {
                   "command": "npx tsc --build --help",
                   "example": {
-                    "args": [
-                      "--force"
-                    ]
+                    "args": ["--force"]
                   }
                 }
               },
@@ -846,9 +680,7 @@
               "parallelism": true
             },
             "build-deps": {
-              "dependsOn": [
-                "^build"
-              ],
+              "dependsOn": ["^build"],
               "configurations": {},
               "options": {},
               "parallelism": true,
@@ -856,9 +688,7 @@
             },
             "watch-deps": {
               "continuous": true,
-              "dependsOn": [
-                "build-deps"
-              ],
+              "dependsOn": ["build-deps"],
               "executor": "nx:run-commands",
               "options": {
                 "command": "npx nx watch --projects @forgekit/utils --includeDependentProjects -- npx nx build-deps @forgekit/utils"
@@ -882,18 +712,12 @@
                 "{workspaceRoot}/packages/utils/eslint.config.mjs",
                 "{workspaceRoot}/tools/eslint-rules/**/*",
                 {
-                  "externalDependencies": [
-                    "eslint"
-                  ]
+                  "externalDependencies": ["eslint"]
                 }
               ],
-              "outputs": [
-                "{options.outputFile}"
-              ],
+              "outputs": ["{options.outputFile}"],
               "metadata": {
-                "technologies": [
-                  "eslint"
-                ],
+                "technologies": ["eslint"],
                 "description": "Runs ESLint on project",
                 "help": {
                   "command": "npx eslint --help",
@@ -910,10 +734,7 @@
             }
           },
           "name": "@forgekit/utils",
-          "tags": [
-            "npm:private",
-            "scope:shared"
-          ],
+          "tags": ["npm:private", "scope:shared"],
           "metadata": {
             "targetGroups": {},
             "js": {
@@ -942,9 +763,7 @@
           "root": ".",
           "name": "@forgekit/source",
           "includedScripts": [],
-          "tags": [
-            "npm:private"
-          ],
+          "tags": ["npm:private"],
           "metadata": {
             "targetGroups": {},
             "js": {

@@ -109,13 +109,15 @@ export function setupFigmaMock() {
         return coll
       }),
       getLocalVariables: vi.fn((type?: string) =>
-        allVariables.filter((v) => !type || v.resolvedType === type),
+        allVariables.filter((v) => !type || v.resolvedType === type)
       ),
-      createVariable: vi.fn((name: string, collection: ReturnType<typeof makeCollection>, type: string) => {
-        const v = makeVariable(name, collection.id, type)
-        allVariables.push(v)
-        return v
-      }),
+      createVariable: vi.fn(
+        (name: string, collection: ReturnType<typeof makeCollection>, type: string) => {
+          const v = makeVariable(name, collection.id, type)
+          allVariables.push(v)
+          return v
+        }
+      ),
     },
     createPage: vi.fn(() => {
       const page = makeNode('PAGE')

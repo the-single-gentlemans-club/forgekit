@@ -23,12 +23,14 @@ export function getTemplate(name: string): StoryTemplate | undefined {
  * Built-in story templates
  */
 const templates = new Map<string, StoryTemplate>([
-  ['basic', {
-    name: 'basic',
-    description: 'Simple story with basic args',
-    useCase: 'Quick component documentation with minimal setup',
-    placeholders: ['ComponentName', 'component-name'],
-    content: `import type { Meta, StoryObj } from '@storybook/react'
+  [
+    'basic',
+    {
+      name: 'basic',
+      description: 'Simple story with basic args',
+      useCase: 'Quick component documentation with minimal setup',
+      placeholders: ['ComponentName', 'component-name'],
+      content: `import type { Meta, StoryObj } from '@storybook/react'
 import { {{ComponentName}} } from './{{ComponentName}}'
 
 const meta: Meta<typeof {{ComponentName}}> = {
@@ -46,14 +48,17 @@ export const Default: Story = {
   },
 }
 `,
-  }],
+    },
+  ],
 
-  ['with-controls', {
-    name: 'with-controls',
-    description: 'Story with full argTypes controls',
-    useCase: 'Interactive component exploration with all props exposed',
-    placeholders: ['ComponentName', 'component-name'],
-    content: `import type { Meta, StoryObj } from '@storybook/react'
+  [
+    'with-controls',
+    {
+      name: 'with-controls',
+      description: 'Story with full argTypes controls',
+      useCase: 'Interactive component exploration with all props exposed',
+      placeholders: ['ComponentName', 'component-name'],
+      content: `import type { Meta, StoryObj } from '@storybook/react'
 import { {{ComponentName}} } from './{{ComponentName}}'
 
 const meta: Meta<typeof {{ComponentName}}> = {
@@ -105,14 +110,17 @@ export const Playground: Story = {
   },
 }
 `,
-  }],
+    },
+  ],
 
-  ['with-variants', {
-    name: 'with-variants',
-    description: 'Story showcasing all variants and sizes',
-    useCase: 'Design system documentation showing all visual options',
-    placeholders: ['ComponentName', 'component-name'],
-    content: `import type { Meta, StoryObj } from '@storybook/react'
+  [
+    'with-variants',
+    {
+      name: 'with-variants',
+      description: 'Story showcasing all variants and sizes',
+      useCase: 'Design system documentation showing all visual options',
+      placeholders: ['ComponentName', 'component-name'],
+      content: `import type { Meta, StoryObj } from '@storybook/react'
 import { {{ComponentName}} } from './{{ComponentName}}'
 
 const meta: Meta<typeof {{ComponentName}}> = {
@@ -194,14 +202,17 @@ export const AllVariants: Story = {
   ),
 }
 `,
-  }],
+    },
+  ],
 
-  ['with-msw', {
-    name: 'with-msw',
-    description: 'Story with MSW API mocking',
-    useCase: 'Components that fetch data and need mocked API responses',
-    placeholders: ['ComponentName', 'component-name'],
-    content: `import type { Meta, StoryObj } from '@storybook/react'
+  [
+    'with-msw',
+    {
+      name: 'with-msw',
+      description: 'Story with MSW API mocking',
+      useCase: 'Components that fetch data and need mocked API responses',
+      placeholders: ['ComponentName', 'component-name'],
+      content: `import type { Meta, StoryObj } from '@storybook/react'
 import { http, HttpResponse } from 'msw'
 import { {{ComponentName}} } from './{{ComponentName}}'
 
@@ -284,14 +295,17 @@ export const Empty: Story = {
   },
 }
 `,
-  }],
+    },
+  ],
 
-  ['with-router', {
-    name: 'with-router',
-    description: 'Story with React Router context',
-    useCase: 'Components that use routing (Link, useNavigate, useParams)',
-    placeholders: ['ComponentName', 'component-name'],
-    content: `import type { Meta, StoryObj } from '@storybook/react'
+  [
+    'with-router',
+    {
+      name: 'with-router',
+      description: 'Story with React Router context',
+      useCase: 'Components that use routing (Link, useNavigate, useParams)',
+      placeholders: ['ComponentName', 'component-name'],
+      content: `import type { Meta, StoryObj } from '@storybook/react'
 import { withRouter, reactRouterParameters } from 'storybook-addon-remix-react-router'
 import { {{ComponentName}} } from './{{ComponentName}}'
 
@@ -350,14 +364,17 @@ export const WithSearchParams: Story = {
   },
 }
 `,
-  }],
+    },
+  ],
 
-  ['page', {
-    name: 'page',
-    description: 'Full page story with layout',
-    useCase: 'Page-level components that need full viewport',
-    placeholders: ['PageName', 'page-name'],
-    content: `import type { Meta, StoryObj } from '@storybook/react'
+  [
+    'page',
+    {
+      name: 'page',
+      description: 'Full page story with layout',
+      useCase: 'Page-level components that need full viewport',
+      placeholders: ['PageName', 'page-name'],
+      content: `import type { Meta, StoryObj } from '@storybook/react'
 import { {{PageName}} } from './{{PageName}}'
 
 const meta: Meta<typeof {{PageName}}> = {
@@ -410,14 +427,17 @@ export const Desktop: Story = {
   },
 }
 `,
-  }],
+    },
+  ],
 
-  ['interactive', {
-    name: 'interactive',
-    description: 'Story with play function for interaction testing',
-    useCase: 'Components with user interactions that need testing',
-    placeholders: ['ComponentName', 'component-name'],
-    content: `import type { Meta, StoryObj } from '@storybook/react'
+  [
+    'interactive',
+    {
+      name: 'interactive',
+      description: 'Story with play function for interaction testing',
+      useCase: 'Components with user interactions that need testing',
+      placeholders: ['ComponentName', 'component-name'],
+      content: `import type { Meta, StoryObj } from '@storybook/react'
 import { expect, userEvent, within } from 'storybook/test'
 import { {{ComponentName}} } from './{{ComponentName}}'
 
@@ -505,14 +525,17 @@ export const HoverTest: Story = {
   },
 }
 `,
-  }],
+    },
+  ],
 
-  ['form', {
-    name: 'form',
-    description: 'Form component with validation states',
-    useCase: 'Form components with multiple input states and validation',
-    placeholders: ['FormName', 'form-name'],
-    content: `import type { Meta, StoryObj } from '@storybook/react'
+  [
+    'form',
+    {
+      name: 'form',
+      description: 'Form component with validation states',
+      useCase: 'Form components with multiple input states and validation',
+      placeholders: ['FormName', 'form-name'],
+      content: `import type { Meta, StoryObj } from '@storybook/react'
 import { expect, userEvent, within } from 'storybook/test'
 import { {{FormName}} } from './{{FormName}}'
 
@@ -616,5 +639,6 @@ export const ValidationTest: Story = {
   },
 }
 `,
-  }],
+    },
+  ],
 ])

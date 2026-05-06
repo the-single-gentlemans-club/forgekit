@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect,it } from 'vitest'
+
+import type { ComponentAnalysis,StorybookMCPConfig } from '../../types.js'
 import { generateTest } from '../test-generator.js'
-import type { StorybookMCPConfig, ComponentAnalysis } from '../../types.js'
 
 function makeConfig(): StorybookMCPConfig {
   return {
@@ -14,10 +15,18 @@ function makeConfig(): StorybookMCPConfig {
 }
 
 const baseDeps = {
-  usesRouter: false, usesReactQuery: false, usesChakra: false,
-  usesShadcn: false, usesTamagui: false, usesGluestack: false,
-  usesReactNative: false, usesEmotion: false, usesTailwind: false,
-  usesFramerMotion: false, usesMSW: false, usesGlobalState: false,
+  usesRouter: false,
+  usesReactQuery: false,
+  usesChakra: false,
+  usesShadcn: false,
+  usesTamagui: false,
+  usesGluestack: false,
+  usesReactNative: false,
+  usesEmotion: false,
+  usesTailwind: false,
+  usesFramerMotion: false,
+  usesMSW: false,
+  usesGlobalState: false,
   otherImports: [] as string[],
 }
 
@@ -73,7 +82,13 @@ describe('test-generator', () => {
       exportType: 'named',
       props: [
         { name: 'children', type: 'string', required: true },
-        { name: 'variant', type: "'solid' | 'outline'", required: false, controlType: 'select', controlOptions: ['solid', 'outline'] },
+        {
+          name: 'variant',
+          type: "'solid' | 'outline'",
+          required: false,
+          controlType: 'select',
+          controlOptions: ['solid', 'outline'],
+        },
       ],
       dependencies: baseDeps,
       suggestions: [],

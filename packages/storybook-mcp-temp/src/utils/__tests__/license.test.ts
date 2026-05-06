@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest'
-import { validateLicense, checkFeatureAccess, requireFeature } from '../license.js'
+import { describe, expect,it } from 'vitest'
+
 import type { StorybookMCPConfig } from '../../types.js'
 import type { Feature } from '../license.js'
+import { checkFeatureAccess, requireFeature,validateLicense } from '../license.js'
 
 function makeConfig(licenseKey?: string): StorybookMCPConfig {
   return {
@@ -70,7 +71,13 @@ describe('license', () => {
     const proStatus = { isValid: true, tier: 'pro' as const, maxSyncLimit: Infinity }
 
     it('allows all features', () => {
-      const features: Feature[] = ['basic_stories', 'advanced_templates', 'test_generation', 'docs_generation', 'unlimited_sync']
+      const features: Feature[] = [
+        'basic_stories',
+        'advanced_templates',
+        'test_generation',
+        'docs_generation',
+        'unlimited_sync',
+      ]
       for (const feature of features) {
         expect(checkFeatureAccess(feature, proStatus)).toBe(true)
       }
@@ -81,7 +88,13 @@ describe('license', () => {
     })
 
     it('requireFeature does not throw for any feature', () => {
-      const features: Feature[] = ['basic_stories', 'advanced_templates', 'test_generation', 'docs_generation', 'unlimited_sync']
+      const features: Feature[] = [
+        'basic_stories',
+        'advanced_templates',
+        'test_generation',
+        'docs_generation',
+        'unlimited_sync',
+      ]
       for (const feature of features) {
         expect(() => requireFeature(feature, proStatus)).not.toThrow()
       }

@@ -28,9 +28,7 @@ interface ListComponentsResult {
  * from the component name. The user/AI can refine as needed.
  */
 function deriveStoryId(componentName: string): string {
-  const kebab = componentName
-    .replace(/([a-z])([A-Z])/g, '$1-$2')
-    .toLowerCase()
+  const kebab = componentName.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()
   return `components-${kebab}--default`
 }
 
@@ -46,10 +44,10 @@ export async function syncStoriesToFigma(
   const storybookBaseUrl = args.storybookUrl?.replace(/\/$/, '') ?? 'http://localhost:6006'
 
   // 1. Get components that have stories
-  const listResult = await orchestrator.callStorybook('list_components', {
+  const listResult = (await orchestrator.callStorybook('list_components', {
     ...(args.library ? { library: args.library } : {}),
     hasStory: true,
-  }) as ListComponentsResult
+  })) as ListComponentsResult
 
   const components = listResult.components ?? []
 
@@ -65,7 +63,10 @@ export async function syncStoriesToFigma(
   if (!devModeAvailable) {
     return {
       pushed: [],
-      skipped: components.map(c => ({ componentName: c.name, reason: 'Figma Dev Mode MCP unavailable' })),
+      skipped: components.map((c) => ({
+        componentName: c.name,
+        reason: 'Figma Dev Mode MCP unavailable',
+      })),
       devModeAvailable: false,
       summary:
         `Found ${components.length} components with stories, but Figma Dev Mode MCP is not running.\n\n` +
@@ -94,11 +95,11 @@ export async function syncStoriesToFigma(
     }
 
     try {
-      const result = await orchestrator.callFigmaDev('generate_figma_design', {
+      const result = (await orchestrator.callFigmaDev('generate_figma_design', {
         componentName: component.name,
         storyUrl,
         targetFrame: component.name,
-      }) as { frameId?: string } | null
+      })) as { frameId?: string } | null
 
       pushed.push({
         componentName: component.name,

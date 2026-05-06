@@ -38,9 +38,10 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "fast-glob": "^3.3.2",
-    "tslib": "^2.3.0"
+    "vitest": "4.0.9"
   },
   "devDependencies": {
+    "@types/node": "^20.19.9",
     "tsup": "^8.5.1"
   },
   "engines": {

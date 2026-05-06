@@ -1,13 +1,15 @@
-import { Client } from '@modelcontextprotocol/sdk/client/index.js'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 import {
-  createStdioMcpClient,
-  createHttpMcpClient,
   callTool,
+  createHttpMcpClient,
+  createStdioMcpClient,
   McpConnectionError,
 } from '@forgekit/mcp-core'
+import { Client } from '@modelcontextprotocol/sdk/client/index.js'
+
 import type { ForgeKitContextConfig } from './types.js'
-import { fileURLToPath } from 'node:url'
-import path from 'node:path'
 
 export type ConnectionStatus = 'connected' | 'unavailable' | 'not-attempted'
 
@@ -41,9 +43,10 @@ export class ForgeKitOrchestrator {
 
     if (figmaResult.status === 'rejected') {
       this.status.figma = 'unavailable'
-      this.status.figmaError = figmaResult.reason instanceof Error
-        ? figmaResult.reason.message
-        : String(figmaResult.reason)
+      this.status.figmaError =
+        figmaResult.reason instanceof Error
+          ? figmaResult.reason.message
+          : String(figmaResult.reason)
       process.stderr.write(`[context-mcp] Figma MCP unavailable: ${this.status.figmaError}\n`)
     } else {
       this.status.figma = 'connected'
@@ -51,23 +54,31 @@ export class ForgeKitOrchestrator {
 
     if (storybookResult.status === 'rejected') {
       this.status.storybook = 'unavailable'
-      this.status.storybookError = storybookResult.reason instanceof Error
-        ? storybookResult.reason.message
-        : String(storybookResult.reason)
-      process.stderr.write(`[context-mcp] Storybook MCP unavailable: ${this.status.storybookError}\n`)
+      this.status.storybookError =
+        storybookResult.reason instanceof Error
+          ? storybookResult.reason.message
+          : String(storybookResult.reason)
+      process.stderr.write(
+        `[context-mcp] Storybook MCP unavailable: ${this.status.storybookError}\n`
+      )
     } else {
       this.status.storybook = 'connected'
     }
 
     if (figmaDevResult.status === 'rejected') {
       this.status.figmaDev = 'unavailable'
-      this.status.figmaDevError = figmaDevResult.reason instanceof Error
-        ? figmaDevResult.reason.message
-        : String(figmaDevResult.reason)
-      process.stderr.write(`[context-mcp] Figma Dev Mode MCP unavailable (Figma desktop not running): ${this.status.figmaDevError}\n`)
+      this.status.figmaDevError =
+        figmaDevResult.reason instanceof Error
+          ? figmaDevResult.reason.message
+          : String(figmaDevResult.reason)
+      process.stderr.write(
+        `[context-mcp] Figma Dev Mode MCP unavailable (Figma desktop not running): ${this.status.figmaDevError}\n`
+      )
     } else {
       this.status.figmaDev = 'connected'
-      process.stderr.write('[context-mcp] Figma Dev Mode MCP connected (Code to Canvas available)\n')
+      process.stderr.write(
+        '[context-mcp] Figma Dev Mode MCP connected (Code to Canvas available)\n'
+      )
     }
 
     return this.getStatus()
@@ -75,7 +86,7 @@ export class ForgeKitOrchestrator {
 
   private async connectFigma(config: ForgeKitContextConfig): Promise<void> {
     const { figma } = config
-    const useDesktop = figma.useDesktop !== false  // default: true
+    const useDesktop = figma.useDesktop !== false // default: true
 
     try {
       if (useDesktop) {
@@ -83,7 +94,7 @@ export class ForgeKitOrchestrator {
           command: 'npx',
           args: ['figma-developer-mcp', '--stdio'],
           env: {
-            ...process.env as Record<string, string>,
+            ...(process.env as Record<string, string>),
             FIGMA_ACCESS_TOKEN: figma.accessToken,
             ...(figma.fileId ? { FIGMA_FILE_ID: figma.fileId } : {}),
           },
@@ -91,11 +102,9 @@ export class ForgeKitOrchestrator {
         })
       } else {
         const remoteUrl = figma.remoteUrl ?? 'https://mcp.figma.com/v1/figma-mcp'
-        this.figmaClient = await createHttpMcpClient(
-          'figma-downstream',
-          remoteUrl,
-          { Authorization: `Bearer ${figma.accessToken}` }
-        )
+        this.figmaClient = await createHttpMcpClient('figma-downstream', remoteUrl, {
+          Authorization: `Bearer ${figma.accessToken}`,
+        })
       }
     } catch (err) {
       throw new McpConnectionError('figma-developer-mcp', err)
@@ -134,7 +143,7 @@ export class ForgeKitOrchestrator {
           ...(storybook.licenseKey ? [`--license=${storybook.licenseKey}`] : []),
         ],
         env: {
-          ...process.env as Record<string, string>,
+          ...(process.env as Record<string, string>),
           STORYBOOK_MCP_PROJECT_ROOT: storybook.projectRoot,
           ...(storybook.licenseKey ? { STORYBOOK_MCP_LICENSE: storybook.licenseKey } : {}),
         },
@@ -160,7 +169,7 @@ export class ForgeKitOrchestrator {
     if (!this.figmaClient || this.status.figma !== 'connected') {
       throw new Error(
         `Figma MCP is unavailable${this.status.figmaError ? `: ${this.status.figmaError}` : ''}. ` +
-        `Ensure FIGMA_ACCESS_TOKEN is set and figma-developer-mcp is installed.`
+          `Ensure FIGMA_ACCESS_TOKEN is set and figma-developer-mcp is installed.`
       )
     }
     return callTool(this.figmaClient, tool, args)
@@ -170,10 +179,10 @@ export class ForgeKitOrchestrator {
     if (!this.figmaDevClient || this.status.figmaDev !== 'connected') {
       throw new Error(
         'Figma Dev Mode MCP is unavailable. To enable Code to Canvas:\n' +
-        '  1. Open Figma desktop app\n' +
-        '  2. Go to Preferences → Enable Dev Mode MCP Server\n' +
-        `  3. The server should start at ${FIGMA_DEV_MODE_URL}\n` +
-        '  4. Restart context-mcp\n'
+          '  1. Open Figma desktop app\n' +
+          '  2. Go to Preferences → Enable Dev Mode MCP Server\n' +
+          `  3. The server should start at ${FIGMA_DEV_MODE_URL}\n` +
+          '  4. Restart context-mcp\n'
       )
     }
     return callTool(this.figmaDevClient, tool, args)
@@ -183,7 +192,7 @@ export class ForgeKitOrchestrator {
     if (!this.storybookClient || this.status.storybook !== 'connected') {
       throw new Error(
         `Storybook MCP is unavailable${this.status.storybookError ? `: ${this.status.storybookError}` : ''}. ` +
-        `Ensure forgekit-storybook-mcp is built and accessible.`
+          `Ensure forgekit-storybook-mcp is built and accessible.`
       )
     }
     return callTool(this.storybookClient, tool, args)

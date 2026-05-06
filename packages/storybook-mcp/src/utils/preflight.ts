@@ -41,8 +41,8 @@ export async function runPreflight(rootDir: string): Promise<PreflightResult> {
   // 4. Check .storybook/preview.ts for outdated patterns
   checkPreviewConfig(rootDir, checks)
 
-  const fails = checks.filter(c => c.status === 'fail')
-  const warns = checks.filter(c => c.status === 'warn')
+  const fails = checks.filter((c) => c.status === 'fail')
+  const warns = checks.filter((c) => c.status === 'warn')
   const passed = fails.length === 0 && warns.length === 0
 
   const parts: string[] = []
@@ -86,7 +86,11 @@ function readFileIfExists(filePath: string): string | null {
   }
 }
 
-function checkRequiredPackages(rootDir: string, checks: PreflightCheck[], installCommands: string[]) {
+function checkRequiredPackages(
+  rootDir: string,
+  checks: PreflightCheck[],
+  installCommands: string[]
+) {
   const required = ['storybook', '@storybook/react', '@storybook/addon-docs', 'react', 'react-dom']
   const missing: string[] = []
 
@@ -114,7 +118,8 @@ function checkRequiredPackages(rootDir: string, checks: PreflightCheck[], instal
     checks.push({
       name: 'package:framework',
       status: 'fail',
-      message: 'No Storybook framework package found (@storybook/react-vite or @storybook/react-webpack5)',
+      message:
+        'No Storybook framework package found (@storybook/react-vite or @storybook/react-webpack5)',
       fix: 'npm install -D @storybook/react-vite',
     })
     missing.push('@storybook/react-vite')
@@ -239,7 +244,7 @@ function checkPreviewConfig(rootDir: string, checks: PreflightCheck[]) {
       name: 'config:preview:argTypesRegex',
       status: 'warn',
       message: 'argTypesRegex is deprecated in SB10 — actions are now auto-detected',
-      fix: "Remove the argTypesRegex line from preview config",
+      fix: 'Remove the argTypesRegex line from preview config',
     })
   }
 

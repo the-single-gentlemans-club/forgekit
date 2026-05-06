@@ -19,7 +19,7 @@
     "!**/*.tsbuildinfo"
   ],
   "peerDependencies": {
-    "@figma/plugin-typings": ">=1.0.0"
+    "vitest": "4.0.9"
   },
   "peerDependenciesMeta": {
     "@figma/plugin-typings": {

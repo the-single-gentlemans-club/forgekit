@@ -7,14 +7,14 @@ import type { ComponentInfo } from 'forgekit-storybook-mcp'
 export interface ForgeKitContextConfig {
   figma: FigmaConfig
   storybook: StorybookContextConfig
-  outputDir?: string  // defaults to '.forgekit/'
+  outputDir?: string // defaults to '.forgekit/'
 }
 
 export interface FigmaConfig {
-  accessToken: string           // FIGMA_ACCESS_TOKEN env var
-  fileId?: string               // specific Figma file ID
-  useDesktop?: boolean          // spawn local npx figma-developer-mcp (default: true)
-  remoteUrl?: string            // override remote URL
+  accessToken: string // FIGMA_ACCESS_TOKEN env var
+  fileId?: string // specific Figma file ID
+  useDesktop?: boolean // spawn local npx figma-developer-mcp (default: true)
+  remoteUrl?: string // override remote URL
 }
 
 export interface StorybookContextConfig {

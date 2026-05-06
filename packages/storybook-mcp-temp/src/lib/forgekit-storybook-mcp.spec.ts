@@ -1,7 +1,7 @@
-import { forgekitStorybookMcpTemp } from './forgekit-storybook-mcp.js'
+import { createStorybookMCPServer } from './forgekit-storybook-mcp.js'
 
-describe('forgekitStorybookMcpTemp', () => {
-  it('should work', () => {
-    expect(forgekitStorybookMcpTemp()).toEqual('forgekit-storybook-mcp-temp')
+describe('forgekit-storybook-mcp-temp', () => {
+  it('exports createStorybookMCPServer', () => {
+    expect(typeof createStorybookMCPServer).toBe('function')
   })
 })

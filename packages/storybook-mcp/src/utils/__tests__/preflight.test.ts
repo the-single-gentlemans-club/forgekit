@@ -1,7 +1,9 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import fs from 'node:fs'
-import path from 'node:path'
 import os from 'node:os'
+import path from 'node:path'
+
+import { afterAll,beforeAll, describe, expect, it } from 'vitest'
+
 import { runPreflight } from '../preflight.js'
 
 let tmpDir: string
@@ -19,13 +21,13 @@ describe('preflight', () => {
     // Empty project - no node_modules
     const result = await runPreflight(tmpDir)
     expect(result.passed).toBe(false)
-    
+
     // Should flag missing packages
-    const failedChecks = result.checks.filter(c => c.status === 'fail')
+    const failedChecks = result.checks.filter((c) => c.status === 'fail')
     expect(failedChecks.length).toBeGreaterThan(0)
-    
+
     // Should specifically flag @storybook/addon-docs
-    const addonDocsCheck = result.checks.find(c => c.name === 'package:@storybook/addon-docs')
+    const addonDocsCheck = result.checks.find((c) => c.name === 'package:@storybook/addon-docs')
     expect(addonDocsCheck).toBeDefined()
     expect(addonDocsCheck!.status).toBe('fail')
   })
@@ -38,21 +40,21 @@ describe('preflight', () => {
 
   it('checks for storybook package', async () => {
     const result = await runPreflight(tmpDir)
-    const sbCheck = result.checks.find(c => c.name === 'package:storybook')
+    const sbCheck = result.checks.find((c) => c.name === 'package:storybook')
     expect(sbCheck).toBeDefined()
     expect(sbCheck!.status).toBe('fail')
   })
 
   it('checks for framework package', async () => {
     const result = await runPreflight(tmpDir)
-    const fwCheck = result.checks.find(c => c.name === 'package:framework')
+    const fwCheck = result.checks.find((c) => c.name === 'package:framework')
     expect(fwCheck).toBeDefined()
     expect(fwCheck!.status).toBe('fail')
   })
 
   it('warns about missing .storybook/main config', async () => {
     const result = await runPreflight(tmpDir)
-    const mainCheck = result.checks.find(c => c.name === 'config:main')
+    const mainCheck = result.checks.find((c) => c.name === 'config:main')
     expect(mainCheck).toBeDefined()
     expect(mainCheck!.status).toBe('warn')
   })

@@ -165,7 +165,8 @@ export async function buildTypographyPage(tokens: PluginTokens): Promise<void> {
     multiline.fontName = { family: 'Inter', style: 'Regular' }
     multiline.fontSize = baseSize
     multiline.lineHeight = { value: lineH * 100, unit: 'PERCENT' }
-    multiline.characters = 'Complete your tasks for today.\nEven small steps count.\nYou\'re doing great.'
+    multiline.characters =
+      "Complete your tasks for today.\nEven small steps count.\nYou're doing great."
     multiline.fills = [solidPaintFromRgba(STONE_900)]
 
     row.appendChild(labelFrame)
