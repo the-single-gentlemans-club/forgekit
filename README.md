@@ -96,7 +96,7 @@ Replace project names with those shown by `npx nx show projects` after install.
       "command": "npx",
       "args": ["forgekit-storybook-mcp", "--skip-init"],
       "env": {
-        "FORGEKIT_LICENSE": "your-license-key"
+        "FORGEKIT": "your-license-key"
       }
     }
   }
@@ -116,7 +116,7 @@ Use after installing `forgekit-context` from this monorepo (`npx nx build forgek
       "env": {
         "FIGMA_ACCESS_TOKEN": "your-figma-token",
         "FIGMA_FILE_ID": "your-file-id",
-        "FORGEKIT_LICENSE": "your-license-key"
+        "FORGEKIT": "your-license-key"
       }
     }
   }
