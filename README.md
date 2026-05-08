@@ -94,10 +94,7 @@ Replace project names with those shown by `npx nx show projects` after install.
   "mcpServers": {
     "storybook": {
       "command": "npx",
-      "args": ["forgekit-storybook-mcp", "--skip-init"],
-      "env": {
-        "FORGEKIT_LICENSE": "your-license-key"
-      }
+      "args": ["forgekit-storybook-mcp", "--skip-init"]
     }
   }
 }
@@ -115,8 +112,7 @@ Use after installing `forgekit-context` from this monorepo (`npx nx build forgek
       "args": ["forgekit-context"],
       "env": {
         "FIGMA_ACCESS_TOKEN": "your-figma-token",
-        "FIGMA_FILE_ID": "your-file-id",
-        "FORGEKIT_LICENSE": "your-license-key"
+        "FIGMA_FILE_ID": "your-file-id"
       }
     }
   }
@@ -154,4 +150,4 @@ Features are developed in this monorepo; published artifacts include:
 
 ## License
 
-Free tier available. Pro license at [forgekit.cloud](https://forgekit.cloud) — $29 launch price.
+MIT — fully open source.

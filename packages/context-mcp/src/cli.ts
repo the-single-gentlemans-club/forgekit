@@ -34,7 +34,6 @@ interface ParsedArgs {
   figmaUseDesktop: boolean
   figmaRemoteUrl?: string
   projectRoot: string
-  licenseKey?: string
   outputDir: string
   storybookUrl: string
   help: boolean
@@ -54,8 +53,6 @@ function parseArgs(): ParsedArgs {
     figmaUseDesktop: !has('figma-remote'),
     figmaRemoteUrl: get('figma-remote-url'),
     projectRoot: get('project-root') ?? process.cwd(),
-    licenseKey:
-      get('license-key') ?? process.env['FORGEKIT_LICENSE'] ?? process.env['STORYBOOK_MCP_LICENSE'],
     outputDir: get('output-dir') ?? '.forgekit',
     storybookUrl: get('storybook-url') ?? 'http://localhost:6006',
     help: has('help') || has('h'),
@@ -75,7 +72,6 @@ OPTIONS:
   --figma-remote            Use remote Figma MCP instead of local npx
   --figma-remote-url=URL    Override remote Figma MCP URL
   --project-root=PATH       Root of the React project (default: cwd)
-  --license-key=KEY         ForgeKit Pro license key (or FORGEKIT_LICENSE env)
   --output-dir=DIR          Output directory for generated files (default: .forgekit)
   --storybook-url=URL       Storybook base URL for sync_stories_to_figma (default: http://localhost:6006)
   -h, --help                Show this help
@@ -92,7 +88,6 @@ TOOLS EXPOSED:
 ENVIRONMENT VARIABLES:
   FIGMA_ACCESS_TOKEN         Figma personal access token
   FIGMA_FILE_ID              Figma file ID to analyze
-  FORGEKIT_LICENSE           ForgeKit Pro license key
 `)
 }
 
@@ -150,7 +145,6 @@ async function main(): Promise<void> {
     storybook: {
       projectRoot: args.projectRoot,
       libraries,
-      licenseKey: args.licenseKey,
       storybookUrl: args.storybookUrl,
     },
     outputDir: args.outputDir,

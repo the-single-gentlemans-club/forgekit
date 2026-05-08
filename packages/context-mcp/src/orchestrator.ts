@@ -137,15 +137,10 @@ export class ForgeKitOrchestrator {
     try {
       this.storybookClient = await createStdioMcpClient('storybook-downstream', {
         command: 'node',
-        args: [
-          cliPath,
-          '--skip-init',
-          ...(storybook.licenseKey ? [`--license=${storybook.licenseKey}`] : []),
-        ],
+        args: [cliPath, '--skip-init'],
         env: {
           ...(process.env as Record<string, string>),
           STORYBOOK_MCP_PROJECT_ROOT: storybook.projectRoot,
-          ...(storybook.licenseKey ? { STORYBOOK_MCP_LICENSE: storybook.licenseKey } : {}),
         },
         cwd: storybook.projectRoot,
         stderr: 'pipe',

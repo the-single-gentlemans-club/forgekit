@@ -62,7 +62,7 @@ npx nx lint forgekit-storybook-mcp
 | `src/utils/story-merger.ts`           | Merge logic for `update_story`                     |
 | `src/utils/story-history.ts`          | Version tracking in `.forgekit/story-history.json` |
 | `src/utils/code-connect-generator.ts` | Figma Code Connect file generation                 |
-| `src/utils/license.ts`                | Polar.sh license validation                        |
+| `src/utils/license.ts`                | Feature access (open source — all enabled)         |
 | `src/utils/constants.ts`              | All centralized constants                          |
 
 ## Porting releases

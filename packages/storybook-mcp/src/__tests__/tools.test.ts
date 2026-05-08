@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 
-import { afterAll,beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { generateDocsTool, generateStoryTool, generateTestTool, syncAll } from '../tools.js'
 import type { StorybookMCPConfig } from '../types.js'
@@ -35,7 +35,7 @@ afterAll(() => {
   fs.rmSync(tmpDir, { recursive: true, force: true })
 })
 
-function makeConfig(licenseKey?: string): StorybookMCPConfig {
+function makeConfig(): StorybookMCPConfig {
   return {
     rootDir: tmpDir,
     libraries: [{ name: 'ui', path: 'src/components', storyTitlePrefix: 'Components' }],
@@ -43,30 +43,29 @@ function makeConfig(licenseKey?: string): StorybookMCPConfig {
     storyFilePattern: '**/*.stories.{ts,tsx}',
     componentPatterns: ['**/*.tsx', '!**/*.stories.tsx', '!**/*.test.tsx'],
     excludePatterns: ['**/node_modules/**'],
-    licenseKey,
   }
 }
 
-describe('tools - feature gating', () => {
-  it('generate_test requires Pro license', async () => {
-    await expect(
-      generateTestTool(makeConfig(), {
-        componentPath: 'src/components/Widget.tsx',
-        dryRun: true,
-      })
-    ).rejects.toThrow(/Pro license/)
+describe('tools - all features available (open source)', () => {
+  it('generate_test works without license', async () => {
+    const result = await generateTestTool(makeConfig(), {
+      componentPath: 'src/components/Widget.tsx',
+      dryRun: true,
+    })
+    expect(result.test).toBeDefined()
+    expect(result.written).toBe(false) // dry run
   })
 
-  it('generate_docs requires Pro license', async () => {
-    await expect(
-      generateDocsTool(makeConfig(), {
-        componentPath: 'src/components/Widget.tsx',
-        dryRun: true,
-      })
-    ).rejects.toThrow(/Pro license/)
+  it('generate_docs works without license', async () => {
+    const result = await generateDocsTool(makeConfig(), {
+      componentPath: 'src/components/Widget.tsx',
+      dryRun: true,
+    })
+    expect(result.docs).toBeDefined()
+    expect(result.written).toBe(false) // dry run
   })
 
-  it('generate_story works in free tier (basic template)', async () => {
+  it('generate_story works with any template', async () => {
     const result = await generateStoryTool(makeConfig(), {
       componentPath: 'src/components/Widget.tsx',
       dryRun: true,
@@ -75,19 +74,18 @@ describe('tools - feature gating', () => {
     expect(result.written).toBe(false) // dry run
   })
 
-  it('generate_story with advanced template requires Pro', async () => {
-    await expect(
-      generateStoryTool(makeConfig(), {
-        componentPath: 'src/components/Widget.tsx',
-        template: 'with-msw',
-        dryRun: true,
-      })
-    ).rejects.toThrow(/Pro license/)
+  it('generate_story with advanced template works', async () => {
+    const result = await generateStoryTool(makeConfig(), {
+      componentPath: 'src/components/Widget.tsx',
+      template: 'with-msw',
+      dryRun: true,
+    })
+    expect(result.story.content).toContain('Widget')
   })
 })
 
 describe('tools - syncAll', () => {
-  it('respects free tier maxComponents limit', async () => {
+  it('syncs all components without limits', async () => {
     // Create multiple components
     const compDir = path.join(tmpDir, 'src', 'components')
     for (let i = 1; i <= 8; i++) {
@@ -107,19 +105,17 @@ export const Comp${i} = () => <div>Comp${i}</div>
       dryRun: true,
     })
 
-    // Free tier disables tests and docs
-    // The result should reflect that tests/docs were disabled
     expect(result).toBeDefined()
+    expect(result.scanned).toBeGreaterThan(0)
   })
 
-  it('disables test generation for free tier', async () => {
+  it('generates tests and docs', async () => {
     const result = await syncAll(makeConfig(), {
       generateTests: true,
       generateDocs: true,
       dryRun: true,
     })
-    // Free tier: tests and docs should be 0 (disabled)
-    expect(result.created.tests).toBe(0)
-    expect(result.created.docs).toBe(0)
+    // All features enabled — tests and docs should be generated
+    expect(result).toBeDefined()
   })
 })

@@ -54,8 +54,7 @@ npm install forgekit-context
       "args": ["forgekit-context"],
       "env": {
         "FIGMA_ACCESS_TOKEN": "your-token-here",
-        "FIGMA_FILE_ID": "abc123",
-        "FORGEKIT_LICENSE": "your-license-key"
+        "FIGMA_FILE_ID": "abc123"
       }
     }
   }
@@ -69,11 +68,10 @@ npx forgekit-context \
   --figma-token=your-token \
   --figma-file=abc123 \
   --project-root=/path/to/project \
-  --license-key=your-license \
   --storybook-url=http://localhost:6006
 ```
 
-All flags can also be set as environment variables: `FIGMA_ACCESS_TOKEN`, `FIGMA_FILE_ID`, `FORGEKIT_LICENSE`.
+All flags can also be set as environment variables: `FIGMA_ACCESS_TOKEN`, `FIGMA_FILE_ID`.
 
 ## Key workflows
 

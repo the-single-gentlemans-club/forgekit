@@ -10,23 +10,23 @@ The published npm package lives at [`d:/documents-from-c/GitHub/storybook-mcp-v2
 
 ### Tools (15 total)
 
-| Tool                     | Tier     | Description                                            |
-| ------------------------ | -------- | ------------------------------------------------------ |
-| `list_components`        | Free     | List and filter components across configured libraries |
-| `analyze_component`      | Free     | Extract props, dependencies, framework detection       |
-| `generate_story`         | Free/Pro | Generate stories with 8 template options               |
-| `update_story`           | Pro      | Regenerate a story while preserving custom exports     |
-| `generate_test`          | Pro      | Generate Playwright or Vitest tests                    |
-| `generate_docs`          | Pro      | Generate MDX documentation pages                       |
-| `generate_code_connect`  | Pro      | Generate Figma Code Connect `.figma.tsx` files         |
-| `validate_story`         | Free     | Validate story syntax and imports                      |
-| `sync_all`               | Free/Pro | Sync stories/tests/docs for all components             |
-| `sync_component`         | Free/Pro | Sync a single component                                |
-| `get_story_template`     | Free     | Retrieve a raw story template                          |
-| `list_templates`         | Free     | List all available templates                           |
-| `get_component_coverage` | Free     | Coverage report for stories/tests/docs                 |
-| `suggest_stories`        | Free     | AI suggestions for story improvements                  |
-| `check_health`           | Free     | Diagnose Storybook configuration issues                |
+| Tool                     | Description                                            |
+| ------------------------ | ------------------------------------------------------ |
+| `list_components`        | List and filter components across configured libraries |
+| `analyze_component`      | Extract props, dependencies, framework detection       |
+| `generate_story`         | Generate stories with 8 template options               |
+| `update_story`           | Regenerate a story while preserving custom exports     |
+| `generate_test`          | Generate Playwright or Vitest tests                    |
+| `generate_docs`          | Generate MDX documentation pages                       |
+| `generate_code_connect`  | Generate Figma Code Connect `.figma.tsx` files         |
+| `validate_story`         | Validate story syntax and imports                      |
+| `sync_all`               | Sync stories/tests/docs for all components             |
+| `sync_component`         | Sync a single component                                |
+| `get_story_template`     | Retrieve a raw story template                          |
+| `list_templates`         | List all available templates                           |
+| `get_component_coverage` | Coverage report for stories/tests/docs                 |
+| `suggest_stories`        | AI suggestions for story improvements                  |
+| `check_health`           | Diagnose Storybook configuration issues                |
 
 ### Story templates
 
@@ -62,7 +62,7 @@ npx nx lint forgekit-storybook-mcp
 | `src/utils/story-merger.ts`           | Merge logic for `update_story`                     |
 | `src/utils/story-history.ts`          | Version tracking in `.forgekit/story-history.json` |
 | `src/utils/code-connect-generator.ts` | Figma Code Connect file generation                 |
-| `src/utils/license.ts`                | Polar.sh license validation                        |
+| `src/utils/license.ts`                | Feature access (open source — all enabled)         |
 | `src/utils/constants.ts`              | All centralized constants                          |
 
 ## Porting releases

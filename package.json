@@ -5,12 +5,12 @@
   "scripts": {
     "lint": "nx run-many -t lint --fix",
     "test": "nx run-many -t test --fix",
-    "build": "nx run-many -t build --fix",
+    "build": "nx run-many -t build",
     "typecheck": "nx run-many -t typecheck --fix",
     "release": "nx release",
-    "release:version": "nx release version --fix",
+    "release:version": "nx release version",
     "release:changelog": "nx release changelog --fix",
-    "publish:figma-plugin": "nx run figma-plugin:nx-release-publish --fix"
+    "publish:figma-plugin": "nx run figma-plugin:nx-release-publish"
   },
   "private": true,
   "devDependencies": {

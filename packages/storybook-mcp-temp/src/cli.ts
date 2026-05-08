@@ -18,9 +18,7 @@ import path from 'node:path'
 import { runServer } from './index.js'
 import type { StorybookMCPConfig } from './types.js'
 import { DEFAULT_CONFIG } from './types.js'
-import { POLAR_UPGRADE_URL } from './utils/constants.js'
 import { initializeComponents } from './utils/initializer.js'
-import { validateLicenseAsync } from './utils/license.js'
 import { runPreflight } from './utils/preflight.js'
 import { runSetup } from './utils/setup.js'
 
@@ -94,17 +92,8 @@ CONFIGURATION:
     "framework": "chakra|shadcn|tamagui|gluestack|vanilla",
     "libraries": [
       { "name": "ui", "path": "libs/ui/src" }
-    ],
-    "licenseKey": "your-license-key"
+    ]
   }
-
-  Or set STORYBOOK_MCP_LICENSE environment variable.
-
-LICENSE:
-  Free tier: 10 components, basic stories only
-  Pro ($29 launch price): Unlimited components, tests, docs, all templates
-
-  Get Pro: ${POLAR_UPGRADE_URL}
 
 MORE INFO:
   https://npmjs.com/package/forgekit-storybook-mcp
@@ -247,32 +236,16 @@ Use --setup --dry-run to preview without writing files.
     console.error('')
   }
 
-  // Validate license (async with caching)
-  const license = await validateLicenseAsync(config)
-  console.error(
-    `[storybook-mcp] License: ${license.tier}${license.tier === 'free' ? ` (max ${license.maxSyncLimit} components)` : ''}`
-  )
-
   // Run initialization unless skipped
   if (!args.skipInit) {
     console.error(`[storybook-mcp] Running component sync...`)
 
-    // Free tier: disable test and docs generation
-    const canGenerateTests = license.tier === 'pro' && !args.noTests
-    const canGenerateDocs = license.tier === 'pro' && !args.noDocs
-
-    if (license.tier === 'free') {
-      if (!args.noTests) console.error('[storybook-mcp] Test generation requires Pro license')
-      if (!args.noDocs) console.error('[storybook-mcp] Docs generation requires Pro license')
-    }
-
     const initResult = await initializeComponents(config, {
       generateStories: !args.noStories,
-      generateTests: canGenerateTests,
-      generateDocs: canGenerateDocs,
+      generateTests: !args.noTests,
+      generateDocs: !args.noDocs,
       updateExisting: !args.noUpdate,
       dryRun: args.dryRun,
-      maxComponents: license.tier === 'free' ? license.maxSyncLimit : undefined,
     })
 
     if (args.dryRun) {
