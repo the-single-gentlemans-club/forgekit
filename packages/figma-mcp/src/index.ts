@@ -1,3 +1,8 @@
+import {
+  createMcpHttpServer,
+  type McpHttpServerHandle,
+  type McpHttpServerOptions,
+} from '@forgekit/mcp-core'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod'
@@ -67,7 +72,10 @@ export async function syncTheme(args: {
   return { filesWritten: allFilesWritten, outputDir: 'multiple' }
 }
 
-export async function runServer() {
+// -----------------------------------------------
+// Tool registration — shared by both stdio + HTTP entrypoints
+// -----------------------------------------------
+function createFigmaMcpServer(): McpServer {
   const server = new McpServer({
     name: 'forgekit-figma-mcp',
     version: '0.1.0',
@@ -110,7 +118,25 @@ export async function runServer() {
     }
   )
 
+  return server
+}
+
+// -----------------------------------------------
+// runServer — stdio mode (for `npx forgekit-figma-mcp` and packaged installs)
+// -----------------------------------------------
+export async function runServer(): Promise<void> {
+  const server = createFigmaMcpServer()
   const transport = new StdioServerTransport()
   await server.connect(transport)
   console.error('ForgeKit Figma MCP Server running on stdio')
+}
+
+// -----------------------------------------------
+// runHttpServer — streamable HTTP mode (for local dev + remote hosts)
+// -----------------------------------------------
+export async function runHttpServer(
+  options?: McpHttpServerOptions
+): Promise<McpHttpServerHandle> {
+  const server = createFigmaMcpServer()
+  return createMcpHttpServer(server, options)
 }

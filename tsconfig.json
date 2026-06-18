@@ -29,6 +29,12 @@
     },
     {
       "path": "./packages/figma-plugin"
+    },
+    {
+      "path": "./packages/design-system"
+    },
+    {
+      "path": "./packages/bff-mcp"
     }
   ]
 }

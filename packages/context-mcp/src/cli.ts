@@ -25,7 +25,7 @@ import path from 'node:path'
 
 import type { LibraryConfig } from 'forgekit-storybook-mcp'
 
-import { runContextServer } from './server.js'
+import { runContextHttpServer, runContextServer } from './server.js'
 import type { ForgeKitContextConfig } from './types.js'
 
 interface ParsedArgs {
@@ -36,6 +36,9 @@ interface ParsedArgs {
   projectRoot: string
   outputDir: string
   storybookUrl: string
+  http: boolean
+  httpPort?: number
+  httpHost?: string
   help: boolean
 }
 
@@ -47,6 +50,7 @@ function parseArgs(): ParsedArgs {
   }
   const has = (flag: string) => argv.includes(`--${flag}`)
 
+  const httpPortRaw = get('port')
   return {
     figmaToken: get('figma-token') ?? process.env['FIGMA_ACCESS_TOKEN'] ?? '',
     figmaFileId: get('figma-file') ?? process.env['FIGMA_FILE_ID'],
@@ -55,6 +59,9 @@ function parseArgs(): ParsedArgs {
     projectRoot: get('project-root') ?? process.cwd(),
     outputDir: get('output-dir') ?? '.forgekit',
     storybookUrl: get('storybook-url') ?? 'http://localhost:6006',
+    http: has('http'),
+    httpPort: httpPortRaw ? Number(httpPortRaw) : undefined,
+    httpHost: get('host'),
     help: has('help') || has('h'),
   }
 }
@@ -74,6 +81,9 @@ OPTIONS:
   --project-root=PATH       Root of the React project (default: cwd)
   --output-dir=DIR          Output directory for generated files (default: .forgekit)
   --storybook-url=URL       Storybook base URL for sync_stories_to_figma (default: http://localhost:6006)
+  --http                    Serve MCP over streamable HTTP instead of stdio (for local dev)
+  --port=PORT               HTTP port (default: PORT env or 3002)
+  --host=HOST               HTTP bind host (default: 127.0.0.1)
   -h, --help                Show this help
 
 TOOLS EXPOSED:
@@ -148,6 +158,18 @@ async function main(): Promise<void> {
       storybookUrl: args.storybookUrl,
     },
     outputDir: args.outputDir,
+  }
+
+  if (args.http) {
+    const httpPort = args.httpPort ?? Number(process.env['PORT'] ?? 3002)
+    const handle = await runContextHttpServer(config, {
+      port: httpPort,
+      host: args.httpHost,
+    })
+    process.stderr.write(
+      `[context-mcp] HTTP endpoint ready at ${handle.url}\n[context-mcp] Press Ctrl+C to stop.\n`
+    )
+    return
   }
 
   await runContextServer(config)
