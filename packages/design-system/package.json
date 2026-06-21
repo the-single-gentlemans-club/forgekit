@@ -29,5 +29,10 @@
       "scope:shared",
       "type:ui"
     ]
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "fast-glob": "^3.3.3",
+    "vitest": "4.0.9"
   }
 }
