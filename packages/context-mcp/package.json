@@ -42,13 +42,13 @@
     "@forgekit/mcp-core": "*",
     "@modelcontextprotocol/sdk": "^1.0.0",
     "forgekit-storybook-mcp": "*",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.6"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.6"
   },
   "engines": {
     "node": ">=18.0.0"
