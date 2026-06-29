@@ -1,0 +1,120 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1781815680710,
+  "projectRoot": "/Users/richtillman/Documents/GitHub/forgekit-v2",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "tsconfig.json"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "react",
+        "version": "19.1.0",
+        "category": "frontend"
+      },
+      {
+        "name": "react-dom",
+        "version": "19.1.0",
+        "category": "frontend"
+      },
+      {
+        "name": "vite",
+        "version": "7.0.0",
+        "category": "build"
+      },
+      {
+        "name": "vitest",
+        "version": "4.0.9",
+        "category": "testing"
+      }
+    ],
+    "packageManager": "npm",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": "npm run build",
+    "testCommand": "npm test",
+    "lintCommand": "npm run lint",
+    "devCommand": null,
+    "scripts": {
+      "lint": "nx run-many -t lint --fix",
+      "test": "nx run-many -t test --fix",
+      "build": "nx run-many -t build",
+      "typecheck": "nx run-many -t typecheck --fix",
+      "release": "nx release",
+      "release:version": "nx release version",
+      "release:changelog": "nx release changelog --fix",
+      "publish:figma-plugin": "nx run figma-plugin:nx-release-publish",
+      "storybook": "nx run storybook dev -p 6006",
+      "build-storybook": "nx run storybook build"
+    }
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": true,
+    "workspaces": [
+      "packages/*"
+    ],
+    "mainDirectories": [],
+    "gitBranches": {
+      "defaultBranch": "master",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "branding": {
+      "path": "branding",
+      "purpose": null,
+      "fileCount": 3,
+      "lastAccessed": 1781815680638,
+      "keyFiles": [
+        "ForgeKit-Brand-Brief.md",
+        "build-brief.cjs",
+        "build-pdf.cjs"
+      ]
+    },
+    "job-digests": {
+      "path": "job-digests",
+      "purpose": null,
+      "fileCount": 24,
+      "lastAccessed": 1781815680640,
+      "keyFiles": [
+        "2026-05-16.md",
+        "2026-05-17.md",
+        "2026-05-18.md",
+        "2026-05-20.md",
+        "2026-05-21.md"
+      ]
+    },
+    "packages": {
+      "path": "packages",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1781815680676,
+      "keyFiles": []
+    }
+  },
+  "hotPaths": [],
+  "userDirectives": []
+}

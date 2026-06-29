@@ -1,0 +1,13 @@
+{
+  "name": "ForgeKit Design System",
+  "id": "forgekit-figma-plugin",
+  "api": "1.0.0",
+  "main": "index.js",
+  "capabilities": [],
+  "enableProposedApi": false,
+  "editorType": ["figma"],
+  "ui": {},
+  "networkAccess": {
+    "allowedDomains": ["none"]
+  }
+}

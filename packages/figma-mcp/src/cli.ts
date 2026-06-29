@@ -5,7 +5,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import prompts from 'prompts'
 
-import { runServer, syncTheme } from './index.js'
+import { runHttpServer, runServer, syncTheme } from './index.js'
 import { OutputConfig } from './types.js'
 import { detectFramework } from './utils/analyzer.js'
 import { fetchFigmaTokens } from './utils/figma.js'
@@ -278,6 +278,31 @@ if (args.includes('init')) {
     })
     .catch((error) => {
       console.error('Error syncing theme:', error.message)
+      process.exit(1)
+    })
+} else if (args.includes('--http')) {
+  const getArg = (flag: string) => {
+    const idx = args.indexOf(flag)
+    return idx > -1 ? args[idx + 1] : undefined
+  }
+  const portRaw = getArg('--port')
+  const port = portRaw ? Number(portRaw) : undefined
+  const host = getArg('--host')
+
+  runHttpServer({ port, host })
+    .then((handle) => {
+      console.error(`ForgeKit Figma MCP — HTTP endpoint ready at ${handle.url}`)
+      console.error('Press Ctrl+C to stop.')
+      const shutdown = async () => {
+        console.error('\nShutting down...')
+        await handle.close()
+        process.exit(0)
+      }
+      process.on('SIGINT', shutdown)
+      process.on('SIGTERM', shutdown)
+    })
+    .catch((error) => {
+      console.error('Fatal error running HTTP server:', error)
       process.exit(1)
     })
 } else {

@@ -20,7 +20,6 @@ export interface FigmaConfig {
 export interface StorybookContextConfig {
   projectRoot: string
   libraries: LibraryConfig[]
-  licenseKey?: string
   storybookUrl?: string
 }
 

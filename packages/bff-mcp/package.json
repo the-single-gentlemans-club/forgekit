@@ -1,0 +1,56 @@
+{
+  "name": "@forgekit/bff-mcp",
+  "version": "0.0.1",
+  "private": true,
+  "description": "MCP server: FE schemas → BFF endpoints (Hono + Zod + OpenAPI + TanStack Query). FE-led, MCP-native.",
+  "author": "Rich Tillman <richtillman@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "forgekit-bff": "./dist/cli.js"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@forgekit/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "nx": {
+    "tags": [
+      "type:mcp",
+      "scope:bff"
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "bff",
+    "backend-for-frontend",
+    "hono",
+    "zod",
+    "openapi",
+    "tanstack-query",
+    "design-systems",
+    "frontend",
+    "ai-tooling",
+    "forgekit"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/effinrich/forgekit.git"
+  },
+  "homepage": "https://forgekit.cloud"
+}

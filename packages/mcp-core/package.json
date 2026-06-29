@@ -6,6 +6,9 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "mcp-core": "./dist/cli.js"
+  },
   "exports": {
     "./package.json": "./package.json",
     ".": {
@@ -15,14 +18,19 @@
       "default": "./dist/index.js"
     }
   },
+  "scripts": {
+    "build": "npx tsup src/index.ts src/cli.ts --format esm --dts --clean --tsconfig tsconfig.build.json",
+    "prepublishOnly": "npm run build",
+    "start": "node dist/cli.js",
+    "typecheck": "tsc --noEmit",
+    "publish:npm": "npm publish --access public"
+  },
   "nx": {
     "tags": [
       "type:mcp",
       "scope:shared"
     ]
   },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
-    "tslib": "^2.3.0"
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }
