@@ -5,12 +5,10 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
-import type {
-  StorybookMCPConfig,
-  ComponentAnalysis,
-} from '../types.js'
-import { toKebabCase } from './scanner.js'
+
+import type { ComponentAnalysis,StorybookMCPConfig } from '../types.js'
 import { FILE_EXTENSIONS } from './constants.js'
+import { toKebabCase } from './scanner.js'
 
 export interface GeneratedTest {
   content: string
@@ -41,14 +39,17 @@ export async function generateTest(
 ): Promise<GeneratedTest> {
   const kebabName = toKebabCase(analysis.name)
   const testPath = buildTestPath(analysis.filePath)
-  
+
   let content = ''
 
   // Only use Playwright if it's actually installed in the project
   // Otherwise default to vitest + @testing-library (works for all components)
   const hasPlaywright = isPackageInstalled(config.rootDir, '@playwright/test')
-  
-  if (hasPlaywright && (analysis.dependencies.usesRouter || analysis.props.some(p => p.name.startsWith('on')))) {
+
+  if (
+    hasPlaywright &&
+    (analysis.dependencies.usesRouter || analysis.props.some((p) => p.name.startsWith('on')))
+  ) {
     content = generatePlaywrightTest(analysis, kebabName)
   } else {
     content = generateVitestTest(config, analysis, kebabName)
@@ -65,7 +66,7 @@ export async function generateTest(
  */
 function generatePlaywrightTest(analysis: ComponentAnalysis, kebabName: string): string {
   const { name, props } = analysis
-  const hasChildren = props.some(p => p.name === 'children')
+  const hasChildren = props.some((p) => p.name === 'children')
 
   let content = `import { test, expect } from '@playwright/test'
 
@@ -83,31 +84,31 @@ test.describe('${name}', () => {
 `
 
   // Add variant tests if component has variants
-  const variantProp = props.find(p => p.name === 'variant' && p.controlOptions)
+  const variantProp = props.find((p) => p.name === 'variant' && p.controlOptions)
   if (variantProp?.controlOptions) {
     content += `
   test('displays all variants', async ({ page }) => {
     await page.goto('/iframe.html?id=components-${kebabName}--variants')
     
-${variantProp.controlOptions.map(v => `    await expect(page.getByText('${v}')).toBeVisible()`).join('\n')}
+${variantProp.controlOptions.map((v) => `    await expect(page.getByText('${v}')).toBeVisible()`).join('\n')}
   })
 `
   }
 
   // Add size tests if component has sizes
-  const sizeProp = props.find(p => p.name === 'size' && p.controlOptions)
+  const sizeProp = props.find((p) => p.name === 'size' && p.controlOptions)
   if (sizeProp?.controlOptions) {
     content += `
   test('displays all sizes', async ({ page }) => {
     await page.goto('/iframe.html?id=components-${kebabName}--sizes')
     
-${sizeProp.controlOptions.map(s => `    await expect(page.getByText('${s}')).toBeVisible()`).join('\n')}
+${sizeProp.controlOptions.map((s) => `    await expect(page.getByText('${s}')).toBeVisible()`).join('\n')}
   })
 `
   }
 
   // Add interaction tests for event handlers
-  const eventProps = props.filter(p => p.name.startsWith('on'))
+  const eventProps = props.filter((p) => p.name.startsWith('on'))
   if (eventProps.length > 0 && hasChildren) {
     content += `
   test('handles interactions', async ({ page }) => {
@@ -123,7 +124,7 @@ ${sizeProp.controlOptions.map(s => `    await expect(page.getByText('${s}')).toB
   }
 
   // Add keyboard accessibility test only if component is interactive
-  const isInteractive = eventProps.length > 0 || props.some(p => p.name === 'disabled')
+  const isInteractive = eventProps.length > 0 || props.some((p) => p.name === 'disabled')
   if (isInteractive) {
     content += `
   test('is keyboard accessible', async ({ page }) => {
@@ -209,19 +210,25 @@ function getFrameworkWrapper(config: StorybookMCPConfig): {
 /**
  * Generate Vitest test
  */
-function generateVitestTest(config: StorybookMCPConfig, analysis: ComponentAnalysis, kebabName: string): string {
+function generateVitestTest(
+  config: StorybookMCPConfig,
+  analysis: ComponentAnalysis,
+  kebabName: string
+): string {
   const { name, filePath, props } = analysis
   const importPath = `./${path.basename(filePath, path.extname(filePath))}`
-  const hasChildren = props.some(p => p.name === 'children')
-  const eventProps = props.filter(p => p.name.startsWith('on'))
+  const hasChildren = props.some((p) => p.name === 'children')
+  const eventProps = props.filter((p) => p.name.startsWith('on'))
   const hasEvents = eventProps.length > 0
   const wrapper = getFrameworkWrapper(config)
-  
+
   // Build required props for rendering (non-optional, non-event, non-children)
-  const requiredProps = props.filter(p => p.required && p.name !== 'children' && !p.name.startsWith('on'))
-  
+  const requiredProps = props.filter(
+    (p) => p.required && p.name !== 'children' && !p.name.startsWith('on')
+  )
+
   // Build a minimal valid render call
-  const buildRenderProps = (extraProps: string = ''): string => {
+  const buildRenderProps = (extraProps = ''): string => {
     const propStrs: string[] = []
     for (const p of requiredProps) {
       if (p.controlOptions && p.controlOptions.length > 0) {
@@ -238,7 +245,7 @@ function generateVitestTest(config: StorybookMCPConfig, analysis: ComponentAnaly
     }
     if (extraProps) propStrs.push(extraProps)
     const propsStr = propStrs.length > 0 ? ' ' + propStrs.join(' ') : ''
-    
+
     if (hasChildren) {
       return `<${name}${propsStr}>Test Content</${name}>`
     } else {
@@ -250,10 +257,12 @@ function generateVitestTest(config: StorybookMCPConfig, analysis: ComponentAnaly
   const wrapRender = (jsx: string): string => wrapper.renderWrapper(jsx)
 
   // Only import vi if we need vi.fn()
-  const vitestImports = hasEvents ? `import { describe, it, expect, vi } from 'vitest'` : `import { describe, it, expect } from 'vitest'`
+  const vitestImports = hasEvents
+    ? `import { describe, it, expect, vi } from 'vitest'`
+    : `import { describe, it, expect } from 'vitest'`
   // Only import userEvent if we have events
   const userEventImport = hasEvents ? `import userEvent from '@testing-library/user-event'` : ''
-  
+
   let content = `${vitestImports}
 import { render, screen } from '@testing-library/react'
 ${userEventImport}
@@ -270,7 +279,7 @@ describe('${name}', () => {
 `
 
   // Add variant tests
-  const variantProp = props.find(p => p.name === 'variant' && p.controlOptions)
+  const variantProp = props.find((p) => p.name === 'variant' && p.controlOptions)
   if (variantProp?.controlOptions) {
     for (const variant of variantProp.controlOptions) {
       content += `
@@ -284,7 +293,7 @@ describe('${name}', () => {
   }
 
   // Add size tests
-  const sizeProp = props.find(p => p.name === 'size' && p.controlOptions)
+  const sizeProp = props.find((p) => p.name === 'size' && p.controlOptions)
   if (sizeProp?.controlOptions) {
     for (const size of sizeProp.controlOptions) {
       content += `
@@ -310,7 +319,7 @@ describe('${name}', () => {
 
     render(${wrapRender(`<${name} ${prop.name}={handleEvent}>Content</${name}>`)})
 
-    await user.${eventType === 'click' ? 'click' : 'type'}(screen.getByText('Content')${eventType !== 'click' ? ', \'test\'' : ''})
+    await user.${eventType === 'click' ? 'click' : 'type'}(screen.getByText('Content')${eventType !== 'click' ? ", 'test'" : ''})
 
     expect(handleEvent).toHaveBeenCalled()
   })
@@ -326,7 +335,7 @@ describe('${name}', () => {
     // Find the root element (first child of container)
     const element = container.firstChild as HTMLElement
     if (element) {
-      await user.${eventType === 'click' ? 'click' : 'type'}(element${eventType !== 'click' ? ', \'test\'' : ''})
+      await user.${eventType === 'click' ? 'click' : 'type'}(element${eventType !== 'click' ? ", 'test'" : ''})
       expect(handleEvent).toHaveBeenCalled()
     }
   })
@@ -335,7 +344,7 @@ describe('${name}', () => {
   }
 
   // Add disabled state test if component has disabled prop
-  if (props.some(p => p.name === 'disabled')) {
+  if (props.some((p) => p.name === 'disabled')) {
     content += `
   it('respects disabled state', () => {
     const { container } = render(${wrapRender(hasChildren ? `<${name} disabled>Content</${name}>` : `<${name} disabled />`)})
@@ -373,19 +382,19 @@ function buildTestPath(componentPath: string): string {
 export async function writeTestFile(
   config: StorybookMCPConfig,
   test: GeneratedTest,
-  overwrite: boolean = false
+  overwrite = false
 ): Promise<boolean> {
   const fullPath = path.join(config.rootDir, test.filePath)
-  
+
   if (fs.existsSync(fullPath) && !overwrite) {
     return false
   }
-  
+
   const dir = path.dirname(fullPath)
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true })
   }
-  
+
   fs.writeFileSync(fullPath, test.content, 'utf-8')
   return true
 }

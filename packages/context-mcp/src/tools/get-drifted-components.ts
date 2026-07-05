@@ -1,7 +1,8 @@
+import type { ComponentInfo } from 'forgekit-storybook-mcp'
+
+import { detectDrift } from '../lib/drift.js'
 import type { ForgeKitOrchestrator } from '../orchestrator.js'
 import type { DriftAnalysis, FigmaVariable, ForgeKitContextConfig } from '../types.js'
-import type { ComponentInfo } from 'forgekit-storybook-mcp'
-import { detectDrift } from '../lib/drift.js'
 
 export async function getDriftedComponents(
   orchestrator: ForgeKitOrchestrator,
@@ -15,15 +16,14 @@ export async function getDriftedComponents(
   ])
 
   if (tokensResult.status === 'rejected') {
-    throw new Error(
-      `Cannot check drift: Figma tokens unavailable. ${tokensResult.reason}`
-    )
+    throw new Error(`Cannot check drift: Figma tokens unavailable. ${tokensResult.reason}`)
   }
 
   const figmaTokens = (tokensResult.value as FigmaVariable[]) ?? []
-  const components = componentsResult.status === 'fulfilled'
-    ? ((componentsResult.value as { components: ComponentInfo[] }).components ?? [])
-    : []
+  const components =
+    componentsResult.status === 'fulfilled'
+      ? ((componentsResult.value as { components: ComponentInfo[] }).components ?? [])
+      : []
 
   return detectDrift(components, figmaTokens, {
     projectRoot: config.storybook.projectRoot,

@@ -5,7 +5,13 @@
  * Generic — no project-specific references.
  */
 import type { PluginTokens } from '../types.js'
-import { getOrResetPage, hexToRgba, loadInterFonts, makeText, solidPaintFromRgba } from '../utils.js'
+import {
+  getOrResetPage,
+  hexToRgba,
+  loadInterFonts,
+  makeText,
+  solidPaintFromRgba,
+} from '../utils.js'
 
 export async function buildSpacingPage(tokens: PluginTokens): Promise<void> {
   const page = getOrResetPage('📐 Spacing & Radius')

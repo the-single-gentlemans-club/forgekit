@@ -15,9 +15,10 @@ export async function getMissingComponents(
   })
 
   const suggestions = (raw as CodeConnectSuggestion[]) ?? []
-  const highConfidence = suggestions.filter(s => s.confidence >= 0.8)
+  const highConfidence = suggestions.filter((s) => s.confidence >= 0.8)
 
-  const summary = `${suggestions.length} suggestion(s) found. ` +
+  const summary =
+    `${suggestions.length} suggestion(s) found. ` +
     `${highConfidence.length} high-confidence (≥80%) mapping(s).`
 
   return { suggestions, summary }

@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest'
-import { parseStoryExports, extractStoryBlock, mergeStories } from '../story-merger.js'
+import { describe, expect,it } from 'vitest'
+
+import { extractStoryBlock, mergeStories,parseStoryExports } from '../story-merger.js'
 
 const GENERATED = `import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from './Button'
@@ -95,7 +96,7 @@ describe('mergeStories', () => {
 
     expect(result.preserved).toContain('MyCustomStory')
     expect(result.content).toContain('export const MyCustomStory: Story')
-    expect(result.content).toContain("disabled: true")
+    expect(result.content).toContain('disabled: true')
   })
 
   it('user story appears after the generated content', () => {

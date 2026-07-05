@@ -1,9 +1,16 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import fs from 'node:fs'
-import path from 'node:path'
 import os from 'node:os'
-import { loadStoryHistory, recordStoryVersion, getStoryVersions, hashContent } from '../story-history.js'
+import path from 'node:path'
+
+import { afterEach,beforeEach, describe, expect, it } from 'vitest'
+
 import { FORGEKIT_DIR, STORY_HISTORY_FILENAME } from '../constants.js'
+import {
+  getStoryVersions,
+  hashContent,
+  loadStoryHistory,
+  recordStoryVersion,
+} from '../story-history.js'
 
 let tmpDir: string
 
@@ -67,7 +74,11 @@ describe('recordStoryVersion', () => {
   })
 
   it('tracks different story paths independently', () => {
-    const otherEntry = { ...BASE_ENTRY, storyPath: 'src/components/Card.stories.tsx', componentPath: 'src/components/Card.tsx' }
+    const otherEntry = {
+      ...BASE_ENTRY,
+      storyPath: 'src/components/Card.stories.tsx',
+      componentPath: 'src/components/Card.tsx',
+    }
     recordStoryVersion(tmpDir, BASE_ENTRY)
     recordStoryVersion(tmpDir, otherEntry)
 
@@ -105,7 +116,7 @@ describe('getStoryVersions', () => {
 
     const versions = getStoryVersions(tmpDir, BASE_ENTRY.storyPath)
     expect(versions).toHaveLength(2)
-    expect(versions.map(v => v.action)).toEqual(['created', 'updated'])
+    expect(versions.map((v) => v.action)).toEqual(['created', 'updated'])
   })
 })
 

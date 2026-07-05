@@ -4,12 +4,9 @@
  */
 
 // ===========================================
-// License & Pro Features
+// Contact
 // ===========================================
-export const POLAR_UPGRADE_URL = 'https://polar.sh/forgekit'
 export const FORGEKIT_EMAIL = 'forgekit@pm.me'
-export const FREE_TIER_MAX_SYNC = 10
-export const LICENSE_CACHE_TTL_MS = 24 * 60 * 60 * 1000 // 24 hours
 
 // ===========================================
 // File Extensions
@@ -33,7 +30,12 @@ export const FILE_EXTENSIONS = {
 // ===========================================
 export const DEFAULT_STORY_PATTERN = '**/*.stories.{ts,tsx}'
 export const DEFAULT_COMPONENT_PATTERNS = ['**/*.tsx', '!**/*.stories.tsx', '!**/*.test.tsx']
-export const DEFAULT_EXCLUDE_PATTERNS = ['**/node_modules/**', '**/dist/**', '**/.next/**', '**/build/**']
+export const DEFAULT_EXCLUDE_PATTERNS = [
+  '**/node_modules/**',
+  '**/dist/**',
+  '**/.next/**',
+  '**/build/**',
+]
 
 // ===========================================
 // Special File Names (Non-Components)

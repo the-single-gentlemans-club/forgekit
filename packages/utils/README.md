@@ -31,10 +31,10 @@ This package is automatically available to all other packages in the monorepo:
 
 ```typescript
 // In any other package (strings, async, colors)
-import { someUtility } from '@org/utils';
+import { someUtility } from '@org/utils'
 
 // Use the shared functionality
-const result = someUtility(input);
+const result = someUtility(input)
 ```
 
 ## 🏗️ Building

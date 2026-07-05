@@ -15,11 +15,8 @@ export enum ErrorCode {
   FILE_WRITE_ERROR = 'FILE_WRITE_ERROR',
   INVALID_PATH = 'INVALID_PATH',
 
-  // License & Feature Errors (2000-2099)
-  LICENSE_REQUIRED = 'LICENSE_REQUIRED',
+  // Feature Errors (2000-2099)
   FEATURE_NOT_AVAILABLE = 'FEATURE_NOT_AVAILABLE',
-  LICENSE_VALIDATION_FAILED = 'LICENSE_VALIDATION_FAILED',
-  SYNC_LIMIT_EXCEEDED = 'SYNC_LIMIT_EXCEEDED',
 
   // Configuration Errors (3000-3099)
   INVALID_CONFIG = 'INVALID_CONFIG',
@@ -168,10 +165,7 @@ export function getErrorCode(error: unknown): ErrorCode {
  */
 export function formatError(error: unknown): string {
   if (error instanceof StorybookMCPError) {
-    const parts = [
-      `[${error.code}]`,
-      error.message,
-    ]
+    const parts = [`[${error.code}]`, error.message]
     if (error.details) {
       parts.push(`Details: ${JSON.stringify(error.details)}`)
     }
@@ -186,7 +180,10 @@ export function formatError(error: unknown): string {
 /**
  * Wrap unknown errors in StorybookMCPError
  */
-export function wrapError(error: unknown, code: ErrorCode = ErrorCode.UNKNOWN_ERROR): StorybookMCPError {
+export function wrapError(
+  error: unknown,
+  code: ErrorCode = ErrorCode.UNKNOWN_ERROR
+): StorybookMCPError {
   if (error instanceof StorybookMCPError) {
     return error
   }

@@ -1,5 +1,6 @@
 import fs from 'fs/promises'
 import path from 'path'
+
 import { ChakraMCPConfig } from './types.js'
 
 export async function loadConfig(): Promise<ChakraMCPConfig | null> {

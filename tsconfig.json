@@ -28,10 +28,13 @@
       "path": "./packages/context-mcp"
     },
     {
-      "path": "./packages/storybook-mcp-temp"
+      "path": "./packages/figma-plugin"
     },
     {
-      "path": "./packages/figma-plugin"
+      "path": "./packages/design-system"
+    },
+    {
+      "path": "./packages/bff-mcp"
     }
   ]
 }

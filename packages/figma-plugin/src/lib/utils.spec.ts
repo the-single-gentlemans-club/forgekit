@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { hexToRgb, hexToRgba, linearGradient, solidPaint, solidPaintFromRgba } from './utils.js'
 
 describe('hexToRgb', () => {

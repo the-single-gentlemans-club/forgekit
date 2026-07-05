@@ -17,7 +17,7 @@ const client = await createStdioMcpClient('figma', {
   command: 'npx',
   args: ['figma-developer-mcp', '--stdio'],
   env: { FIGMA_ACCESS_TOKEN: process.env.FIGMA_ACCESS_TOKEN },
-  stderr: 'pipe',  // prevents subprocess stderr from corrupting parent stdio
+  stderr: 'pipe', // prevents subprocess stderr from corrupting parent stdio
 })
 ```
 
@@ -28,10 +28,7 @@ Connects to a remote MCP server via `StreamableHTTPClientTransport` (SDK 1.26.0+
 ```typescript
 import { createHttpMcpClient } from '@forgekit/mcp-core'
 
-const client = await createHttpMcpClient(
-  'figma-dev-mode',
-  'http://127.0.0.1:3845/sse'
-)
+const client = await createHttpMcpClient('figma-dev-mode', 'http://127.0.0.1:3845/sse')
 ```
 
 > **Note:** `SSEClientTransport` is deprecated in SDK 1.26.0. This package uses `StreamableHTTPClientTransport` exclusively.
@@ -52,9 +49,9 @@ Joins non-empty summary strings with a newline separator. Used by orchestrator t
 
 ### Error classes
 
-| Class | When thrown |
-|-------|-------------|
-| `McpToolError` | Tool returned `isError: true`. Has `toolName` field. |
+| Class                | When thrown                                                      |
+| -------------------- | ---------------------------------------------------------------- |
+| `McpToolError`       | Tool returned `isError: true`. Has `toolName` field.             |
 | `McpConnectionError` | Client unavailable or connection failed. Has `serverName` field. |
 
 ## Development

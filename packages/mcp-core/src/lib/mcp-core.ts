@@ -1,7 +1,7 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js'
+import type { StdioServerParameters } from '@modelcontextprotocol/sdk/client/stdio.js'
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js'
-import type { StdioServerParameters } from '@modelcontextprotocol/sdk/client/stdio.js'
 
 // -----------------------------------------------
 // Content types from MCP tool call responses
@@ -20,10 +20,7 @@ export async function createStdioMcpClient(
   params: StdioServerParameters
 ): Promise<Client> {
   const transport = new StdioClientTransport(params)
-  const client = new Client(
-    { name: clientName, version: '0.1.0' },
-    { capabilities: {} }
-  )
+  const client = new Client({ name: clientName, version: '0.1.0' }, { capabilities: {} })
   await client.connect(transport)
   return client
 }
@@ -38,14 +35,10 @@ export async function createHttpMcpClient(
   url: string,
   headers?: Record<string, string>
 ): Promise<Client> {
-  const transport = new StreamableHTTPClientTransport(
-    new URL(url),
-    { requestInit: { headers: headers ?? {} } }
-  )
-  const client = new Client(
-    { name: clientName, version: '0.1.0' },
-    { capabilities: {} }
-  )
+  const transport = new StreamableHTTPClientTransport(new URL(url), {
+    requestInit: { headers: headers ?? {} },
+  })
+  const client = new Client({ name: clientName, version: '0.1.0' }, { capabilities: {} })
   await client.connect(transport)
   return client
 }
@@ -80,7 +73,7 @@ export async function callTool(
 // extractText — pull first text item from MCP content array
 // -----------------------------------------------
 function extractText(content: McpTextContent[]): string {
-  const textContent = content?.find(c => c.type === 'text')
+  const textContent = content?.find((c) => c.type === 'text')
   return textContent?.text ?? ''
 }
 

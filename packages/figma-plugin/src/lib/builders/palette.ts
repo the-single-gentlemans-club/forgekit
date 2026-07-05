@@ -35,7 +35,7 @@ export async function buildPalettePage(tokens: PluginTokens): Promise<void> {
       paletteName.charAt(0).toUpperCase() + paletteName.slice(1),
       11,
       hexToRgba('#78716c'),
-      'Semi Bold',
+      'Semi Bold'
     )
     titleNode.x = xOffset
     titleNode.y = -28

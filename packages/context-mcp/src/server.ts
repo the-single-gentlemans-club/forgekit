@@ -1,18 +1,21 @@
+import {
+  createMcpHttpServer,
+  type McpHttpServerHandle,
+  type McpHttpServerOptions,
+} from '@forgekit/mcp-core'
 import { Server } from '@modelcontextprotocol/sdk/server/index.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js'
+import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js'
+
 import { ForgeKitOrchestrator } from './orchestrator.js'
-import type { ForgeKitContextConfig } from './types.js'
-import { getDesignSystemState } from './tools/get-design-system-state.js'
-import { getGaps } from './tools/get-gaps.js'
 import { getComponent } from './tools/get-component.js'
+import { getDesignSystemState } from './tools/get-design-system-state.js'
 import { getDriftedComponents } from './tools/get-drifted-components.js'
+import { getGaps } from './tools/get-gaps.js'
 import { getMissingComponents } from './tools/get-missing-components.js'
 import { onboard } from './tools/onboard.js'
 import { syncStoriesToFigma } from './tools/sync-stories-to-figma.js'
+import type { ForgeKitContextConfig } from './types.js'
 
 export function createContextMCPServer(
   config: ForgeKitContextConfig,
@@ -137,7 +140,8 @@ export function createContextMCPServer(
         case 'sync_stories_to_figma':
           result = await syncStoriesToFigma(orchestrator, {
             library: typedArgs['library'] as string | undefined,
-            storybookUrl: (typedArgs['storybookUrl'] as string | undefined) ?? config.storybook.storybookUrl,
+            storybookUrl:
+              (typedArgs['storybookUrl'] as string | undefined) ?? config.storybook.storybookUrl,
             dryRun: typedArgs['dryRun'] as boolean | undefined,
           })
           break
@@ -160,7 +164,13 @@ export function createContextMCPServer(
   return server
 }
 
-export async function runContextServer(config: ForgeKitContextConfig): Promise<void> {
+// -----------------------------------------------
+// Shared bootstrap — orchestrator + downstream status + the MCP server.
+// Both stdio and HTTP entrypoints reuse this.
+// -----------------------------------------------
+async function bootstrap(
+  config: ForgeKitContextConfig
+): Promise<{ server: Server; orchestrator: ForgeKitOrchestrator }> {
   const orchestrator = new ForgeKitOrchestrator()
 
   process.stderr.write('[context-mcp] Connecting to downstream MCP servers...\n')
@@ -175,17 +185,47 @@ export async function runContextServer(config: ForgeKitContextConfig): Promise<v
     )
   }
 
+  const server = createContextMCPServer(config, orchestrator)
+  return { server, orchestrator }
+}
+
+// -----------------------------------------------
+// runContextServer — stdio mode (for packaged installs / Claude Desktop subprocess)
+// -----------------------------------------------
+export async function runContextServer(config: ForgeKitContextConfig): Promise<void> {
+  const { server, orchestrator } = await bootstrap(config)
+
   const gracefulShutdown = async () => {
     process.stderr.write('[context-mcp] Shutting down...\n')
     await orchestrator.disconnect()
     process.exit(0)
   }
-
   process.on('SIGINT', gracefulShutdown)
   process.on('SIGTERM', gracefulShutdown)
 
-  const server = createContextMCPServer(config, orchestrator)
   const transport = new StdioServerTransport()
   await server.connect(transport)
   process.stderr.write('[context-mcp] MCP server running on stdio\n')
+}
+
+// -----------------------------------------------
+// runContextHttpServer — streamable HTTP mode (for local dev + remote hosts)
+// -----------------------------------------------
+export async function runContextHttpServer(
+  config: ForgeKitContextConfig,
+  httpOptions?: McpHttpServerOptions
+): Promise<McpHttpServerHandle> {
+  const { server, orchestrator } = await bootstrap(config)
+  const handle = await createMcpHttpServer(server, httpOptions)
+
+  const gracefulShutdown = async () => {
+    process.stderr.write('[context-mcp] Shutting down...\n')
+    await handle.close()
+    await orchestrator.disconnect()
+    process.exit(0)
+  }
+  process.on('SIGINT', gracefulShutdown)
+  process.on('SIGTERM', gracefulShutdown)
+
+  return handle
 }

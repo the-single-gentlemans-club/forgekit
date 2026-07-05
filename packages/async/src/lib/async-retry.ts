@@ -3,17 +3,17 @@
  */
 export interface RetryOptions {
   /** Maximum number of retries (default: 3) */
-  retries?: number;
+  retries?: number
   /** Initial delay in ms (default: 1000) */
-  delay?: number;
+  delay?: number
   /** Maximum delay in ms (default: 30000) */
-  maxDelay?: number;
+  maxDelay?: number
   /** Exponential backoff factor (default: 2) */
-  factor?: number;
+  factor?: number
   /** Callback on each retry */
-  onRetry?: (error: Error, attempt: number, nextDelay: number) => void;
+  onRetry?: (error: Error, attempt: number, nextDelay: number) => void
   /** Function to determine if should retry */
-  shouldRetry?: (error: Error, attempt: number) => boolean;
+  shouldRetry?: (error: Error, attempt: number) => boolean
 }
 
 /**
@@ -21,28 +21,27 @@ export interface RetryOptions {
  */
 export interface RetryWithTimeoutOptions extends RetryOptions {
   /** Timeout in milliseconds for each attempt */
-  timeout?: number;
+  timeout?: number
   /** Custom timeout error message */
-  timeoutMessage?: string;
+  timeoutMessage?: string
 }
 
 /**
  * Timeout error class
  */
 export class TimeoutError extends Error {
-  code = 'TIMEOUT';
+  code = 'TIMEOUT'
 
   constructor(message = 'Operation timed out') {
-    super(message);
-    this.name = 'TimeoutError';
+    super(message)
+    this.name = 'TimeoutError'
   }
 }
 
 /**
  * Sleep for specified milliseconds
  */
-const sleep = (ms: number): Promise<void> =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
 
 /**
  * Retry failed async functions with exponential backoff
@@ -57,49 +56,46 @@ export async function retry<T>(
     maxDelay = 30000,
     factor = 2,
     onRetry = () => {
-      return;
+      return
     },
     shouldRetry = () => true,
-  } = options;
+  } = options
 
-  let lastError: Error | undefined;
-  let currentDelay = delay;
+  let lastError: Error | undefined
+  let currentDelay = delay
 
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      return await fn(attempt);
+      return await fn(attempt)
     } catch (error) {
-      lastError = error as Error;
+      lastError = error as Error
 
       // Check if we should retry
       if (attempt === retries || !shouldRetry(lastError, attempt)) {
-        throw error;
+        throw error
       }
 
       // Call onRetry callback
-      onRetry(lastError, attempt, currentDelay);
+      onRetry(lastError, attempt, currentDelay)
 
       // Wait before retrying
-      await sleep(currentDelay);
+      await sleep(currentDelay)
 
       // Calculate next delay with exponential backoff
-      currentDelay = Math.min(currentDelay * factor, maxDelay);
+      currentDelay = Math.min(currentDelay * factor, maxDelay)
     }
   }
 
-  throw lastError;
+  throw lastError
 }
 
 /**
  * Create a reusable retry wrapper with preset options
  */
 export function createRetry(defaultOptions: RetryOptions = {}) {
-  return <T>(
-    fn: (attempt: number) => Promise<T>,
-    overrides: RetryOptions = {}
-  ): Promise<T> => {
-    return retry(fn, { ...defaultOptions, ...overrides });
-  };
+  return <T>(fn: (attempt: number) => Promise<T>, overrides: RetryOptions = {}): Promise<T> => {
+    return retry(fn, { ...defaultOptions, ...overrides })
+  }
 }
 
 /**
@@ -110,8 +106,8 @@ export function withRetry<T extends (...args: any[]) => Promise<any>>(
   options: RetryOptions = {}
 ): T {
   return (async (...args: Parameters<T>) => {
-    return retry(() => fn(...args), options);
-  }) as T;
+    return retry(() => fn(...args), options)
+  }) as T
 }
 
 /**
@@ -121,7 +117,7 @@ export async function retryAll<T>(
   fns: Array<(attempt: number) => Promise<T>>,
   options: RetryOptions = {}
 ): Promise<T[]> {
-  return Promise.all(fns.map((fn) => retry(fn, options)));
+  return Promise.all(fns.map((fn) => retry(fn, options)))
 }
 
 /**
@@ -131,7 +127,7 @@ export async function retryRace<T>(
   fns: Array<(attempt: number) => Promise<T>>,
   options: RetryOptions = {}
 ): Promise<T> {
-  return Promise.race(fns.map((fn) => retry(fn, options)));
+  return Promise.race(fns.map((fn) => retry(fn, options)))
 }
 
 /**
@@ -141,5 +137,5 @@ export async function retryAllSettled<T>(
   fns: Array<(attempt: number) => Promise<T>>,
   options: RetryOptions = {}
 ): Promise<PromiseSettledResult<T>[]> {
-  return Promise.allSettled(fns.map((fn) => retry(fn, options)));
+  return Promise.allSettled(fns.map((fn) => retry(fn, options)))
 }

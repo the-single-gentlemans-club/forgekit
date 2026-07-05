@@ -11,29 +11,29 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import {
   CallToolRequestSchema,
-  ListToolsRequestSchema,
   ListResourcesRequestSchema,
+  ListToolsRequestSchema,
   ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js'
 
-import type { StorybookMCPConfig } from './types.js'
 import {
-  listComponents,
   analyzeComponentTool,
+  checkHealthTool,
+  generateCodeConnectTool,
+  generateDocsTool,
   generateStoryTool,
-  updateStoryTool,
-  validateStoryTool,
-  getStoryTemplate,
-  listTemplates,
+  generateTestTool,
   getComponentCoverage,
+  getStoryTemplate,
+  listComponents,
+  listTemplates,
   suggestStories,
   syncAll,
   syncComponentTool,
-  generateTestTool,
-  generateDocsTool,
-  generateCodeConnectTool,
-  checkHealthTool,
+  updateStoryTool,
+  validateStoryTool,
 } from './tools.js'
+import type { StorybookMCPConfig } from './types.js'
 
 export type { StorybookMCPConfig } from './types.js'
 export * from './types.js'
@@ -151,7 +151,7 @@ export function createStorybookMCPServer(config: StorybookMCPConfig) {
       {
         name: 'update_story',
         description:
-          'Update an existing Storybook story — regenerates template sections while preserving user-added stories. Pro tier only.',
+          'Update an existing Storybook story — regenerates template sections while preserving user-added stories.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -384,7 +384,7 @@ export function createStorybookMCPServer(config: StorybookMCPConfig) {
       {
         name: 'generate_code_connect',
         description:
-          'Generate a @figma/code-connect .figma.tsx file for a component, linking it to Figma dev mode so designers see your actual code. Pro tier only.',
+          'Generate a @figma/code-connect .figma.tsx file for a component, linking it to Figma dev mode so designers see your actual code.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -593,15 +593,8 @@ export function createStorybookMCPServer(config: StorybookMCPConfig) {
 
 /**
  * Run the MCP server with stdio transport
- * Ensures license validation is performed before starting
  */
 export async function runServer(config: StorybookMCPConfig) {
-  // Import here to avoid circular dependency
-  const { validateLicenseAsync } = await import('./utils/license.js')
-
-  // Validate license and cache result for all tool calls
-  await validateLicenseAsync(config)
-
   const server = createStorybookMCPServer(config)
   const transport = new StdioServerTransport()
   await server.connect(transport)

@@ -18,7 +18,7 @@ export function generateThemeTokens(tokens: FigmaToken[]): ThemeToken {
   for (const token of tokens) {
     if (token.isSemantic) {
       const value = mapModesToChakra(token.value as Record<string, string>)
-      
+
       switch (token.type) {
         case 'color':
           assignNested(theme.semanticTokens!.colors!, token.name, value)
@@ -36,7 +36,7 @@ export function generateThemeTokens(tokens: FigmaToken[]): ThemeToken {
       }
     } else {
       const value = token.value as string
-      
+
       switch (token.type) {
         case 'color':
           assignNested(theme.colors, token.name, value)
@@ -63,7 +63,7 @@ export function generateThemeTokens(tokens: FigmaToken[]): ThemeToken {
 
 function mapModesToChakra(modes: Record<string, string>): Record<string, string> {
   const result: Record<string, string> = {}
-  
+
   for (const [mode, value] of Object.entries(modes)) {
     if (mode === 'light') {
       result['default'] = value
@@ -89,7 +89,7 @@ function mapModesToChakra(modes: Record<string, string>): Record<string, string>
 function assignNested(obj: Record<string, any>, path: string, value: any) {
   const parts = path.split('.')
   let current = obj
-  
+
   for (let i = 0; i < parts.length - 1; i++) {
     const part = parts[i]
     // If it doesn't exist, create object
@@ -100,13 +100,13 @@ function assignNested(obj: Record<string, any>, path: string, value: any) {
     // e.g. 'blue' = '#00f' AND 'blue.500' = '#...'
     // Figma usually prevents this, but we should be careful.
     if (typeof current[part] !== 'object') {
-       // Convert leaf to object with 'DEFAULT' key? Chakra supports this in some places but not all.
-       // For now, overwrite (last write wins) or ignore.
-       // Let's assume structure is clean.
-       current[part] = {} 
+      // Convert leaf to object with 'DEFAULT' key? Chakra supports this in some places but not all.
+      // For now, overwrite (last write wins) or ignore.
+      // Let's assume structure is clean.
+      current[part] = {}
     }
     current = current[part]
   }
-  
+
   current[parts[parts.length - 1]] = value
 }

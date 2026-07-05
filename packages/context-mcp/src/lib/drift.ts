@@ -1,7 +1,9 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import type { FigmaVariable, DriftedComponent, DriftItem, DriftAnalysis } from '../types.js'
+
 import type { ComponentInfo } from 'forgekit-storybook-mcp'
+
+import type { DriftAnalysis,DriftedComponent, DriftItem, FigmaVariable } from '../types.js'
 
 // Regex patterns for detecting hardcoded design values in source files
 const COLOR_PATTERN = /#[0-9a-fA-F]{3,8}\b|rgba?\(\s*\d+[\s,]+\d+[\s,]+\d+[^)]*\)/g
@@ -51,9 +53,10 @@ export function detectDrift(
     }
   }
 
-  const summary = drifted.length === 0
-    ? `All ${clean.length} component(s) use design tokens correctly.`
-    : `${drifted.length} component(s) have hardcoded values that should use Figma tokens. ${clean.length} component(s) are clean.`
+  const summary =
+    drifted.length === 0
+      ? `All ${clean.length} component(s) use design tokens correctly.`
+      : `${drifted.length} component(s) have hardcoded values that should use Figma tokens. ${clean.length} component(s) are clean.`
 
   return { drifted, clean, summary }
 }
@@ -97,7 +100,8 @@ function scanSourceForDrift(
       line.includes('theme.') ||
       line.includes('colors.') ||
       line.includes('semantic.')
-    ) return
+    )
+      return
 
     // Check colors
     for (const match of line.matchAll(COLOR_PATTERN)) {

@@ -5,19 +5,20 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
+
 import type { StorybookMCPConfig, StoryGenerationOptions } from './types.js'
-import { scanComponents, analyzeComponent } from './utils/scanner.js'
+import { generateCodeConnect, writeCodeConnectFile } from './utils/code-connect-generator.js'
+import { generateDocs, writeDocsFile } from './utils/docs-generator.js'
 import { generateStory, writeStoryFile } from './utils/generator.js'
-import { validateStory, validateGeneratedStory } from './utils/validator.js'
+import { initializeComponents, syncSingleComponent } from './utils/initializer.js'
+import { requireFeature, validateLicense } from './utils/license.js'
+import { runPreflight } from './utils/preflight.js'
+import { analyzeComponent, scanComponents } from './utils/scanner.js'
+import { hashContent, recordStoryVersion } from './utils/story-history.js'
+import { mergeStories, parseStoryExports } from './utils/story-merger.js'
 import { getTemplate, getTemplates } from './utils/templates.js'
 import { generateTest, writeTestFile } from './utils/test-generator.js'
-import { generateDocs, writeDocsFile } from './utils/docs-generator.js'
-import { initializeComponents, syncSingleComponent } from './utils/initializer.js'
-import { validateLicense, requireFeature } from './utils/license.js'
-import { runPreflight } from './utils/preflight.js'
-import { mergeStories, parseStoryExports } from './utils/story-merger.js'
-import { recordStoryVersion, hashContent } from './utils/story-history.js'
-import { generateCodeConnect, writeCodeConnectFile } from './utils/code-connect-generator.js'
+import { validateGeneratedStory, validateStory } from './utils/validator.js'
 
 /**
  * Tool: list_components
@@ -203,26 +204,17 @@ export async function getStoryTemplate(
  * List all available story templates
  */
 export async function listTemplates(config: StorybookMCPConfig) {
-  // Check license
-  const license = validateLicense(config)
-  const isPro = license.tier === 'pro'
-
-  // Filter templates based on license
   const templates = getTemplates()
-  const list = Array.from(templates.entries()).map(([name, template]) => {
-    const isBasic = name === 'basic'
-    return {
-      name,
-      description: template.description + (isBasic || isPro ? '' : ' (Pro Only)'),
-      useCase: template.useCase,
-      available: isBasic || isPro,
-    }
-  })
+  const list = Array.from(templates.entries()).map(([name, template]) => ({
+    name,
+    description: template.description,
+    useCase: template.useCase,
+    available: true,
+  }))
 
   return {
     templates: list,
     count: list.length,
-    tier: license.tier,
   }
 }
 
@@ -317,10 +309,6 @@ export async function syncAll(
     dryRun?: boolean
   }
 ) {
-  // Check license for limits
-  const license = validateLicense(config)
-
-  // If requesting features not allowed in free tier, warn/disable them
   const options = {
     library: args?.library,
     generateStories: args?.generateStories ?? true,
@@ -330,33 +318,7 @@ export async function syncAll(
     dryRun: args?.dryRun ?? false,
   }
 
-  // Force disable Pro features if no license
-  if (license.tier === 'free') {
-    if (typeof globalThis !== 'undefined' && options.generateTests) {
-      // eslint-disable-next-line no-console
-      globalThis.console?.warn?.('[storybook-mcp] Warning: Test generation disabled (Free Tier)')
-      options.generateTests = false
-    }
-    if (typeof globalThis !== 'undefined' && options.generateDocs) {
-      // eslint-disable-next-line no-console
-      console.warn('[storybook-mcp] Warning: Docs generation disabled (Free Tier)')
-      options.generateDocs = false
-    }
-  }
-
-  const result = await initializeComponents(config, {
-    ...options,
-    maxComponents: license.maxSyncLimit === Infinity ? undefined : license.maxSyncLimit,
-  })
-
-  // Notify if sync limit was applied
-  if (license.tier === 'free' && result.scanned > (license.maxSyncLimit || Infinity)) {
-    return {
-      ...result,
-      summary: `Free Tier Limit: Synced first ${license.maxSyncLimit} of ${result.scanned} components. Upgrade to Pro for unlimited sync.`,
-      warning: `Sync limit reached (${license.maxSyncLimit} components max for Free Tier)`,
-    }
-  }
+  const result = await initializeComponents(config, options)
 
   return {
     ...result,
@@ -486,7 +448,6 @@ export async function generateDocsTool(
 /**
  * Tool: update_story
  * Update an existing story — regenerates template sections while preserving user-added exports.
- * Pro tier only.
  */
 export async function updateStoryTool(
   config: StorybookMCPConfig,
@@ -582,7 +543,6 @@ export async function updateStoryTool(
 /**
  * Tool: generate_code_connect
  * Generate a @figma/code-connect .figma.tsx file linking the component to Figma dev mode.
- * Pro tier only.
  */
 export async function generateCodeConnectTool(
   config: StorybookMCPConfig,

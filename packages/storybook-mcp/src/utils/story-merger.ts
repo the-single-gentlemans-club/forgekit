@@ -71,7 +71,7 @@ export function mergeStories(
   const existingExports = parseStoryExports(existing)
 
   // User-added: in existing but not in the freshly generated set
-  const userAdded = existingExports.filter(name => !generatedExports.includes(name))
+  const userAdded = existingExports.filter((name) => !generatedExports.includes(name))
 
   if (userAdded.length === 0) {
     return { content: generated, preserved: [], removed: [] }
@@ -85,7 +85,8 @@ export function mergeStories(
     }
   }
 
-  const separator = '\n// ─── User-added stories (preserved by update_story) ───────────────────────\n\n'
+  const separator =
+    '\n// ─── User-added stories (preserved by update_story) ───────────────────────\n\n'
   const merged = generated.trimEnd() + '\n' + separator + blocks.join('\n') + '\n'
 
   return {
