@@ -1,98 +1,80 @@
-# Claude Code Preferences
+# CLAUDE.md
 
-## Developer Profile
+ForgeKit — an Nx monorepo of Model Context Protocol (MCP) servers, a Figma plugin library, and shared TypeScript libraries connecting Figma, Storybook, and component codebases.
 
-Senior frontend engineer specializing in React, React Native, Storybook, UI, and design systems.
+Stack: TypeScript 5.9, React 19, Nx 22, Vitest 4, Storybook 10, Tailwind 4, `@modelcontextprotocol/sdk` ^1.26. Package manager is **npm** (`package-lock.json`).
 
-## Code Quality Standards
+## Project map
 
-- **Clean codebase** - Well-organized, readable, maintainable
-- **Small components** - Break up large components into focused, reusable pieces
-- **Linted & formatted** - All code must pass linting and formatting checks
-- **Zero type errors** - TypeScript must compile without errors
-- **No zombie code** - Always clean up stale, unused, or dead code after changes
-- **Write tests for everything** - Always write unit and e2e tests when possible, and make sure all are passing, as well as interaction tests with stories before clearing for release, publish, commit or prod.
+All code lives in `packages/` — there is no `apps/` directory.
 
-## Design Requirements
+Published MCP servers:
 
-- **Rich UI** - Components must be visually polished and production-ready
-- **Color correct** - Proper color usage, contrast, and accessibility
-- **Beautiful** - Aesthetic, modern design aligned with the design system
+- `storybook-mcp` → `forgekit-storybook-mcp` — stories, tests, docs, Code Connect, sync, health (15 tools). Bins: `forgekit-storybook-mcp`, `storybook-mcp`
+- `figma-mcp` → `forgekit-figma-mcp` — syncs Figma variables into Chakra theme files (`sync-theme`). Bin: `forgekit`
+- `context-mcp` → `forgekit-context` — orchestrates Figma + Storybook MCP for gaps, drift, onboarding, Code to Canvas (7 tools). Not yet on npm. Bins: `forgekit-context`, `context-mcp`
+- `bff-mcp` → `@forgekit/bff-mcp`
 
-## High Priority Rules
+Libraries:
 
-### 1. Package Management
+- `mcp-core` → `@forgekit/mcp-core` — shared MCP transports (`createStdioMcpClient`, `createHttpMcpClient`, `callTool`)
+- `figma-plugin` → `@forgekit/figma-plugin` — token sync, palette/spacing/typography builders, `setupPlugin()` orchestration
+- `design-system` → `@forgekit/design-system`
+- `utils`, `strings`, `colors`, `async` → `@forgekit/*`
 
-- All packages must be latest stable releases
-- Package versions must align perfectly with each other
-- Always add packages to `package.json` when importing new libraries
-- Never allow versioning conflicts that break builds or CI
+Each package has its own README with tool-level detail; the root README.md has the full package table.
 
-### 2. Documentation
+<important if="you need to run a build, test, lint, typecheck, storybook, or release command">
 
-- Documentation must be automated and generated
-- Update docs as code, components, and plans change
-- Use Mintlify, Docusaurus, or Featurebase for docs
-- Create reusable SKILL/MCP for docs solution across projects
+Run from the repo root — Nx resolves the project.
 
-### 3. Communication
+| Command | What it does |
+|---|---|
+| `npm run build` | `nx run-many -t build` |
+| `npm test` | `nx run-many -t test` |
+| `npm run lint` | `nx run-many -t lint --fix` |
+| `npm run typecheck` | `nx run-many -t typecheck` |
+| `npm run storybook` | Storybook dev server on port 6006 |
+| `npm run build-storybook` | Build Storybook |
+| `npm run release` | `nx release` |
+| `npm run release:version` | `nx release version` |
+| `npm run release:changelog` | `nx release changelog` |
+| `npm run publish:figma-plugin` | Publish `figma-plugin` |
+| `nx run <project>:<target>` | Any single project target |
 
-- Ask clarifying questions when requirements are ambiguous
-- Provide suggestions for improvements and best practices
-- Flag potential issues before they become problems
+Prefer `nx affected -t lint,test,build` over `run-many` when iterating on a branch.
+</important>
 
-### 4. Release Notes
+<important if="you are adding or changing an MCP tool, server, or transport">
 
-- After each release, update the README.md `What's New in {version}` section (where `{version}` is the newest)
-- Lead with new features and notable bug fixes; fall back to lower-level changes only when there's nothing higher-impact to highlight
+- Servers are built on `@modelcontextprotocol/sdk` ^1.26 — check the installed version's API surface rather than assuming, the SDK moves fast.
+- Share client/transport code through `@forgekit/mcp-core` instead of re-implementing stdio/HTTP clients per server.
+- A tool that shells out to installs or long-running work must run **async** child processes, and callers must pass an explicit timeout — the MCP `callTool()` default (~60s) will otherwise kill multi-minute tools.
+- Each server exposes CLI bins (see the project map); keep `package.json` `bin` entries in sync when renaming.
+</important>
 
-### 5. Shell Fallback
+<important if="you are writing or fixing tests">
 
-- On Windows, use Git Bash when POSIX `bash` isn't available
+Vitest 4 across all packages. Vitest 4 dropped workspace files — use `defineProject` in per-package config, not a root workspace file.
+</important>
 
-## Tech Stack
+<important if="you are cutting a release or publishing a package">
 
-- React Native / Expo
-- TypeScript (strict mode)
-- Supabase (backend)
-- Legend State (state management)
-- TanStack Query
-- Storybook (component development)
+Releases go through `nx release` (`release:version` → `release:changelog` → publish targets), not manual `npm publish`. Note which packages are published vs internal — `@forgekit/*`-scoped libraries are internal; the `forgekit-*` unscoped names are the npm-published servers.
 
-## Skills
+After a release, update the `What's New in {version}` section of README.md, leading with new features and notable fixes.
+</important>
 
-If not in repo or settings, add and use this skill before commits and PRs.
+<important if="you are adding or updating documentation for a package">
 
-```skill
----
-name: code-review
-description: Reviews code changes for bugs, style issues, and best practices. Use when reviewing PRs or checking code quality.
----
-
-# Code Review Skill
-
-When reviewing code, follow these steps:
-
-## Review checklist
-
-1. **Correctness**: Does the code do what it's supposed to?
-2. **Edge cases**: Are error conditions handled?
-3. **Style**: Does it follow project conventions?
-4. **Performance**: Are there obvious inefficiencies?
-
-## How to provide feedback
-
-- Be specific about what needs to change
-- Explain why, not just what
-- Suggest alternatives when possible
-```
+Each package owns its README.md; the root README.md carries the package table and must stay consistent with it when packages are added, renamed, or published.
+</important>
 
 <!-- nx configuration start-->
 <!-- Leave the start & end comments to automatically receive updates. -->
 
 ## General Guidelines for working with Nx
 
-- Ingest ALL docs and reference regularly: <https://nx.dev/docs/getting-started/intro>
 - For navigating/exploring the workspace, invoke the `nx-workspace` skill first - it has patterns for querying projects, targets, and dependencies
 - When running tasks (for example build, lint, test, e2e, etc.), always prefer running the task through `nx` (i.e. `nx run`, `nx run-many`, `nx affected`) instead of using the underlying tooling directly
 - Prefix nx commands with the workspace's package manager (e.g., `pnpm nx build`, `npm exec nx test`) - avoids using globally installed CLI
@@ -111,80 +93,3 @@ When reviewing code, follow these steps:
 - The `nx-generate` skill handles generator discovery internally - don't call nx_docs just to look up generator syntax
 
 <!-- nx configuration end-->
-
-<!-- IMPORTANT NOTE start -->
-
-## IMPORTANT NOTE
-
-### React Compiler
-
-React Compiler — aka React Forget — that automatically memoizes components and hooks at compile time such that useMemo, useCallback, and memo is removed in many cases. MADRiGAN Blog
-
-Now, go back and read that line again, would you? When another developer turned on the compiler in a dashboard app, it eliminated the need for 2,300 lines of memoization code, and the app was faster without the manual optimisations. Vocal Media
-
-**Follow these 2 patterns strictly:**
-
-- **1.** Actions API and use() shipped stable in React 19 — and it completely rethinks what async means in components. Say no to useEffect spaghetti for data fetching:
-
-```JS
-// React 19 — clean async with use() and Suspense | DO NOT USE USEEFFECT
-import { use, Suspense } from "react";
-
-function UserProfile({ userPromise }: { userPromise: Promise<User> }) {
-  const user = use(userPromise); // unwraps promise directly
-  return <h2>Welcome, {user.name}</h2>;
-}
-
-export default function Page() {
-  const data = fetchUser(42); // returns a promise
-  return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <UserProfile userPromise={data} />
-    </Suspense>
-  );
-}
-```
-
-- **2.** Use types as documentation
-
-```JS
-// Don't do this
-const getUser = async (id: any) => { ... }
-
-// Do this — types as documentation
-type UserId = string & { readonly _brand: "UserId" };
-
-const getUser = async (id: UserId): Promise<User> => {
-  const res = await fetch(`/api/users/${id}`);
-  return res.json();
-};
-```
-
-Conclusion: Before you write your next useMemo, consider whether the compiler does this for you already.
-
-### useActionState
-
-useActionState replaces the old useFormState pattern with cleaner semantics and better TypeScript support. This built-in hook has greatly simplified common patterns that previously required 20+ lines of custom code into just a few lines. Vocal Media
-
-```JS
-// Before: custom state, manual pending flag, error juggling
-const [isPending, setIsPending] = useState(false);
-const [error, setError] = useState<string | null>(null);
-
-// After: one hook, clean and readable
-const [error, submitAction, isPending] = useActionState(
-  async (prevState: string | null, formData: FormData) => {
-    const result = await saveUserProfile(formData);
-    if (!result.ok) return "Failed to save profile.";
-    return null;
-  },
-  null
-);
-```
-
-EVERYTHING IN THIS ARTICLE SHOULD BE APPLIED IN MY/OUR PROJECTS:
-<https://medium.com/@mernstackdevbykevin/react-hooks-are-getting-a-major-upgrade-heres-what-every-developer-needs-to-know-in-2026-9f2a14158793>
-
-LET ME KNOW IF THAT LINK CAN'T BE OPENED.
-
-<!-- IMPORTANT NOTE end -->
